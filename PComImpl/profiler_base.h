@@ -12,7 +12,6 @@ public:
 		: eventMask( eventMask )
 	{
 		f = fopen( "c:\\profile.txt", "w" );
-		fprintf(f, "testing");
 	}
 
 	ProfilerBase()

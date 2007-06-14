@@ -126,13 +126,23 @@ public:
 	{
 		Log("Initialize started");
 		ProfilerBase::Initialize( pCorProfilerInfoUnk );
-		if (FAILED(profiler->SetEnterLeaveFunctionHooks( Profiler::DispatchFunctionEnter, Profiler::DispatchFunctionLeave, 0 )))
+		HRESULT hr;
+		if (FAILED(hr = profiler->SetEnterLeaveFunctionHooks( 
+			Profiler::DispatchFunctionEnter,
+			Profiler::DispatchFunctionLeave,
+			Profiler::DispatchFunctionTailCall )))
+		{
+			char buf[64];
+			sprintf(buf, "0x%08x", hr);
 			Log("Function hooks failed");
+			Log(buf);
+		}
 		return S_OK;
 	}
 
 	static void DispatchFunctionEnter( UINT functionId ) { __inst->OnFunctionEnter( functionId ); }
 	static void DispatchFunctionLeave( UINT functionId ) { __inst->OnFunctionLeave( functionId ); }
+	static void DispatchFunctionTailCall( UINT functionId) { }
 
 	volatile UINT lastSeenThread;
 
