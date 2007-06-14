@@ -14,11 +14,6 @@ public:
 		f = fopen( "c:\\profile.txt", "w" );
 	}
 
-	ProfilerBase()
-		: eventMask( COR_PRF_ALL )
-	{
-	}
-
 	void Log( char const * s )
 	{
 		fprintf(f, "%s\n", s );

@@ -11,6 +11,8 @@ namespace ProfilerUi
 		ThreadTransition = 1,
 		EnterFunction = 2,
 		LeaveFunction = 3,
+		SetClockFrequency = 4,
+		LeaveViaTailCall = 5,
 	}
 
 	class CallTree
@@ -24,49 +26,62 @@ namespace ProfilerUi
 
 			Thread currentThread = null;
 
+			ulong frequency = 0;
+
 			try
 			{
 				while (true)
 				{
 					Opcode o = (Opcode)reader.ReadByte();
 					uint id = reader.ReadUInt32();
+					ulong timestamp = reader.ReadUInt64();
 
 					switch (o)
 					{
+						case Opcode.LeaveViaTailCall:
+							MessageBox.Show("tailcall");
+							break;
+
+						case Opcode.SetClockFrequency:
+							frequency = timestamp;
+							break;
+
 						case Opcode.ThreadTransition:
-							{
-								if (!threads.TryGetValue(id, out currentThread))
-									threads.Add(id, currentThread = new Thread((int)id));
-							}
+							if (!threads.TryGetValue(id, out currentThread))
+								threads.Add(id, currentThread = new Thread((int)id));
 							break;
 
 						case Opcode.EnterFunction:
-							{
-								if (currentThread.current == null)
-								{
-									Function f;
-									if (!currentThread.roots.TryGetValue(id, out f))
-										currentThread.roots.Add(id, f = new Function(null, names.GetName(id)));
+							Function f;
 
-									currentThread.current = f;
+							Dictionary<uint, Function> dict = (currentThread.current == null) 
+								? currentThread.roots : currentThread.current.children;
 
-									++f.calls;
-								}
-								else
-								{
-									Function f;
-									if (!currentThread.current.children.TryGetValue(id, out f))
-										currentThread.current.children.Add(id, f = new Function(currentThread.current, names.GetName(id)));
-									currentThread.current = f;
-									++f.calls;
-								}
-							}
+							if (!dict.TryGetValue(id, out f))
+								dict.Add(id, f = new Function(currentThread.current, names.GetName(id), id));
+
+							currentThread.current = f;
+							++f.calls;
+							currentThread.entryTimes.Push(timestamp);
+
 							break;
 
 						case Opcode.LeaveFunction:
+							if (currentThread.current.id != id )
 							{
-								if (currentThread.current != null)
-									currentThread.current = currentThread.current.caller;
+								MessageBox.Show("trying to leave function not in; current=" + 
+									names.GetName(currentThread.current.id) + "\n tried=" + names.GetName(id));
+							}
+
+							ulong entryTime = currentThread.entryTimes.Pop();
+							ulong timeTaken = timestamp - entryTime;
+
+							double milliseconds = 1000.0 * (double)timeTaken / (double)frequency;
+
+							if (currentThread.current != null)
+							{
+								currentThread.current.time += milliseconds;
+								currentThread.current = currentThread.current.caller;
 							}
 							break;
 					}
@@ -78,20 +93,24 @@ namespace ProfilerUi
 
 	class Function
 	{
-		public Function(Function caller, string name)
+		public Function(Function caller, string name, uint id)
 		{
 			this.caller = caller;
-			this.name = name; 
+			this.name = name;
+			this.id = id;
 		}
 
 		public int calls = 0;
 		public Dictionary<uint, Function> children = new Dictionary<uint, Function>();
 		public Function caller;
 		public string name;
+		public uint id;
+
+		public double time;
 
 		public TreeNode CreateView()
 		{
-			TreeNode n = new TreeNode(name + "(" + calls + " calls)");
+			TreeNode n = new TreeNode(name + "    (" + calls + " calls)    " + time.ToString("F1") + "ms");
 			n.Tag = this;
 
 			foreach (Function f in children.Values)
@@ -105,6 +124,8 @@ namespace ProfilerUi
 	{
 		public Dictionary<uint, Function> roots = new Dictionary<uint, Function>();
 		public Function current;
+		public Stack<ulong> entryTimes = new Stack<ulong>();
+
 		readonly int id;
 
 		public int Id { get { return id; } }

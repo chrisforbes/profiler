@@ -24,10 +24,7 @@ namespace ProfilerUi
 				info.EnvironmentVariables["Cor_Enable_Profiling"] = "1";
 				info.EnvironmentVariables["COR_PROFILER"] = "{C1E9FE1F-F517-45c0-BB0E-EFAECC9401FC}";
 
-				Process process = Process.Start(info);
-
-				while (!process.WaitForExit(50))
-					Application.DoEvents();
+				Process.Start(info).WaitForExit();
 			}
 		}
 
@@ -52,6 +49,8 @@ namespace ProfilerUi
 			CallTree tree = new CallTree("c:\\profile.bin", names);
 			foreach (Thread thread in tree.threads.Values)
 				callTreeView1.Nodes.Add(thread.CreateView());
+
+			callTreeView1.Sort();
 		}
 	}
 }

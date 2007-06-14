@@ -183,6 +183,10 @@
 			>
 		</File>
 		<File
+			RelativePath=".\profilewriter.h"
+			>
+		</File>
+		<File
 			RelativePath=".\registry.cpp"
 			>
 		</File>

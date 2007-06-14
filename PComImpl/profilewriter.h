@@ -1,0 +1,120 @@
+#pragma once
+
+#define BUFFER_SIZE		512 * 1024
+
+#define op_thread_transition	1
+#define op_enter_func			2
+#define op_leave_func			3
+#define op_setfreq				4
+#define op_tail_func			5
+
+class ProfileWriter
+{
+	HANDLE fh;
+	unsigned char * buffer;
+	unsigned char * cur;
+	CRITICAL_SECTION cs;
+
+public:
+	ProfileWriter( std::string const & filename )
+	{
+		fh = CreateFileA( filename.c_str(), GENERIC_WRITE, 0, NULL, CREATE_ALWAYS, 0, 0 );
+		buffer = new unsigned char[ BUFFER_SIZE ];
+		InitializeCriticalSection( &cs );
+	}
+
+	~ProfileWriter()
+	{
+		Flush();
+		CloseHandle( fh );
+		delete[] buffer;
+		DeleteCriticalSection( &cs );
+	}
+
+	void WriteData( unsigned char * data, unsigned int length )
+	{
+		EnterCriticalSection( &cs );
+
+		DWORD b;
+		if (cur + length >= buffer + BUFFER_SIZE)
+		{
+			WriteFile( fh, buffer, cur - buffer, &b, NULL );
+			cur = buffer;
+		}
+
+		memcpy( cur, data, length );
+		cur += length;
+
+		LeaveCriticalSection( &cs );
+	}
+
+	void Flush()
+	{
+		EnterCriticalSection( &cs );
+
+		if (cur != buffer)
+		{
+			DWORD b;
+			WriteFile( fh, buffer, cur - buffer, &b, NULL );
+		}
+
+		LeaveCriticalSection( &cs );
+	}
+
+#pragma pack(push,1)
+	struct OpRec
+	{
+		unsigned char opcode;
+		UINT id;
+		__int64 timestamp;
+
+		OpRec( unsigned char opcode, UINT id ) : opcode(opcode), id(id), timestamp(0)
+		{
+			__int64 t;
+
+			if (TRUE != QueryPerformanceCounter( ( LARGE_INTEGER * ) &t ))
+				timestamp = GetLastError();
+
+			timestamp = t;
+		}
+	};
+#pragma pack(pop)
+
+	void WriteClockFrequency()
+	{
+		OpRec o( op_setfreq, 0 );
+
+		__int64 t;
+		QueryPerformanceFrequency( (LARGE_INTEGER *) &t );
+		o.timestamp = t;
+
+		WriteData( (unsigned char*) &o, sizeof(o) );
+	}
+
+	void WriteThreadTransition( UINT managedThreadId )
+	{
+		OpRec o( op_thread_transition, managedThreadId );
+		WriteData( (unsigned char*)&o, sizeof(o) );
+	}
+
+	void WriteEnterFunction( UINT functionId ) 
+	{
+		OpRec o( op_enter_func, functionId );
+		WriteData( (unsigned char*)&o, sizeof(o) );
+	}
+
+	void WriteLeaveFunction( UINT functionId )
+	{
+		OpRec o( op_leave_func, functionId );
+		WriteData( (unsigned char*)&o, sizeof(o) );
+	}
+
+	void WriteTailFunction( UINT functionId )
+	{
+		OpRec o( op_tail_func, functionId );
+		WriteData( (unsigned char*)&o, sizeof(o) );
+	}
+
+	void WriteFunctionBinding( UINT functionId, std::wstring const & name ) {}
+};
+

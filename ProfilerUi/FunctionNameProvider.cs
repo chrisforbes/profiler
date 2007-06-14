@@ -32,7 +32,7 @@ namespace ProfilerUi
 		{
 			string value;
 			if (!names.TryGetValue(functionId, out value))
-				return "";
+				return "<unbound " + functionId + " >";
 
 			return value;
 		}

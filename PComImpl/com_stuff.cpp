@@ -14,96 +14,7 @@
 extern const GUID __declspec( selectany ) CLSID_PROFILER = { 0xc1e9fe1f, 0xf517, 0x45c0, { 0xbb, 0x0e, 0xef, 0xae, 0xcc, 0x94, 0x01, 0xfc }};
 
 #include "profiler_base.h"
-
-#define BUFFER_SIZE		512 * 1024
-
-class ProfileWriter
-{
-	HANDLE fh;
-	unsigned char * buffer;
-	unsigned char * cur;
-	CRITICAL_SECTION cs;
-
-public:
-	ProfileWriter( std::string const & filename )
-	{
-		fh = CreateFileA( filename.c_str(), GENERIC_WRITE, 0, NULL, CREATE_ALWAYS, 0, 0 );
-		buffer = new unsigned char[ BUFFER_SIZE ];
-		InitializeCriticalSection( &cs );
-	}
-
-	~ProfileWriter()
-	{
-		Flush();
-		CloseHandle( fh );
-		delete[] buffer;
-		DeleteCriticalSection( &cs );
-	}
-
-	void WriteData( unsigned char * data, unsigned int length )
-	{
-		EnterCriticalSection( &cs );
-
-		DWORD b;
-		if (cur + length >= buffer + BUFFER_SIZE)
-		{
-			WriteFile( fh, buffer, cur - buffer, &b, NULL );
-			cur = buffer;
-		}
-
-		memcpy( cur, data, length );
-		cur += length;
-
-		LeaveCriticalSection( &cs );
-	}
-
-	void Flush()
-	{
-		EnterCriticalSection( &cs );
-
-		if (cur != buffer)
-		{
-			DWORD b;
-			WriteFile( fh, buffer, cur - buffer, &b, NULL );
-		}
-
-		LeaveCriticalSection( &cs );
-	}
-
-#define op_thread_transition	1
-#define op_enter_func			2
-#define op_leave_func			3
-
-#pragma pack(push,1)
-	struct OpRec
-	{
-		unsigned char opcode;
-		UINT id;
-
-		OpRec( unsigned char opcode, UINT id ) : opcode(opcode), id(id) {}
-	};
-#pragma pack(pop)
-
-	void WriteThreadTransition( UINT managedThreadId )
-	{
-		OpRec o( op_thread_transition, managedThreadId );
-		WriteData( (unsigned char*)&o, sizeof(o) );
-	}
-
-	void WriteEnterFunction( UINT functionId ) 
-	{
-		OpRec o( op_enter_func, functionId );
-		WriteData( (unsigned char*)&o, sizeof(o) );
-	}
-
-	void WriteLeaveFunction( UINT functionId )
-	{
-		OpRec o( op_leave_func, functionId );
-		WriteData( (unsigned char*)&o, sizeof(o) );
-	}
-
-	void WriteFunctionBinding( UINT functionId, std::wstring const & name ) {}
-};
+#include "profilewriter.h"
 
 class Profiler * __inst;
 
@@ -130,6 +41,7 @@ public:
 	{
 		ProfilerBase::Initialize( pCorProfilerInfoUnk );
 		profiler->SetEnterLeaveFunctionHooks( __funcEnter, __funcLeave, __funcTail );
+		writer.WriteClockFrequency();
 		return S_OK;
 	}
 
@@ -146,7 +58,7 @@ public:
 	{
 		ReportThreadTransition();
 
-		if (!(seen_function[functionId]++))
+		if (!seen_function[functionId])
 		{
 			char sz[1024];
 			std::wstring ws = GetFunctionName( functionId );
@@ -154,6 +66,7 @@ public:
 			Log(sz);
 
 			writer.WriteFunctionBinding( functionId, ws );
+			seen_function[functionId] = true;
 		}
 		writer.WriteEnterFunction( functionId );
 	}
@@ -164,7 +77,11 @@ public:
 		writer.WriteLeaveFunction( functionId );
 	}
 
-	void OnFunctionTail( UINT functionId ) {}
+	void OnFunctionTail( UINT functionId )
+	{
+		ReportThreadTransition();
+		writer.WriteTailFunction( functionId );
+	}
 
 	STDMETHOD(ThreadAssignedToOSThread)(UINT managed, DWORD os)
 	{
