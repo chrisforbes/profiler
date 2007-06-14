@@ -59,7 +59,7 @@ namespace ProfilerUi
 								? currentThread.roots : currentThread.activations.Peek().Function.children;
 
 							if (!dict.TryGetValue(id, out f))
-								dict.Add(id, f = new Function(names.GetName(id), id));
+								dict.Add(id, f = new Function(names.GetName(id)));
 
 							currentThread.activations.Push(new Activation(f, timestamp));
 							break;

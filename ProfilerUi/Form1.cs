@@ -48,11 +48,21 @@ namespace ProfilerUi
 
 			CallTree tree = new CallTree("c:\\profile.bin", names);
 
-			callTreeView1.BeginUpdate();
 			callTreeView1.Nodes.Clear();
+			List<TreeNode> nodes = new List<TreeNode>();
 			foreach (Thread thread in tree.threads.Values)
-				callTreeView1.Nodes.Add(thread.CreateView());
-			callTreeView1.EndUpdate();
+				nodes.Add(thread.CreateView());
+			callTreeView1.Nodes.AddRange(nodes.ToArray());
+
+			UpdateFilter(sender, e);
+		}
+
+		void UpdateFilter(object sender, EventArgs e)
+		{
+			FunctionFilter filter = new FunctionFilter(textBox1.Text.Replace("*", "").Split(new char[] { ' ', ',' },
+				StringSplitOptions.RemoveEmptyEntries));
+
+			callTreeView1.Filter = filter;
 		}
 	}
 }
