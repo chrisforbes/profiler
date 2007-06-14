@@ -107,6 +107,10 @@ public:
 
 class Profiler * __inst;
 
+void __funcEnter( UINT functionId );
+void __funcLeave( UINT functionId );
+void __funcTail( UINT functionId );
+
 class Profiler : public ProfilerBase
 {
 	std::map<UINT, UINT> seen_function;
@@ -128,9 +132,9 @@ public:
 		ProfilerBase::Initialize( pCorProfilerInfoUnk );
 		HRESULT hr;
 		if (FAILED(hr = profiler->SetEnterLeaveFunctionHooks( 
-			Profiler::DispatchFunctionEnter,
-			Profiler::DispatchFunctionLeave,
-			Profiler::DispatchFunctionTailCall )))
+			__funcEnter,
+			__funcLeave,
+			__funcTail )))
 		{
 			char buf[64];
 			sprintf(buf, "0x%08x", hr);
@@ -139,10 +143,6 @@ public:
 		}
 		return S_OK;
 	}
-
-	static void DispatchFunctionEnter( UINT functionId ) { __inst->OnFunctionEnter( functionId ); }
-	static void DispatchFunctionLeave( UINT functionId ) { __inst->OnFunctionLeave( functionId ); }
-	static void DispatchFunctionTailCall( UINT functionId) { }
 
 	volatile UINT lastSeenThread;
 
@@ -179,6 +179,11 @@ public:
 	{
 		ReportThreadTransition();
 		writer.WriteLeaveFunction( functionId );
+	}
+
+	void OnFunctionTail( UINT functionId )
+	{
+		Log( "wtf, tail call in my .NET?" );
 	}
 
 	STDMETHOD(Shutdown)()
@@ -235,6 +240,57 @@ public:
 		return std::wstring( class_buf ) + L"::" + std::wstring( buf );
 	}
 };
+
+void __declspec(naked) __funcEnter ( UINT functionId )
+{
+	__asm
+	{
+		push eax
+		push ecx
+		push edx
+		push [esp+16]
+		mov ecx, __inst
+		call Profiler::OnFunctionEnter
+		pop edx
+		pop ecx
+		pop eax
+		ret 4
+	}
+}
+
+void __declspec(naked) __funcLeave ( UINT functionId )
+{
+	__asm
+	{
+		push eax
+		push ecx
+		push edx
+		push [esp+16]
+		mov ecx, __inst
+		call Profiler::OnFunctionLeave
+		pop edx
+		pop ecx
+		pop eax
+		ret 4
+	}
+}
+
+void __declspec(naked) __funcTail ( UINT functionId )
+{
+	__asm
+	{
+		push eax
+		push ecx
+		push edx
+		push [esp+16]
+		mov ecx, __inst
+		call Profiler::OnFunctionTail
+		pop edx
+		pop ecx
+		pop eax
+		ret 4
+	}
+}
 
 STDAPI DllGetClassObject( IID const & rclsid, IID const & riid, void ** ppv )
 {
