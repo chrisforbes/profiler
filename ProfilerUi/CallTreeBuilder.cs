@@ -21,7 +21,7 @@ namespace ProfilerUi
 			Stream s = new FileStream(filename, FileMode.Open, FileAccess.Read);
 			BinaryReader reader = new BinaryReader(s);
 
-			Thread currentThread;
+			Thread currentThread = null;
 
 			try
 			{
@@ -43,12 +43,23 @@ namespace ProfilerUi
 						case Opcode.EnterFunction:
 							{
 								uint funcId = reader.ReadUInt32();
+
+								if (currentThread.current == null)
+									currentThread.root = currentThread.current = new Function(null);
+								else
+								{
+									Function f = currentThread.current.children[funcId];
+									++f.calls;
+								}
 							}
 							break;
 
 						case Opcode.LeaveFunction:
 							{
 								uint funcId = reader.ReadUInt32();
+
+								if (currentThread.current != null)
+									currentThread.current = currentThread.current.caller;
 							}
 							break;
 					}
@@ -60,11 +71,15 @@ namespace ProfilerUi
 
 	class Function
 	{
-		public int calls = 0;
+		public Function(Function caller) { this.caller = caller; }
+
+		public int calls = 1;
 		public Dictionary<uint, Function> children = new Dictionary<uint, Function>();
+		public Function caller;
 	}
 
 	class Thread
 	{
+		public Function root, current;
 	}
 }
