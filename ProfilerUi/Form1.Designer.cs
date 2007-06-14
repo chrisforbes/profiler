@@ -44,17 +44,19 @@ namespace ProfilerUi
 			// 
 			// callView
 			// 
-			this.callView.Dock = System.Windows.Forms.DockStyle.Right;
-			this.callView.Location = new System.Drawing.Point(134, 0);
+			this.callView.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom)
+						| System.Windows.Forms.AnchorStyles.Left)
+						| System.Windows.Forms.AnchorStyles.Right)));
+			this.callView.Location = new System.Drawing.Point(12, 41);
 			this.callView.Name = "callView";
-			this.callView.Size = new System.Drawing.Size(212, 345);
+			this.callView.Size = new System.Drawing.Size(623, 389);
 			this.callView.TabIndex = 1;
 			// 
 			// Form1
 			// 
 			this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
 			this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-			this.ClientSize = new System.Drawing.Size(346, 345);
+			this.ClientSize = new System.Drawing.Size(647, 442);
 			this.Controls.Add(this.callView);
 			this.Controls.Add(this.button1);
 			this.Name = "Form1";

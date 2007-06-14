@@ -46,27 +46,7 @@ namespace ProfilerUi
 
 			CallTree tree = new CallTree("c:\\profile.bin", names);
 			foreach (Thread thread in tree.threads.Values)
-			{
-				TreeNode n = new TreeNode(thread.Id.ToString());
-				n.Tag = thread;
-				RecurseFunctions(thread.root, n);
-				callView.Nodes.Add(n);
-			}
-			Text = "Threads: " + tree.threads.Count + " Funcs: " + Function.totalFunctions;
-		}
-
-		void RecurseFunctions(Function f, TreeNode parentNode)
-		{
-			if (f.children.Count < 1)
-				return;
-
-			foreach (Function g in f.children.Values)
-			{
-				TreeNode n = new TreeNode(g.name);
-				n.Tag = g;
-				parentNode.Nodes.Add(n);
-				RecurseFunctions(g, n);
-			}
+				callView.Nodes.Add(thread.CreateView());
 		}
 	}
 }

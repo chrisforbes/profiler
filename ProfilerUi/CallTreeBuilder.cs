@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Text;
 using System.IO;
+using System.Windows.Forms;
 
 namespace ProfilerUi
 {
@@ -42,13 +43,21 @@ namespace ProfilerUi
 						case Opcode.EnterFunction:
 							{
 								if (currentThread.current == null)
-									currentThread.root = currentThread.current = new Function(null, names.GetName( id ));
+								{
+									Function f;
+									if (!currentThread.roots.TryGetValue(id, out f))
+										currentThread.roots.Add(id, f = new Function(null, names.GetName(id)));
+
+									currentThread.current = f;
+
+									++f.calls;
+								}
 								else
 								{
 									Function f;
 									if (!currentThread.current.children.TryGetValue(id, out f))
-										currentThread.current.children.Add(id, currentThread.current = f = 
-											new Function(currentThread.current, names.GetName( id )));
+										currentThread.current.children.Add(id, f = new Function(currentThread.current, names.GetName(id)));
+									currentThread.current = f;
 									++f.calls;
 								}
 							}
@@ -82,11 +91,23 @@ namespace ProfilerUi
 		public string name;
 
 		public static int totalFunctions = 0;
+
+		public TreeNode CreateView()
+		{
+			TreeNode n = new TreeNode(name);
+			n.Tag = this;
+
+			foreach (Function f in children.Values)
+				n.Nodes.Add(f.CreateView());
+
+			return n;
+		}
 	}
 
 	class Thread
 	{
-		public Function root, current;
+		public Dictionary<uint, Function> roots = new Dictionary<uint, Function>();
+		public Function current;
 		readonly int id;
 
 		public int Id { get { return id; } }
@@ -94,6 +115,17 @@ namespace ProfilerUi
 		public Thread(int id)
 		{
 			this.id = id;
+		}
+
+		public TreeNode CreateView()
+		{
+			TreeNode n = new TreeNode("Thread #" + id.ToString());
+			n.Tag = this;
+
+			foreach (Function f in roots.Values)
+				n.Nodes.Add(f.CreateView());
+
+			return n;
 		}
 	}
 }
