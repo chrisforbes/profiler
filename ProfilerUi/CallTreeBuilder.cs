@@ -35,7 +35,7 @@ namespace ProfilerUi
 						case Opcode.ThreadTransition:
 							{
 								if (!threads.TryGetValue(id, out currentThread))
-									threads.Add(id, currentThread = new Thread());
+									threads.Add(id, currentThread = new Thread((int)id));
 							}
 							break;
 
@@ -87,5 +87,13 @@ namespace ProfilerUi
 	class Thread
 	{
 		public Function root, current;
+		readonly int id;
+
+		public int Id { get { return id; } }
+
+		public Thread(int id)
+		{
+			this.id = id;
+		}
 	}
 }
