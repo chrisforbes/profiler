@@ -69,7 +69,12 @@ namespace ProfilerUi
 
 	class Function
 	{
-		public Function(Function caller, string name) { this.caller = caller; ++totalFunctions; this.name = name; }
+		public Function(Function caller, string name)
+		{
+			this.caller = caller;
+			this.name = name; 
+			++totalFunctions; 
+		}
 
 		public int calls = 1;
 		public Dictionary<uint, Function> children = new Dictionary<uint, Function>();
