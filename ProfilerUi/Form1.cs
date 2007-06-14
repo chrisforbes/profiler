@@ -42,7 +42,9 @@ namespace ProfilerUi
 
 			ProfileProcess(d.FileName);
 
-			CallTree tree = new CallTree("c:\\profile.bin");
+			FunctionNameProvider names = new FunctionNameProvider("c:\\profile.txt");
+
+			CallTree tree = new CallTree("c:\\profile.bin", names);
 			Text = "Threads: " + tree.threads.Count + " Funcs: " + Function.totalFunctions;
 		}
 	}

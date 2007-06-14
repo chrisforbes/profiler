@@ -16,7 +16,7 @@ namespace ProfilerUi
 	{
 		public Dictionary<uint, Thread> threads = new Dictionary<uint, Thread>();
 
-		public CallTree(string filename)
+		public CallTree(string filename, FunctionNameProvider names)
 		{
 			Stream s = new FileStream(filename, FileMode.Open, FileAccess.Read);
 			BinaryReader reader = new BinaryReader(s);
