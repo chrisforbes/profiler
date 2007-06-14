@@ -4,6 +4,7 @@ using System.Text;
 using System.IO;
 using System.Text.RegularExpressions;
 using System.Globalization;
+using System.Windows.Forms;
 
 namespace ProfilerUi
 {
@@ -20,7 +21,7 @@ namespace ProfilerUi
 				if (m == null || !m.Success)
 					continue;
 
-				uint functionId = uint.Parse(m.Groups[1].Value, NumberStyles.HexNumber);
+				uint functionId = (uint)int.Parse(m.Groups[1].Value.Substring(2), NumberStyles.HexNumber);
 				string functionName = m.Groups[2].Value;
 
 				names.Add(functionId, functionName);
