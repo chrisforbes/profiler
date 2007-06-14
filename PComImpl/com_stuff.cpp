@@ -7,6 +7,7 @@
 #include <map>
 
 #include "classfactory.h"
+#include "thread_ptr.h"
 
 #pragma comment(lib, "corguids.lib")
 
@@ -14,13 +15,109 @@ extern const GUID __declspec( selectany ) CLSID_PROFILER = { 0xc1e9fe1f, 0xf517,
 
 #include "profiler_base.h"
 
+#define BUFFER_SIZE		512 * 1024
+
+class ProfileWriter
+{
+	HANDLE fh;
+	unsigned char * buffer;
+	unsigned char * cur;
+	CRITICAL_SECTION cs;
+
+public:
+	ProfileWriter( std::string const & filename )
+	{
+		fh = CreateFileA( filename.c_str(), GENERIC_WRITE, 0, NULL, CREATE_ALWAYS, 0, 0 );
+		buffer = new unsigned char[ BUFFER_SIZE ];
+		InitializeCriticalSection( &cs );
+	}
+
+	~ProfileWriter()
+	{
+		Flush();
+		CloseHandle( fh );
+		delete[] buffer;
+		DeleteCriticalSection( &cs );
+	}
+
+	void WriteData( unsigned char * data, unsigned int length )
+	{
+		EnterCriticalSection( &cs );
+
+		DWORD b;
+		if (cur + length >= buffer + BUFFER_SIZE)
+		{
+			WriteFile( fh, buffer, cur - buffer, &b, NULL );
+			cur = buffer;
+		}
+
+		memcpy( cur, data, length );
+		cur += length;
+
+		LeaveCriticalSection( &cs );
+	}
+
+	void Flush()
+	{
+		EnterCriticalSection( &cs );
+
+		if (cur != buffer)
+		{
+			DWORD b;
+			WriteFile( fh, buffer, cur - buffer, &b, NULL );
+		}
+
+		LeaveCriticalSection( &cs );
+	}
+
+#define op_thread_transition	1
+#define op_enter_func			2
+#define op_leave_func			3
+
+#pragma pack(push,1)
+	struct OpRec
+	{
+		unsigned char opcode;
+		UINT id;
+
+		OpRec( unsigned char opcode, UINT id ) : opcode(opcode), id(id) {}
+	};
+#pragma pack(pop)
+
+	void WriteThreadTransition( UINT managedThreadId )
+	{
+		OpRec o( op_thread_transition, managedThreadId );
+		WriteData( (unsigned char*)&o, sizeof(o) );
+	}
+
+	void WriteEnterFunction( UINT functionId ) 
+	{
+		OpRec o( op_enter_func, functionId );
+		WriteData( (unsigned char*)&o, sizeof(o) );
+	}
+
+	void WriteLeaveFunction( UINT functionId )
+	{
+		OpRec o( op_leave_func, functionId );
+		WriteData( (unsigned char*)&o, sizeof(o) );
+	}
+
+	void WriteFunctionBinding( UINT functionId, std::wstring const & name ) {}
+};
+
 class Profiler * __inst;
 
 class Profiler : public ProfilerBase
 {
+	std::map<UINT, UINT> seen_function;
+	thread_ptr<UINT> thread;
+
+	ProfileWriter writer;
+
 public:
 	Profiler()
-		: ProfilerBase( COR_PRF_MONITOR_ENTERLEAVE )
+		: ProfilerBase( COR_PRF_MONITOR_ENTERLEAVE | COR_PRF_MONITOR_THREADS ), 
+		writer( "c:\\profile.bin" )
 	{
 		__inst = this;
 	}
@@ -32,22 +129,44 @@ public:
 		return S_OK;
 	}
 
-	static void DispatchFunctionEnter( UINT functionId )
-	{
-		__inst->OnFunctionEnter( functionId );
-	}
+	static void DispatchFunctionEnter( UINT functionId ) { __inst->OnFunctionEnter( functionId ); }
+	static void DispatchFunctionLeave( UINT functionId ) { __inst->OnFunctionLeave( functionId ); }
 
-	std::map<UINT, UINT> seen_function;
+	volatile UINT lastSeenThread;
+
+	void ReportThreadTransition()
+	{
+		UINT currentManagedThread = *thread.get();
+		if (currentManagedThread != InterlockedExchange( (LONG volatile *)&lastSeenThread, currentManagedThread ))
+		{
+			char sz[64];
+			sprintf(sz, "switch to thread 0x%08x", currentManagedThread);
+			Log(sz);
+
+			writer.WriteThreadTransition( currentManagedThread );
+		}
+	}
 
 	void OnFunctionEnter( UINT functionId )
 	{
+		ReportThreadTransition();
+
 		if (!(seen_function[functionId]++))
 		{
 			char sz[1024];
 			std::wstring ws = GetFunctionName( functionId );
 			sprintf(sz, "0x%08x=%ws", functionId, ws.c_str());
 			Log(sz);
+
+			writer.WriteFunctionBinding( functionId, ws );
 		}
+		writer.WriteEnterFunction( functionId );
+	}
+
+	void OnFunctionLeave( UINT functionId )
+	{
+		ReportThreadTransition();
+		writer.WriteLeaveFunction( functionId );
 	}
 
 	STDMETHOD(Shutdown)()
@@ -58,6 +177,19 @@ public:
 			sprintf(sz, "0x%08x=%d", i->first, i->second);
 			Log(sz);
 		}
+
+		return S_OK;
+	}
+
+	STDMETHOD(ThreadAssignedToOSThread)(UINT managed, DWORD os)
+	{
+		if (NULL == thread.get())
+		{
+			UINT * threadinfo = new UINT;
+			thread.set( threadinfo );
+		}
+
+		*thread.get() = managed;
 
 		return S_OK;
 	}

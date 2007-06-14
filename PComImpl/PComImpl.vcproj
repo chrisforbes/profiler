@@ -186,6 +186,10 @@
 			RelativePath=".\registry.cpp"
 			>
 		</File>
+		<File
+			RelativePath=".\thread_ptr.h"
+			>
+		</File>
 	</Files>
 	<Globals>
 	</Globals>

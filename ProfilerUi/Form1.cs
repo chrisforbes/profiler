@@ -44,6 +44,9 @@ namespace ProfilerUi
 				return;
 
 			ProfileProcess(d.FileName);
+
+			CallTree tree = new CallTree("c:\\profile.bin");
+			Text = "Threads: " + tree.threads.Count;
 		}
 	}
 }
