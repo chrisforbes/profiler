@@ -47,8 +47,12 @@ namespace ProfilerUi
 			FunctionNameProvider names = new FunctionNameProvider("c:\\profile.txt");
 
 			CallTree tree = new CallTree("c:\\profile.bin", names);
+
+			callTreeView1.BeginUpdate();
+			callTreeView1.Nodes.Clear();
 			foreach (Thread thread in tree.threads.Values)
 				callTreeView1.Nodes.Add(thread.CreateView());
+			callTreeView1.EndUpdate();
 		}
 	}
 }

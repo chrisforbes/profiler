@@ -8,8 +8,8 @@ namespace ProfilerUi
 	class Thread
 	{
 		public Dictionary<uint, Function> roots = new Dictionary<uint, Function>();
-		public Function current;
-		public Stack<ulong> entryTimes = new Stack<ulong>();
+
+		public Stack<Activation> activations = new Stack<Activation>();
 
 		readonly int id;
 		public double time = 0.0;
@@ -17,10 +17,7 @@ namespace ProfilerUi
 
 		public int Id { get { return id; } }
 
-		public Thread(int id)
-		{
-			this.id = id;
-		}
+		public Thread(int id) { this.id = id; }
 
 		public TreeNode CreateView()
 		{

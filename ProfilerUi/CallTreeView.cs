@@ -17,7 +17,6 @@ namespace ProfilerUi
 		}
 
 		Brush selected = new SolidBrush(Color.FromArgb(0xee, 0xee, 0xff));
-		Font fbold;
 
 		protected override void OnDrawNode(DrawTreeNodeEventArgs e)
 		{

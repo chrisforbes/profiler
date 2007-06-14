@@ -26,7 +26,7 @@ namespace ProfilerUi
 
 			Thread currentThread = null;
 
-			ulong frequency = 0;
+			ulong frequency = 0, timestamp = 0;
 
 			try
 			{
@@ -34,7 +34,7 @@ namespace ProfilerUi
 				{
 					Opcode o = (Opcode)reader.ReadByte();
 					uint id = reader.ReadUInt32();
-					ulong timestamp = reader.ReadUInt64();
+					timestamp = reader.ReadUInt64();
 
 					switch (o)
 					{
@@ -43,14 +43,8 @@ namespace ProfilerUi
 							break;
 
 						case Opcode.ThreadTransition:
-							Thread previous = currentThread;
-							if (previous != null)
-							{
-								ulong timeTaken = timestamp - previous.lastEntryTime;
-								double milliseconds = 1000.0 * (double)timeTaken / (double)frequency;
-
-								previous.time += milliseconds;
-							}
+							if (currentThread != null)
+								currentThread.time += Activation.GetTime(currentThread.lastEntryTime, timestamp, frequency);
 
 							if (!threads.TryGetValue(id, out currentThread))
 								threads.Add(id, currentThread = new Thread((int)id));
@@ -61,39 +55,39 @@ namespace ProfilerUi
 						case Opcode.EnterFunction:
 							Function f;
 
-							Dictionary<uint, Function> dict = (currentThread.current == null) 
-								? currentThread.roots : currentThread.current.children;
+							Dictionary<uint, Function> dict = (currentThread.activations.Count == 0) 
+								? currentThread.roots : currentThread.activations.Peek().Function.children;
 
 							if (!dict.TryGetValue(id, out f))
-								dict.Add(id, f = new Function(currentThread.current, names.GetName(id), id));
+								dict.Add(id, f = new Function(names.GetName(id), id));
 
-							currentThread.current = f;
-							++f.calls;
-							currentThread.entryTimes.Push(timestamp);
-
+							currentThread.activations.Push(new Activation(f, timestamp));
 							break;
 
 						case Opcode.LeaveFunction:
-							if (currentThread.current.id != id)
+							if (currentThread.activations.Count == 0)
 							{
-								MessageBox.Show("trying to leave function not in; current=" +
-									names.GetName(currentThread.current.id) + "\n tried=" + names.GetName(id));
+								MessageBox.Show("no activation to end");
+								break;
 							}
 
-							if (currentThread.current != null)
-							{
-								ulong entryTime = currentThread.entryTimes.Pop();
-								ulong timeTaken = timestamp - entryTime;
-								double milliseconds = 1000.0 * (double)timeTaken / (double)frequency;
-
-								currentThread.current.time += milliseconds;
-								currentThread.current = currentThread.current.caller;
-							}
+							Activation a = currentThread.activations.Pop();
+							a.Complete(timestamp, frequency);
 							break;
 					}
 				}
 			}
 			catch (EndOfStreamException) { }
+
+			//close dead activations
+			foreach (Thread t in threads.Values)
+			{
+				while (t.activations.Count > 0)
+				{
+					Activation a = t.activations.Pop();
+					a.Complete(timestamp, frequency);
+				}
+			}
 		}
 	}
 }

@@ -36,6 +36,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Activation.cs" />
     <Compile Include="CallTreeBuilder.cs" />
     <Compile Include="CallTreeView.cs">
       <SubType>Component</SubType>
