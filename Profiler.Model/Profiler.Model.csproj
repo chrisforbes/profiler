@@ -56,6 +56,6 @@
   </Target>
   -->
   <PropertyGroup>
-    <PostBuildEvent>copy "$(TargetPath)" "$(SolutionDir)debug\"</PostBuildEvent>
+    <PostBuildEvent>copy "$(TargetDir)*.dll" "$(SolutionDir)debug\"</PostBuildEvent>
   </PropertyGroup>
 </Project>
