@@ -12,6 +12,7 @@ public:
 		: eventMask( eventMask )
 	{
 		f = fopen( "c:\\profile.txt", "w" );
+		fprintf(f, "testing");
 	}
 
 	ProfilerBase()
@@ -34,6 +35,7 @@ public:
 			*ppInterface = (void*)this;
 			return S_OK;
 		}
+		Log("Query Interface failed");
 		return E_NOINTERFACE;
 	}
 
@@ -41,7 +43,10 @@ public:
 	{
 		HRESULT hr = pCorProfilerInfoUnk->QueryInterface( IID_ICorProfilerInfo2, (void **)&profiler );
 		if (FAILED(hr))
+		{
+			Log("initialize failed");
 			return E_INVALIDARG;
+		}
 
 		profiler->SetEventMask( eventMask );
 		return S_OK;

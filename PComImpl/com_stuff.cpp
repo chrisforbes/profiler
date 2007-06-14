@@ -124,8 +124,10 @@ public:
 
 	STDMETHOD(Initialize)( IUnknown * pCorProfilerInfoUnk )
 	{
+		Log("Initialize started");
 		ProfilerBase::Initialize( pCorProfilerInfoUnk );
-		profiler->SetEnterLeaveFunctionHooks( Profiler::DispatchFunctionEnter, 0, 0 );
+		if (FAILED(profiler->SetEnterLeaveFunctionHooks( Profiler::DispatchFunctionEnter, Profiler::DispatchFunctionLeave, 0 )))
+			Log("Function hooks failed");
 		return S_OK;
 	}
 
