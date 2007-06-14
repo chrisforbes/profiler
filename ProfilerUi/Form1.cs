@@ -31,7 +31,7 @@ namespace ProfilerUi
 			}
 		}
 
-		void DoIt(object sender, EventArgs e)
+		void NewRun(object sender, EventArgs e)
 		{
 			OpenFileDialog d = new OpenFileDialog();
 			d.Filter = "Application|*.exe";
@@ -42,21 +42,16 @@ namespace ProfilerUi
 
 			ProfileProcess(d.FileName);
 
+			LoadLastRun(sender, e);
+		}
+
+		void LoadLastRun(object sender, EventArgs e)
+		{
 			FunctionNameProvider names = new FunctionNameProvider("c:\\profile.txt");
 
 			CallTree tree = new CallTree("c:\\profile.bin", names);
 			foreach (Thread thread in tree.threads.Values)
-				callView.Nodes.Add(thread.CreateView());
-		}
-
-		Brush selected = new SolidBrush(Color.FromArgb(0xee, 0xee, 0xff));
-
-		void OnDrawNode(object sender, DrawTreeNodeEventArgs e)
-		{
-			if (e.Node == callView.SelectedNode)
-				e.Graphics.FillRectangle(selected, e.Bounds);
-
-			e.DrawDefault = true;
+				callTreeView1.Nodes.Add(thread.CreateView());
 		}
 	}
 }
