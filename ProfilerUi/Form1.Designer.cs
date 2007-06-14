@@ -47,10 +47,13 @@ namespace ProfilerUi
 			this.callView.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom)
 						| System.Windows.Forms.AnchorStyles.Left)
 						| System.Windows.Forms.AnchorStyles.Right)));
+			this.callView.DrawMode = System.Windows.Forms.TreeViewDrawMode.OwnerDrawAll;
 			this.callView.Location = new System.Drawing.Point(12, 41);
 			this.callView.Name = "callView";
+			this.callView.ShowRootLines = false;
 			this.callView.Size = new System.Drawing.Size(623, 389);
 			this.callView.TabIndex = 1;
+			this.callView.DrawNode += new System.Windows.Forms.DrawTreeNodeEventHandler(this.OnDrawNode);
 			// 
 			// Form1
 			// 
@@ -59,6 +62,7 @@ namespace ProfilerUi
 			this.ClientSize = new System.Drawing.Size(647, 442);
 			this.Controls.Add(this.callView);
 			this.Controls.Add(this.button1);
+			this.DoubleBuffered = true;
 			this.Name = "Form1";
 			this.Text = "Form1";
 			this.ResumeLayout(false);

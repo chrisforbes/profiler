@@ -48,5 +48,15 @@ namespace ProfilerUi
 			foreach (Thread thread in tree.threads.Values)
 				callView.Nodes.Add(thread.CreateView());
 		}
+
+		Brush selected = new SolidBrush(Color.FromArgb(0xee, 0xee, 0xff));
+
+		void OnDrawNode(object sender, DrawTreeNodeEventArgs e)
+		{
+			if (e.Node == callView.SelectedNode)
+				e.Graphics.FillRectangle(selected, e.Bounds);
+
+			e.DrawDefault = true;
+		}
 	}
 }
