@@ -38,17 +38,24 @@ namespace ProfilerUi
 
 					switch (o)
 					{
-						case Opcode.LeaveViaTailCall:
-							MessageBox.Show("tailcall");
-							break;
-
 						case Opcode.SetClockFrequency:
 							frequency = timestamp;
 							break;
 
 						case Opcode.ThreadTransition:
+							Thread previous = currentThread;
+							if (previous != null)
+							{
+								ulong timeTaken = timestamp - previous.lastEntryTime;
+								double milliseconds = 1000.0 * (double)timeTaken / (double)frequency;
+
+								previous.time += milliseconds;
+							}
+
 							if (!threads.TryGetValue(id, out currentThread))
 								threads.Add(id, currentThread = new Thread((int)id));
+
+							currentThread.lastEntryTime = timestamp;
 							break;
 
 						case Opcode.EnterFunction:
@@ -67,19 +74,18 @@ namespace ProfilerUi
 							break;
 
 						case Opcode.LeaveFunction:
-							if (currentThread.current.id != id )
+							if (currentThread.current.id != id)
 							{
-								MessageBox.Show("trying to leave function not in; current=" + 
+								MessageBox.Show("trying to leave function not in; current=" +
 									names.GetName(currentThread.current.id) + "\n tried=" + names.GetName(id));
 							}
 
-							ulong entryTime = currentThread.entryTimes.Pop();
-							ulong timeTaken = timestamp - entryTime;
-
-							double milliseconds = 1000.0 * (double)timeTaken / (double)frequency;
-
 							if (currentThread.current != null)
 							{
+								ulong entryTime = currentThread.entryTimes.Pop();
+								ulong timeTaken = timestamp - entryTime;
+								double milliseconds = 1000.0 * (double)timeTaken / (double)frequency;
+
 								currentThread.current.time += milliseconds;
 								currentThread.current = currentThread.current.caller;
 							}
@@ -88,62 +94,6 @@ namespace ProfilerUi
 				}
 			}
 			catch (EndOfStreamException) { }
-		}
-	}
-
-	class Function
-	{
-		public Function(Function caller, string name, uint id)
-		{
-			this.caller = caller;
-			this.name = name;
-			this.id = id;
-		}
-
-		public int calls = 0;
-		public Dictionary<uint, Function> children = new Dictionary<uint, Function>();
-		public Function caller;
-		public string name;
-		public uint id;
-
-		public double time;
-
-		public TreeNode CreateView()
-		{
-			TreeNode n = new TreeNode(name + "    (" + calls + " calls)    " + time.ToString("F1") + "ms");
-			n.Tag = this;
-
-			foreach (Function f in children.Values)
-				n.Nodes.Add(f.CreateView());
-
-			return n;
-		}
-	}
-
-	class Thread
-	{
-		public Dictionary<uint, Function> roots = new Dictionary<uint, Function>();
-		public Function current;
-		public Stack<ulong> entryTimes = new Stack<ulong>();
-
-		readonly int id;
-
-		public int Id { get { return id; } }
-
-		public Thread(int id)
-		{
-			this.id = id;
-		}
-
-		public TreeNode CreateView()
-		{
-			TreeNode n = new TreeNode("Thread #" + id.ToString());
-			n.Tag = this;
-
-			foreach (Function f in roots.Values)
-				n.Nodes.Add(f.CreateView());
-
-			return n;
 		}
 	}
 }

@@ -49,8 +49,6 @@ namespace ProfilerUi
 			CallTree tree = new CallTree("c:\\profile.bin", names);
 			foreach (Thread thread in tree.threads.Values)
 				callTreeView1.Nodes.Add(thread.CreateView());
-
-			callTreeView1.Sort();
 		}
 	}
 }
