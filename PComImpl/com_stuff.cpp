@@ -113,7 +113,7 @@ void __funcTail( UINT functionId );
 
 class Profiler : public ProfilerBase
 {
-	std::map<UINT, UINT> seen_function;
+	std::map<UINT, bool> seen_function;
 	thread_ptr<UINT> thread;
 
 	ProfileWriter writer;
@@ -128,19 +128,8 @@ public:
 
 	STDMETHOD(Initialize)( IUnknown * pCorProfilerInfoUnk )
 	{
-		Log("Initialize started");
 		ProfilerBase::Initialize( pCorProfilerInfoUnk );
-		HRESULT hr;
-		if (FAILED(hr = profiler->SetEnterLeaveFunctionHooks( 
-			__funcEnter,
-			__funcLeave,
-			__funcTail )))
-		{
-			char buf[64];
-			sprintf(buf, "0x%08x", hr);
-			Log("Function hooks failed");
-			Log(buf);
-		}
+		profiler->SetEnterLeaveFunctionHooks( __funcEnter, __funcLeave, __funcTail );
 		return S_OK;
 	}
 
@@ -150,13 +139,7 @@ public:
 	{
 		UINT currentManagedThread = *thread.get();
 		if (currentManagedThread != InterlockedExchange( (LONG volatile *)&lastSeenThread, currentManagedThread ))
-		{
-			char sz[64];
-			sprintf(sz, "switch to thread 0x%08x", currentManagedThread);
-			Log(sz);
-
 			writer.WriteThreadTransition( currentManagedThread );
-		}
 	}
 
 	void OnFunctionEnter( UINT functionId )
@@ -181,22 +164,7 @@ public:
 		writer.WriteLeaveFunction( functionId );
 	}
 
-	void OnFunctionTail( UINT functionId )
-	{
-		Log( "wtf, tail call in my .NET?" );
-	}
-
-	STDMETHOD(Shutdown)()
-	{
-		char sz[64];
-		for( std::map<UINT, UINT>::const_iterator i = seen_function.begin(); i != seen_function.end(); i++ )
-		{
-			sprintf(sz, "0x%08x=%d", i->first, i->second);
-			Log(sz);
-		}
-
-		return S_OK;
-	}
+	void OnFunctionTail( UINT functionId ) {}
 
 	STDMETHOD(ThreadAssignedToOSThread)(UINT managed, DWORD os)
 	{
