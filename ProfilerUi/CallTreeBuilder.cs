@@ -28,27 +28,26 @@ namespace ProfilerUi
 				while (true)
 				{
 					Opcode o = (Opcode)reader.ReadByte();
+					uint id = reader.ReadUInt32();
 
 					switch (o)
 					{
 						case Opcode.ThreadTransition:
 							{
-								uint threadId = reader.ReadUInt32();
-
-								if (!threads.TryGetValue(threadId, out currentThread))
-									threads.Add(threadId, currentThread = new Thread());
+								if (!threads.TryGetValue(id, out currentThread))
+									threads.Add(id, currentThread = new Thread());
 							}
 							break;
 
 						case Opcode.EnterFunction:
 							{
-								uint funcId = reader.ReadUInt32();
-
 								if (currentThread.current == null)
 									currentThread.root = currentThread.current = new Function(null);
 								else
 								{
-									Function f = currentThread.current.children[funcId];
+									Function f;
+									if (!currentThread.current.children.TryGetValue(id, out f))
+										currentThread.current.children.Add(id, currentThread.current = f = new Function(currentThread.current));
 									++f.calls;
 								}
 							}
@@ -56,8 +55,6 @@ namespace ProfilerUi
 
 						case Opcode.LeaveFunction:
 							{
-								uint funcId = reader.ReadUInt32();
-
 								if (currentThread.current != null)
 									currentThread.current = currentThread.current.caller;
 							}
@@ -71,11 +68,13 @@ namespace ProfilerUi
 
 	class Function
 	{
-		public Function(Function caller) { this.caller = caller; }
+		public Function(Function caller) { this.caller = caller; ++totalFunctions; }
 
 		public int calls = 1;
 		public Dictionary<uint, Function> children = new Dictionary<uint, Function>();
 		public Function caller;
+
+		public static int totalFunctions = 0;
 	}
 
 	class Thread
