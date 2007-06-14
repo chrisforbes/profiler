@@ -82,19 +82,16 @@ namespace ProfilerUi
 		{
 			this.caller = caller;
 			this.name = name; 
-			++totalFunctions; 
 		}
 
-		public int calls = 1;
+		public int calls = 0;
 		public Dictionary<uint, Function> children = new Dictionary<uint, Function>();
 		public Function caller;
 		public string name;
 
-		public static int totalFunctions = 0;
-
 		public TreeNode CreateView()
 		{
-			TreeNode n = new TreeNode(name);
+			TreeNode n = new TreeNode(name + "(" + calls + " calls)");
 			n.Tag = this;
 
 			foreach (Function f in children.Values)
