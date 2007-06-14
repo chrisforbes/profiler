@@ -42,12 +42,13 @@ namespace ProfilerUi
 						case Opcode.EnterFunction:
 							{
 								if (currentThread.current == null)
-									currentThread.root = currentThread.current = new Function(null);
+									currentThread.root = currentThread.current = new Function(null, names.GetName( id ));
 								else
 								{
 									Function f;
 									if (!currentThread.current.children.TryGetValue(id, out f))
-										currentThread.current.children.Add(id, currentThread.current = f = new Function(currentThread.current));
+										currentThread.current.children.Add(id, currentThread.current = f = 
+											new Function(currentThread.current, names.GetName( id )));
 									++f.calls;
 								}
 							}
@@ -68,11 +69,12 @@ namespace ProfilerUi
 
 	class Function
 	{
-		public Function(Function caller) { this.caller = caller; ++totalFunctions; }
+		public Function(Function caller, string name) { this.caller = caller; ++totalFunctions; this.name = name; }
 
 		public int calls = 1;
 		public Dictionary<uint, Function> children = new Dictionary<uint, Function>();
 		public Function caller;
+		public string name;
 
 		public static int totalFunctions = 0;
 	}
