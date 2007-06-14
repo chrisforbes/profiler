@@ -19,7 +19,6 @@ namespace ProfilerUi
 		public Function caller;
 		public string name;
 		public uint id;
-
 		public double time;
 
 		public TreeNode CreateView()
