@@ -98,7 +98,7 @@ public:
 
 	std::wstring GetFunctionName( UINT functionId )
 	{
-		mdToken methodToken, classToken;
+		mdToken methodToken, classToken, newClassToken;
 		IMetaDataImport * pm = NULL;
 
 		if (FAILED(profiler->GetTokenAndMetaDataFromFunction( functionId, IID_IMetaDataImport, (IUnknown **) &pm, &methodToken )))
@@ -112,17 +112,31 @@ public:
 			return L"<no metadata>";
 		}
 
-		wchar_t class_buf[512];
-		size = 512;
-		if (FAILED(pm->GetTypeDefProps( classToken, class_buf, size, &size, NULL, NULL )))
+		std::wstring class_buf_string;
+		while( true )
 		{
-			pm->Release();
-			return L"<no metadata>";
+			wchar_t class_buf[512];
+			size = 512;
+			if (FAILED(pm->GetTypeDefProps( classToken, class_buf, size, &size, NULL, NULL )))
+			{
+				pm->Release();
+				return L"<no metadata>";
+			}
+			class_buf_string = std::wstring( class_buf ) + class_buf_string;
+
+			if( FAILED( pm->GetNestedClassProps( classToken, &newClassToken ) ) )
+				break;
+			if( newClassToken == classToken || newClassToken == 0 )
+				break;
+
+			class_buf_string = L"$" + class_buf_string;
+
+			classToken = newClassToken;
 		}
 
 		pm->Release();
 
-		return std::wstring( class_buf ) + L"::" + std::wstring( buf );
+		return class_buf_string + L"::" + std::wstring( buf );
 	}
 };
 
