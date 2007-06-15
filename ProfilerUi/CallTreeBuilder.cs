@@ -6,88 +6,76 @@ using System.Windows.Forms;
 
 namespace ProfilerUi
 {
-	enum Opcode : byte
-	{
-		ThreadTransition = 1,
-		EnterFunction = 2,
-		LeaveFunction = 3,
-		SetClockFrequency = 4,
-		LeaveViaTailCall = 5,
-	}
-
 	class CallTree
 	{
 		public Dictionary<uint, Thread> threads = new Dictionary<uint, Thread>();
+		Activation<Thread> currentThread = null;
+		FunctionNameProvider names;
+		ulong frequency;
 
 		public CallTree(string filename, FunctionNameProvider names)
 		{
+			this.names = names;
 			Stream s = new FileStream(filename, FileMode.Open, FileAccess.Read);
 			BinaryReader reader = new BinaryReader(s);
 
-			Thread currentThread = null;
+			ulong finalTime = 0;
 
-			ulong frequency = 0, timestamp = 0;
-
-			try
+			foreach (ProfileEvent e in ProfileEvent.GetEvents(reader))
 			{
-				while (true)
+				switch (e.opcode)
 				{
-					Opcode o = (Opcode)reader.ReadByte();
-					uint id = reader.ReadUInt32();
-					timestamp = reader.ReadUInt64();
-
-					switch (o)
-					{
-						case Opcode.SetClockFrequency:
-							frequency = timestamp;
-							break;
-
-						case Opcode.ThreadTransition:
-							if (currentThread != null)
-								currentThread.time += Activation.GetTime(currentThread.lastEntryTime, timestamp, frequency);
-
-							if (!threads.TryGetValue(id, out currentThread))
-								threads.Add(id, currentThread = new Thread((int)id));
-
-							currentThread.lastEntryTime = timestamp;
-							break;
-
-						case Opcode.EnterFunction:
-							Function f;
-
-							Dictionary<uint, Function> dict = (currentThread.activations.Count == 0) 
-								? currentThread.roots : currentThread.activations.Peek().Function.children;
-
-							if (!dict.TryGetValue(id, out f))
-								dict.Add(id, f = new Function(names.GetName(id)));
-
-							currentThread.activations.Push(new Activation(f, timestamp));
-							break;
-
-						case Opcode.LeaveFunction:
-							if (currentThread.activations.Count == 0)
-							{
-								MessageBox.Show("no activation to end");
-								break;
-							}
-
-							Activation a = currentThread.activations.Pop();
-							a.Complete(timestamp, frequency);
-							break;
-					}
+					case Opcode.SetClockFrequency: frequency = e.timestamp; break;
+					case Opcode.ThreadTransition: OnThreadTransition(e); break;
+					case Opcode.EnterFunction: OnEnterFunction(e); break;
+					case Opcode.LeaveFunction: OnLeaveFunction(e); break;
 				}
-			}
-			catch (EndOfStreamException) { }
 
-			//close dead activations
+				finalTime = e.timestamp;
+			}
+
 			foreach (Thread t in threads.Values)
 			{
 				while (t.activations.Count > 0)
 				{
-					Activation a = t.activations.Pop();
-					a.Complete(timestamp, frequency);
+					Activation<Function> a = t.activations.Pop();
+					a.Complete(finalTime, frequency);
 				}
 			}
+
+			currentThread.Complete(finalTime, frequency);
+		}
+
+		void OnThreadTransition(ProfileEvent e)
+		{
+			if (currentThread != null)
+				currentThread.Complete(e.timestamp, frequency);
+
+			Thread t;
+
+			if (!threads.TryGetValue(e.id, out t))
+				threads.Add(e.id, t = new Thread(e.id));
+
+			currentThread = new Activation<Thread>(t, e.timestamp);
+		}
+
+		void OnEnterFunction(ProfileEvent e)
+		{
+			Thread t = currentThread.Target;
+			Dictionary<uint, Function> dict = (t.activations.Count == 0)
+				? t.roots : t.activations.Peek().Target.children;
+
+			Function f;
+
+			if (!dict.TryGetValue(e.id, out f))
+				dict.Add(e.id, f = new Function(names.GetName(e.id)));
+
+			t.activations.Push(new Activation<Function>(f, e.timestamp));
+		}
+
+		void OnLeaveFunction(ProfileEvent e)
+		{
+			currentThread.Target.activations.Pop().Complete(e.timestamp, frequency);
 		}
 	}
 }

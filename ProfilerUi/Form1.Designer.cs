@@ -99,7 +99,7 @@ namespace ProfilerUi
 			this.Controls.Add(this.button1);
 			this.DoubleBuffered = true;
 			this.Name = "Form1";
-			this.Text = "Form1";
+			this.Text = "IJW Profiler 0.2";
 			this.ResumeLayout(false);
 			this.PerformLayout();
 

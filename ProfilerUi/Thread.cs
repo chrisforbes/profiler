@@ -5,19 +5,19 @@ using System.Windows.Forms;
 
 namespace ProfilerUi
 {
-	class Thread
+	class Thread : IActivatible
 	{
 		public Dictionary<uint, Function> roots = new Dictionary<uint, Function>();
 
-		public Stack<Activation> activations = new Stack<Activation>();
+		public Stack<Activation<Function>> activations = new Stack<Activation<Function>>();
 
-		readonly int id;
+		readonly uint id;
 		public double time = 0.0;
 		public ulong lastEntryTime = 0;
 
-		public int Id { get { return id; } }
+		public uint Id { get { return id; } }
 
-		public Thread(int id) { this.id = id; }
+		public Thread(uint id) { this.id = id; }
 
 		public TreeNode CreateView()
 		{
@@ -31,6 +31,11 @@ namespace ProfilerUi
 				n.Nodes.Add(f.CreateView());
 
 			return n;
+		}
+
+		public void Complete(double milliseconds)
+		{
+			time += milliseconds;
 		}
 	}
 }

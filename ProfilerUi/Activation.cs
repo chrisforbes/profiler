@@ -4,25 +4,26 @@ using System.Text;
 
 namespace ProfilerUi
 {
-	class Activation
+	class Activation<T>
+		where T : IActivatible
 	{
-		public Activation(Function f, ulong start)
+		public Activation(T target, ulong start)
 		{
-			this.f = f;
+			this.target = target;
 			this.start = start;
 		}
 
-		Function f;
+		T target;
 		ulong start;
 
 		public void Complete(ulong end, ulong freq)
 		{
 			double t = GetTime(start, end, freq);
-			f.time += t;
-			f.calls++;
+			target.Complete(t);
+
 		}
 
-		public Function Function { get { return f; } }
+		public T Target { get { return target; } }
 
 		public static double GetTime(ulong start, ulong end, ulong freq)
 		{

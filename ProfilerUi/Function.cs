@@ -6,7 +6,7 @@ using System.Text.RegularExpressions;
 
 namespace ProfilerUi
 {
-	class Function
+	class Function : IActivatible
 	{
 		public Function(string name)
 		{
@@ -36,5 +36,11 @@ namespace ProfilerUi
 		{
 			return b.time.CompareTo(a.time);
 		};
+
+		public void Complete(double milliseconds)
+		{
+			time += milliseconds;
+			calls++;
+		}
 	}
 }

@@ -51,6 +51,8 @@
     <Compile Include="Function.cs" />
     <Compile Include="FunctionFilter.cs" />
     <Compile Include="FunctionNameProvider.cs" />
+    <Compile Include="IActivatible.cs" />
+    <Compile Include="ProfileEvent.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <EmbeddedResource Include="Form1.resx">
