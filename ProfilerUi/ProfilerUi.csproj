@@ -49,6 +49,7 @@
       <DependentUpon>Form1.cs</DependentUpon>
     </Compile>
     <Compile Include="Function.cs" />
+    <Compile Include="FunctionFilter.cs" />
     <Compile Include="FunctionNameProvider.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
