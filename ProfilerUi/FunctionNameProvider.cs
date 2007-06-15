@@ -14,17 +14,17 @@ namespace ProfilerUi
 
 		public FunctionNameProvider( string filename )
 		{
-			Regex r = new Regex( "^(.*)=(.*)$" );
+			Regex r = new Regex( "^0x([0-9a-fA-F]*)=(.*)$" );
 			foreach( string s in File.ReadAllLines(filename))
 			{
 				Match m = r.Match( s );
 				if (m == null || !m.Success)
 					continue;
 
-				uint functionId = uint.Parse(m.Groups[1].Value.Substring(2), NumberStyles.HexNumber);
-				string functionName = m.Groups[2].Value;
+				uint functionId = uint.Parse( m.Groups[ 1 ].Value, NumberStyles.HexNumber );
+				string functionName = m.Groups[ 2 ].Value;
 
-				names.Add(functionId, functionName);
+				names.Add( functionId, functionName );
 			}
 		}
 
