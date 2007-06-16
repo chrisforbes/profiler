@@ -28,6 +28,7 @@ namespace ProfilerUi
 		/// </summary>
 		private void InitializeComponent()
 		{
+			System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(Form1));
 			this.button1 = new System.Windows.Forms.Button();
 			this.button2 = new System.Windows.Forms.Button();
 			this.textBox1 = new System.Windows.Forms.TextBox();
@@ -98,6 +99,7 @@ namespace ProfilerUi
 			this.Controls.Add(this.button2);
 			this.Controls.Add(this.button1);
 			this.DoubleBuffered = true;
+			this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
 			this.Name = "Form1";
 			this.Text = "IJW Profiler 0.2";
 			this.ResumeLayout(false);
