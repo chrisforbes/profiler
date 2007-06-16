@@ -7,7 +7,6 @@
 #include <map>
 
 #include "classfactory.h"
-#include "thread_ptr.h"
 
 #pragma comment(lib, "corguids.lib")
 
@@ -25,8 +24,6 @@ void __funcTail( UINT functionId );
 class Profiler : public ProfilerBase
 {
 	std::map<UINT, bool> seen_function;
-	thread_ptr<UINT> thread;
-
 	ProfileWriter writer;
 
 public:
@@ -45,19 +42,8 @@ public:
 		return S_OK;
 	}
 
-	volatile UINT lastSeenThread;
-
-	void ReportThreadTransition()
-	{
-		UINT currentManagedThread = *thread.get();
-		if (currentManagedThread != InterlockedExchange( (LONG volatile *)&lastSeenThread, currentManagedThread ))
-			writer.WriteThreadTransition( currentManagedThread );
-	}
-
 	void OnFunctionEnter( UINT functionId )
 	{
-		ReportThreadTransition();
-
 		if (!seen_function[functionId])
 		{
 			char sz[1024];
@@ -65,35 +51,19 @@ public:
 			sprintf(sz, "0x%08x=%ws", functionId, ws.c_str());
 			Log(sz);
 
-			writer.WriteFunctionBinding( functionId, ws );
 			seen_function[functionId] = true;
 		}
-		writer.WriteEnterFunction( functionId );
+		writer.WriteEnterFunction( functionId, profiler );
 	}
 
 	void OnFunctionLeave( UINT functionId )
 	{
-		ReportThreadTransition();
-		writer.WriteLeaveFunction( functionId );
+		writer.WriteLeaveFunction( functionId, profiler );
 	}
 
 	void OnFunctionTail( UINT functionId )
 	{
-		ReportThreadTransition();
-		writer.WriteTailFunction( functionId );
-	}
-
-	STDMETHOD(ThreadAssignedToOSThread)(UINT managed, DWORD os)
-	{
-		if (NULL == thread.get())
-		{
-			UINT * threadinfo = new UINT;
-			thread.set( threadinfo );
-		}
-
-		*thread.get() = managed;
-
-		return S_OK;
+		writer.WriteTailFunction( functionId, profiler );
 	}
 
 	std::wstring GetFunctionName( UINT functionId )

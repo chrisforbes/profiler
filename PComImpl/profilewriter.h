@@ -17,6 +17,7 @@ class ProfileWriter
 
 public:
 	ProfileWriter( std::string const & filename )
+		: lastThreadId(0)
 	{
 		fh = CreateFileA( filename.c_str(), GENERIC_WRITE, 0, NULL, CREATE_ALWAYS, 0, 0 );
 		buffer = new unsigned char[ BUFFER_SIZE ];
@@ -29,36 +30,6 @@ public:
 		CloseHandle( fh );
 		delete[] buffer;
 		DeleteCriticalSection( &cs );
-	}
-
-	void WriteData( unsigned char * data, unsigned int length )
-	{
-		EnterCriticalSection( &cs );
-
-		DWORD b;
-		if (cur + length >= buffer + BUFFER_SIZE)
-		{
-			WriteFile( fh, buffer, cur - buffer, &b, NULL );
-			cur = buffer;
-		}
-
-		memcpy( cur, data, length );
-		cur += length;
-
-		LeaveCriticalSection( &cs );
-	}
-
-	void Flush()
-	{
-		EnterCriticalSection( &cs );
-
-		if (cur != buffer)
-		{
-			DWORD b;
-			WriteFile( fh, buffer, cur - buffer, &b, NULL );
-		}
-
-		LeaveCriticalSection( &cs );
 	}
 
 #pragma pack(push,1)
@@ -80,6 +51,8 @@ public:
 	};
 #pragma pack(pop)
 
+	UINT lastThreadId;
+
 	void WriteClockFrequency()
 	{
 		OpRec o( op_setfreq, 0 );
@@ -91,30 +64,85 @@ public:
 		WriteData( (unsigned char*) &o, sizeof(o) );
 	}
 
+	void WriteEnterFunction( UINT functionId, ICorProfilerInfo2 * prof ) 
+	{
+		EnterCriticalSection( &cs );
+
+		UINT threadId;
+		prof->GetCurrentThreadID( &threadId );
+
+		if (threadId != lastThreadId)
+			WriteThreadTransition( lastThreadId = threadId );
+
+		OpRec o( op_enter_func, functionId );
+		WriteData( (unsigned char*)&o, sizeof(o) );
+
+		LeaveCriticalSection( &cs );
+	}
+
+	void WriteLeaveFunction( UINT functionId, ICorProfilerInfo2 * prof )
+	{
+		EnterCriticalSection( &cs );
+
+		UINT threadId;
+		prof->GetCurrentThreadID( &threadId );
+
+		if (threadId != lastThreadId)
+			WriteThreadTransition( lastThreadId = threadId );
+
+		OpRec o( op_leave_func, functionId );
+		WriteData( (unsigned char*)&o, sizeof(o) );
+
+		LeaveCriticalSection( &cs );
+	}
+
+	void WriteTailFunction( UINT functionId, ICorProfilerInfo2 * prof )
+	{
+		EnterCriticalSection( &cs );
+
+		UINT threadId;
+		prof->GetCurrentThreadID( &threadId );
+
+		if (threadId != lastThreadId)
+			WriteThreadTransition( lastThreadId = threadId );
+
+		OpRec o( op_tail_func, functionId );
+		WriteData( (unsigned char*)&o, sizeof(o) );
+
+		LeaveCriticalSection( &cs );
+	}
+
+private:
 	void WriteThreadTransition( UINT managedThreadId )
 	{
 		OpRec o( op_thread_transition, managedThreadId );
 		WriteData( (unsigned char*)&o, sizeof(o) );
 	}
 
-	void WriteEnterFunction( UINT functionId ) 
+	void WriteData( unsigned char * data, unsigned int length )
 	{
-		OpRec o( op_enter_func, functionId );
-		WriteData( (unsigned char*)&o, sizeof(o) );
+		DWORD b;
+		if (cur + length >= buffer + BUFFER_SIZE)
+		{
+			WriteFile( fh, buffer, cur - buffer, &b, NULL );
+			cur = buffer;
+		}
+
+		memcpy( cur, data, length );
+		cur += length;
 	}
 
-	void WriteLeaveFunction( UINT functionId )
+	void Flush()
 	{
-		OpRec o( op_leave_func, functionId );
-		WriteData( (unsigned char*)&o, sizeof(o) );
-	}
+		EnterCriticalSection( &cs );
 
-	void WriteTailFunction( UINT functionId )
-	{
-		OpRec o( op_tail_func, functionId );
-		WriteData( (unsigned char*)&o, sizeof(o) );
-	}
+		if (cur != buffer)
+		{
+			DWORD b;
+			WriteFile( fh, buffer, cur - buffer, &b, NULL );
+		}
 
-	void WriteFunctionBinding( UINT functionId, std::wstring const & name ) {}
+		LeaveCriticalSection( &cs );
+	}
 };
 
