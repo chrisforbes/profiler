@@ -35,13 +35,8 @@ namespace ProfilerUi
 			}
 
 			foreach (Thread t in threads.Values)
-			{
 				while (t.activations.Count > 0)
-				{
-					Activation<Function> a = t.activations.Pop();
-					a.Complete(finalTime, frequency);
-				}
-			}
+					t.activations.Pop().Complete(finalTime, frequency);
 
 			currentThread.Complete(finalTime, frequency);
 		}
