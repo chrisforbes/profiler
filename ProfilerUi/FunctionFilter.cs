@@ -21,9 +21,6 @@ namespace ProfilerUi
 			regex = new Regex(p);
 		}
 
-		public bool IsFiltered(Function f)
-		{
-			return regex.IsMatch(f.name);
-		}
+		public bool Evaluate(Function f) { return regex.IsMatch(f.name); }
 	}
 }
