@@ -25,7 +25,7 @@ namespace ProfilerUi
 			n.Tag = this;
 
 			List<Function> fns = new List<Function>(roots.Values);
-			fns.Sort(delegate(Function a, Function b) { return b.time.CompareTo(a.time); });
+			fns.Sort(Function.ByTimeDecreasing);
 
 			foreach (Function f in fns)
 				n.Nodes.Add(f.CreateView());

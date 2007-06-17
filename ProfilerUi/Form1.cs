@@ -62,7 +62,7 @@ namespace ProfilerUi
 			FunctionFilter filter = new FunctionFilter(textBox1.Text.Replace("*", "").Split(new char[] { ' ', ',' },
 				StringSplitOptions.RemoveEmptyEntries));
 
-			callTreeView1.Filter = filter;
+			callTreeView1.Filter = filter.IsFiltered;
 		}
 	}
 }

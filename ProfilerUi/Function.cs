@@ -24,7 +24,7 @@ namespace ProfilerUi
 			n.Tag = this;
 
 			List<Function> fns = new List<Function>(children.Values);
-			fns.Sort(byTimeDecreasing);
+			fns.Sort(ByTimeDecreasing);
 
 			foreach (Function f in fns)
 				n.Nodes.Add(f.CreateView());
@@ -32,10 +32,7 @@ namespace ProfilerUi
 			return n;
 		}
 
-		static Comparison<Function> byTimeDecreasing = delegate(Function a, Function b)
-		{
-			return b.time.CompareTo(a.time);
-		};
+		public static Comparison<Function> ByTimeDecreasing = delegate(Function a, Function b) { return b.time.CompareTo(a.time); };
 
 		public void Complete(double milliseconds)
 		{

@@ -48,6 +48,18 @@ namespace ProfilerUi
 			return n.Text;
 		}
 
+		string GetImageKey(TreeNode n)
+		{
+			if (IsPropGetter(n))
+				return "prop_get";
+			if (IsPropSetter(n))
+				return "prop_set";
+			if (n.Tag is Thread)
+				return "thread";
+
+			return "method";
+		}
+
 		protected override void OnDrawNode(DrawTreeNodeEventArgs e)
 		{
 			e.DrawDefault = false;
@@ -60,19 +72,10 @@ namespace ProfilerUi
 			Brush textBrush = GetBrush(e.Node.Tag as Function);
 			Point p = e.Node.Bounds.Location;
 
-			if (e.Node.Tag is Thread)
-			{
-				e.Graphics.DrawImage(images.Images["thread"], e.Node.Bounds.Left, e.Node.Bounds.Top);
-				p.Offset(16, 0);
-			}
-			else
-			{
-				string img = IsPropGetter(e.Node) ? "prop_get" : IsPropSetter(e.Node) ? "prop_set" : "method";
-				e.Graphics.DrawImage(images.Images[img], e.Node.Bounds.Left, e.Node.Bounds.Top);
-				p.Offset(16, 0);
-			}
+			string imageKey = GetImageKey(e.Node);
+			e.Graphics.DrawImage(images.Images[imageKey], e.Node.Bounds.Location);
 
-			p.Offset(2, 1);
+			p.Offset(16+2, 1);
 			e.Graphics.DrawString(GetEffectiveName( e.Node ), Font, textBrush, p, StringFormat.GenericTypographic);
 
 			if (e.Node.Nodes.Count > 0)
@@ -90,13 +93,13 @@ namespace ProfilerUi
 			if (filter == null || function == null)
 				return Brushes.Black;
 
-			return filter.IsFiltered(function) ? Brushes.Gray : Brushes.Black;
+			return filter(function) ? Brushes.Gray : Brushes.Black;
 		}
 
-		FunctionFilter filter = null;
+		Predicate<Function> filter = null;
 
 		[DefaultValue(null)]
-		public FunctionFilter Filter
+		public Predicate<Function> Filter
 		{
 			get { return filter; }
 			set { filter = value; Invalidate(); }
