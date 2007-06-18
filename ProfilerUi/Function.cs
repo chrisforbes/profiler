@@ -32,17 +32,17 @@ namespace ProfilerUi
 		public double OwnTime { get { return time - TimeInChildren; } }
 		public double TotalTime { get { return time; } }
 
-		public TreeNode CreateView()
+		public TreeNode CreateView( double rootTime )
 		{
-			TreeNode n = new TreeNode(string.Format("{0} - {1} calls - {2:F1}ms - [{3:F1}ms]",
-				name, calls, time, OwnTime));
+			TreeNode n = new TreeNode(string.Format("{0} - {1} calls - {4:F1}% {2:F1}ms - [{3:F1}ms]",
+				name, calls, time, OwnTime, 100.0 * time / rootTime));
 			n.Tag = this;
 
 			List<Function> fns = new List<Function>(children.Values);
 			fns.Sort(ByTimeDecreasing);
 
 			foreach (Function f in fns)
-				n.Nodes.Add(f.CreateView());
+				n.Nodes.Add(f.CreateView(rootTime));
 
 			return n;
 		}

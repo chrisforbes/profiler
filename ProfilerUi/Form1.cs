@@ -120,7 +120,7 @@ namespace ProfilerUi
 			if (f != null)
 			{
 				CallTreeView v = CreateNewView(f.name.Substring(f.name.IndexOf("::") + 2));
-				TreeNode n2 = f.CreateView();
+				TreeNode n2 = f.CreateView(f.TotalTime);
 				v.Nodes.Add(n2);	//todo: offer to merge
 				v.Filter = GetFunctionFilter();
 				v.Focus();

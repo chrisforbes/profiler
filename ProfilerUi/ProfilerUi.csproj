@@ -38,7 +38,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Activation.cs" />
-    <Compile Include="CallTreeBuilder.cs" />
+    <Compile Include="CallTree.cs" />
     <Compile Include="CallTreeView.cs">
       <SubType>Component</SubType>
     </Compile>

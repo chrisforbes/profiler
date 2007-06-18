@@ -20,7 +20,6 @@ namespace ProfilerUi
 		{
 			double t = GetTime(start, end, freq);
 			target.Complete(t);
-
 		}
 
 		public T Target { get { return target; } }

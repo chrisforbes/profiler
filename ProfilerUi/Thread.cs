@@ -28,7 +28,7 @@ namespace ProfilerUi
 			fns.Sort(Function.ByTimeDecreasing);
 
 			foreach (Function f in fns)
-				n.Nodes.Add(f.CreateView());
+				n.Nodes.Add(f.CreateView(time));
 
 			return n;
 		}
