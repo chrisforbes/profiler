@@ -33,6 +33,7 @@ namespace ProfilerUi
 			TabPage page = new TabPage(name);
 			CallTreeView view = new CallTreeView();
 			page.Controls.Add(view);
+			page.Tag = view;
 			view.Dock = DockStyle.Fill;
 
 			tabControl1.Controls.Add(page);
@@ -65,16 +66,19 @@ namespace ProfilerUi
 			CallTreeView view = CreateNewView("Profile #" + ++runCount);
 
 			view.Nodes.Clear();
-			List<TreeNode> nodes = new List<TreeNode>();
 			foreach (Thread thread in tree.threads.Values)
-				nodes.Add(thread.CreateView());
-			view.Nodes.AddRange(nodes.ToArray());
+				view.Nodes.Add(thread.CreateView());
 
+			view.Filter = GetFunctionFilter();
+		}
+
+		Predicate<Function> GetFunctionFilter()
+		{
 			string filterText = "System.*, Microsoft.*";
 			FunctionFilter filter = new FunctionFilter(filterText.Replace("*", "").Split(new char[] { ' ', ',' },
 				StringSplitOptions.RemoveEmptyEntries));
 
-			view.Filter = filter.Evaluate;
+			return filter.Evaluate;
 		}
 
 		void OnCloseClicked(object sender, EventArgs e)
@@ -82,9 +86,44 @@ namespace ProfilerUi
 			Close();
 		}
 
+		TreeNode GetSelectedNode()
+		{
+			if (tabControl1.SelectedTab == null)
+				return null;
+
+			CallTreeView view = tabControl1.SelectedTab.Tag as CallTreeView;
+			if (view == null)
+				return null;
+
+			return view.SelectedNode;
+		}
+
 		void OnOpenInNewTab(object sender, EventArgs e)
 		{
-			MessageBox.Show("Wait for 0.3 please");
+			TreeNode n = GetSelectedNode();
+			if (n == null)
+				return;
+
+			Thread t = n.Tag as Thread;
+			if (t != null)
+			{
+				CallTreeView v = CreateNewView("Thread #" + t.Id);
+				v.Nodes.Add(t.CreateView());
+				v.Filter = GetFunctionFilter();
+				v.Focus();
+				return;
+			}
+
+			Function f = n.Tag as Function;
+			if (f != null)
+			{
+				CallTreeView v = CreateNewView(f.name.Substring(f.name.IndexOf("::") + 2));
+				v.Nodes.Add(f.CreateView());	//todo: offer to merge
+				v.Filter = GetFunctionFilter();
+				v.Focus();
+				return;
+			}
+
 		}
 	}
 }
