@@ -108,9 +108,11 @@ namespace ProfilerUi
 			if (t != null)
 			{
 				CallTreeView v = CreateNewView("Thread #" + t.Id);
-				v.Nodes.Add(t.CreateView());
+				TreeNode n2 = t.CreateView();
+				v.Nodes.Add(n2);
 				v.Filter = GetFunctionFilter();
 				v.Focus();
+				v.SelectedNode = n2;
 				return;
 			}
 
@@ -118,12 +120,13 @@ namespace ProfilerUi
 			if (f != null)
 			{
 				CallTreeView v = CreateNewView(f.name.Substring(f.name.IndexOf("::") + 2));
-				v.Nodes.Add(f.CreateView());	//todo: offer to merge
+				TreeNode n2 = f.CreateView();
+				v.Nodes.Add(n2);	//todo: offer to merge
 				v.Filter = GetFunctionFilter();
 				v.Focus();
+				v.SelectedNode = n2;
 				return;
 			}
-
 		}
 	}
 }

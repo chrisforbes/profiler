@@ -8,10 +8,11 @@ namespace ProfilerUi
 {
 	class Function : IActivatible
 	{
-		public Function(string name) { this.name = name; }
+		public Function(uint id, string name) { this.id = id; this.name = name; }
 
 		int calls;
 		double time;
+		uint id;
 
 		public Dictionary<uint, Function> children = new Dictionary<uint, Function>();
 		public string name;

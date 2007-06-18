@@ -63,7 +63,7 @@ namespace ProfilerUi
 			Function f;
 
 			if (!dict.TryGetValue(e.id, out f))
-				dict.Add(e.id, f = new Function(names.GetName(e.id)));
+				dict.Add(e.id, f = new Function(e.id, names.GetName(e.id)));
 
 			t.activations.Push(new Activation<Function>(f, e.timestamp));
 		}
