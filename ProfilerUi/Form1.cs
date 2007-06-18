@@ -28,6 +28,18 @@ namespace ProfilerUi
 			}
 		}
 
+		CallTreeView CreateNewView(string name)
+		{
+			TabPage page = new TabPage(name);
+			CallTreeView view = new CallTreeView();
+			page.Controls.Add(view);
+			view.Dock = DockStyle.Fill;
+
+			tabControl1.Controls.Add(page);
+			tabControl1.SelectedTab = page;
+			return view;
+		}
+
 		void NewRun(object sender, EventArgs e)
 		{
 			OpenFileDialog d = new OpenFileDialog();
@@ -42,27 +54,37 @@ namespace ProfilerUi
 			LoadLastRun(sender, e);
 		}
 
+		int runCount = 0;
+
 		void LoadLastRun(object sender, EventArgs e)
 		{
 			FunctionNameProvider names = new FunctionNameProvider("c:\\profile.txt");
 
 			CallTree tree = new CallTree("c:\\profile.bin", names);
 
-			callTreeView1.Nodes.Clear();
+			CallTreeView view = CreateNewView("Profile #" + ++runCount);
+
+			view.Nodes.Clear();
 			List<TreeNode> nodes = new List<TreeNode>();
 			foreach (Thread thread in tree.threads.Values)
 				nodes.Add(thread.CreateView());
-			callTreeView1.Nodes.AddRange(nodes.ToArray());
+			view.Nodes.AddRange(nodes.ToArray());
 
-			UpdateFilter(sender, e);
-		}
-
-		void UpdateFilter(object sender, EventArgs e)
-		{
-			FunctionFilter filter = new FunctionFilter(textBox1.Text.Replace("*", "").Split(new char[] { ' ', ',' },
+			string filterText = "System.*, Microsoft.*";
+			FunctionFilter filter = new FunctionFilter(filterText.Replace("*", "").Split(new char[] { ' ', ',' },
 				StringSplitOptions.RemoveEmptyEntries));
 
-			callTreeView1.Filter = filter.Evaluate;
+			view.Filter = filter.Evaluate;
+		}
+
+		void OnCloseClicked(object sender, EventArgs e)
+		{
+			Close();
+		}
+
+		void OnOpenInNewTab(object sender, EventArgs e)
+		{
+			MessageBox.Show("Wait for 0.3 please");
 		}
 	}
 }

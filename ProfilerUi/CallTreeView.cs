@@ -69,14 +69,10 @@ namespace ProfilerUi
 
 			e.Graphics.FillRectangle((e.Node == SelectedNode) ? selected : SystemBrushes.Window, e.Bounds);
 
-			Brush textBrush = GetBrush(e.Node.Tag as Function);
-			Point p = e.Node.Bounds.Location;
-
-			string imageKey = GetImageKey(e.Node);
-			e.Graphics.DrawImage(images.Images[imageKey], e.Node.Bounds.Location);
-
-			p.Offset(16+2, 1);
-			e.Graphics.DrawString(GetEffectiveName( e.Node ), Font, textBrush, p, StringFormat.GenericTypographic);
+			ItemPainter painter = new ItemPainter(e.Graphics, e.Node.Bounds.Location);
+			painter.DrawImage(images.Images[GetImageKey(e.Node)]);
+			painter.Pad(2);
+			painter.DrawText(GetEffectiveName(e.Node), Font, GetBrush(e.Node.Tag as Function), 1);
 
 			if (e.Node.Nodes.Count > 0)
 			{

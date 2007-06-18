@@ -29,91 +29,150 @@ namespace ProfilerUi
 		private void InitializeComponent()
 		{
 			System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(Form1));
-			this.button1 = new System.Windows.Forms.Button();
-			this.button2 = new System.Windows.Forms.Button();
-			this.textBox1 = new System.Windows.Forms.TextBox();
-			this.button3 = new System.Windows.Forms.Button();
-			this.callTreeView1 = new ProfilerUi.CallTreeView();
+			this.workspace = new System.Windows.Forms.ToolStripContainer();
+			this.tabControl1 = new System.Windows.Forms.TabControl();
+			this.menuStrip1 = new System.Windows.Forms.MenuStrip();
+			this.fileToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+			this.newSessionToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+			this.openToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+			this.toolStripMenuItem1 = new System.Windows.Forms.ToolStripSeparator();
+			this.exitToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+			this.viewToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+			this.openInNewTabToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+			this.workspace.ContentPanel.SuspendLayout();
+			this.workspace.TopToolStripPanel.SuspendLayout();
+			this.workspace.SuspendLayout();
+			this.menuStrip1.SuspendLayout();
 			this.SuspendLayout();
 			// 
-			// button1
+			// workspace
 			// 
-			this.button1.Location = new System.Drawing.Point(12, 12);
-			this.button1.Name = "button1";
-			this.button1.Size = new System.Drawing.Size(109, 23);
-			this.button1.TabIndex = 0;
-			this.button1.Text = "New profiling run";
-			this.button1.UseVisualStyleBackColor = true;
-			this.button1.Click += new System.EventHandler(this.NewRun);
 			// 
-			// button2
+			// workspace.ContentPanel
 			// 
-			this.button2.Location = new System.Drawing.Point(127, 12);
-			this.button2.Name = "button2";
-			this.button2.Size = new System.Drawing.Size(109, 23);
-			this.button2.TabIndex = 0;
-			this.button2.Text = "Load last run";
-			this.button2.UseVisualStyleBackColor = true;
-			this.button2.Click += new System.EventHandler(this.LoadLastRun);
+			this.workspace.ContentPanel.Controls.Add(this.tabControl1);
+			this.workspace.ContentPanel.Size = new System.Drawing.Size(647, 418);
+			this.workspace.Dock = System.Windows.Forms.DockStyle.Fill;
+			this.workspace.Location = new System.Drawing.Point(0, 0);
+			this.workspace.Name = "workspace";
+			this.workspace.Size = new System.Drawing.Size(647, 442);
+			this.workspace.TabIndex = 0;
+			this.workspace.Text = "toolStripContainer1";
 			// 
-			// textBox1
+			// workspace.TopToolStripPanel
 			// 
-			this.textBox1.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
-						| System.Windows.Forms.AnchorStyles.Right)));
-			this.textBox1.Location = new System.Drawing.Point(242, 14);
-			this.textBox1.Name = "textBox1";
-			this.textBox1.Size = new System.Drawing.Size(312, 20);
-			this.textBox1.TabIndex = 2;
-			this.textBox1.Text = "System.*, Microsoft.*";
+			this.workspace.TopToolStripPanel.Controls.Add(this.menuStrip1);
 			// 
-			// button3
+			// tabControl1
 			// 
-			this.button3.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-			this.button3.Location = new System.Drawing.Point(560, 12);
-			this.button3.Name = "button3";
-			this.button3.Size = new System.Drawing.Size(75, 23);
-			this.button3.TabIndex = 3;
-			this.button3.Text = "Refresh";
-			this.button3.UseVisualStyleBackColor = true;
-			this.button3.Click += new System.EventHandler(this.UpdateFilter);
+			this.tabControl1.Appearance = System.Windows.Forms.TabAppearance.FlatButtons;
+			this.tabControl1.Dock = System.Windows.Forms.DockStyle.Fill;
+			this.tabControl1.Location = new System.Drawing.Point(0, 0);
+			this.tabControl1.Name = "tabControl1";
+			this.tabControl1.SelectedIndex = 0;
+			this.tabControl1.Size = new System.Drawing.Size(647, 418);
+			this.tabControl1.TabIndex = 0;
 			// 
-			// callTreeView1
+			// menuStrip1
 			// 
-			this.callTreeView1.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom)
-						| System.Windows.Forms.AnchorStyles.Left)
-						| System.Windows.Forms.AnchorStyles.Right)));
-			this.callTreeView1.DrawMode = System.Windows.Forms.TreeViewDrawMode.OwnerDrawAll;
-			this.callTreeView1.Location = new System.Drawing.Point(12, 41);
-			this.callTreeView1.Name = "callTreeView1";
-			this.callTreeView1.Size = new System.Drawing.Size(623, 389);
-			this.callTreeView1.TabIndex = 1;
+			this.menuStrip1.Dock = System.Windows.Forms.DockStyle.None;
+			this.menuStrip1.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.fileToolStripMenuItem,
+            this.viewToolStripMenuItem});
+			this.menuStrip1.Location = new System.Drawing.Point(0, 0);
+			this.menuStrip1.Name = "menuStrip1";
+			this.menuStrip1.Size = new System.Drawing.Size(647, 24);
+			this.menuStrip1.TabIndex = 0;
+			this.menuStrip1.Text = "menuStrip1";
+			// 
+			// fileToolStripMenuItem
+			// 
+			this.fileToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.newSessionToolStripMenuItem,
+            this.openToolStripMenuItem,
+            this.toolStripMenuItem1,
+            this.exitToolStripMenuItem});
+			this.fileToolStripMenuItem.Name = "fileToolStripMenuItem";
+			this.fileToolStripMenuItem.Size = new System.Drawing.Size(35, 20);
+			this.fileToolStripMenuItem.Text = "&File";
+			// 
+			// newSessionToolStripMenuItem
+			// 
+			this.newSessionToolStripMenuItem.Name = "newSessionToolStripMenuItem";
+			this.newSessionToolStripMenuItem.Size = new System.Drawing.Size(157, 22);
+			this.newSessionToolStripMenuItem.Text = "&New Session...";
+			this.newSessionToolStripMenuItem.Click += new System.EventHandler(this.NewRun);
+			// 
+			// openToolStripMenuItem
+			// 
+			this.openToolStripMenuItem.Name = "openToolStripMenuItem";
+			this.openToolStripMenuItem.Size = new System.Drawing.Size(157, 22);
+			this.openToolStripMenuItem.Text = "&Open...";
+			this.openToolStripMenuItem.Click += new System.EventHandler(this.LoadLastRun);
+			// 
+			// toolStripMenuItem1
+			// 
+			this.toolStripMenuItem1.Name = "toolStripMenuItem1";
+			this.toolStripMenuItem1.Size = new System.Drawing.Size(154, 6);
+			// 
+			// exitToolStripMenuItem
+			// 
+			this.exitToolStripMenuItem.Name = "exitToolStripMenuItem";
+			this.exitToolStripMenuItem.Size = new System.Drawing.Size(157, 22);
+			this.exitToolStripMenuItem.Text = "E&xit";
+			this.exitToolStripMenuItem.Click += new System.EventHandler(this.OnCloseClicked);
+			// 
+			// viewToolStripMenuItem
+			// 
+			this.viewToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.openInNewTabToolStripMenuItem});
+			this.viewToolStripMenuItem.Name = "viewToolStripMenuItem";
+			this.viewToolStripMenuItem.Size = new System.Drawing.Size(41, 20);
+			this.viewToolStripMenuItem.Text = "&View";
+			// 
+			// openInNewTabToolStripMenuItem
+			// 
+			this.openInNewTabToolStripMenuItem.Name = "openInNewTabToolStripMenuItem";
+			this.openInNewTabToolStripMenuItem.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.T)));
+			this.openInNewTabToolStripMenuItem.Size = new System.Drawing.Size(202, 22);
+			this.openInNewTabToolStripMenuItem.Text = "&Open in new tab";
+			this.openInNewTabToolStripMenuItem.Click += new System.EventHandler(this.OnOpenInNewTab);
 			// 
 			// Form1
 			// 
 			this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
 			this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
 			this.ClientSize = new System.Drawing.Size(647, 442);
-			this.Controls.Add(this.button3);
-			this.Controls.Add(this.textBox1);
-			this.Controls.Add(this.callTreeView1);
-			this.Controls.Add(this.button2);
-			this.Controls.Add(this.button1);
+			this.Controls.Add(this.workspace);
 			this.DoubleBuffered = true;
 			this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
+			this.MainMenuStrip = this.menuStrip1;
 			this.Name = "Form1";
-			this.Text = "IJW Profiler 0.2";
+			this.Text = "IJW Profiler 0.2.2";
+			this.workspace.ContentPanel.ResumeLayout(false);
+			this.workspace.TopToolStripPanel.ResumeLayout(false);
+			this.workspace.TopToolStripPanel.PerformLayout();
+			this.workspace.ResumeLayout(false);
+			this.workspace.PerformLayout();
+			this.menuStrip1.ResumeLayout(false);
+			this.menuStrip1.PerformLayout();
 			this.ResumeLayout(false);
-			this.PerformLayout();
 
 		}
 
 		#endregion
 
-		private System.Windows.Forms.Button button1;
-		private CallTreeView callTreeView1;
-		private System.Windows.Forms.Button button2;
-		private System.Windows.Forms.TextBox textBox1;
-		private System.Windows.Forms.Button button3;
+		private System.Windows.Forms.ToolStripContainer workspace;
+		private System.Windows.Forms.MenuStrip menuStrip1;
+		private System.Windows.Forms.ToolStripMenuItem fileToolStripMenuItem;
+		private System.Windows.Forms.ToolStripMenuItem newSessionToolStripMenuItem;
+		private System.Windows.Forms.ToolStripMenuItem openToolStripMenuItem;
+		private System.Windows.Forms.ToolStripSeparator toolStripMenuItem1;
+		private System.Windows.Forms.ToolStripMenuItem exitToolStripMenuItem;
+		private System.Windows.Forms.ToolStripMenuItem viewToolStripMenuItem;
+		private System.Windows.Forms.ToolStripMenuItem openInNewTabToolStripMenuItem;
+		private System.Windows.Forms.TabControl tabControl1;
+
 	}
 }
 
