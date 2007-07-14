@@ -136,5 +136,11 @@ namespace ProfilerUi
 				return;
 			}
 		}
+
+		void OnClose(object sender, FormClosedEventArgs e)
+		{
+			File.Delete(profilerTextOutput);
+			File.Delete(profilerBinOutput);
+		}
 	}
 }
