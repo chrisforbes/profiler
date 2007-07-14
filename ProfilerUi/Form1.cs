@@ -32,9 +32,6 @@ namespace ProfilerUi
 				info.EnvironmentVariables["ijwprof_txt"] = profilerTextOutput;
 				info.EnvironmentVariables["ijwprof_bin"] = profilerBinOutput;
 
-				MessageBox.Show("txt: " + profilerTextOutput + "\n"
-					+ "bin: " + profilerBinOutput);
-
 				Process.Start(info).WaitForExit();
 			}
 		}

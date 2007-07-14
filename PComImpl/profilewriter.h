@@ -1,6 +1,7 @@
 #pragma once
 
-#define BUFFER_SIZE		512 * 1024
+// 2MB buffer!
+#define BUFFER_SIZE		2048 * 1024
 
 #define op_thread_transition	1
 #define op_enter_func			2
@@ -11,7 +12,7 @@
 class ProfileWriter
 {
 	HANDLE fh;
-	unsigned char * buffer;
+	unsigned char buffer[ BUFFER_SIZE ];
 	unsigned char * cur;
 	CRITICAL_SECTION cs;
 
@@ -20,7 +21,7 @@ public:
 		: lastThreadId(0)
 	{
 		fh = CreateFileA( filename.c_str(), GENERIC_WRITE, 0, NULL, CREATE_ALWAYS, 0, 0 );
-		buffer = new unsigned char[ BUFFER_SIZE ];
+		cur = buffer;
 		InitializeCriticalSection( &cs );
 	}
 

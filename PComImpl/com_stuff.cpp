@@ -43,7 +43,7 @@ class Profiler : public ProfilerBase
 
 public:
 	Profiler()
-		: ProfilerBase( COR_PRF_MONITOR_ENTERLEAVE | COR_PRF_MONITOR_THREADS ), 
+		: ProfilerBase( COR_PRF_MONITOR_ENTERLEAVE ), 
 		writer( GetEnv( binProfileEnv ) )
 	{
 		__inst = this;
@@ -59,8 +59,8 @@ public:
 	STDMETHOD(Initialize)( IUnknown * pCorProfilerInfoUnk )
 	{
 		ProfilerBase::Initialize( pCorProfilerInfoUnk );
-	//	profiler->SetEnterLeaveFunctionHooks( __funcEnter, __funcLeave, __funcTail );
-	//	writer.WriteClockFrequency();
+		profiler->SetEnterLeaveFunctionHooks( __funcEnter, __funcLeave, __funcTail );
+		writer.WriteClockFrequency();
 		return S_OK;
 	}
 

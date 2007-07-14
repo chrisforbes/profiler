@@ -24,11 +24,11 @@ public:
 
 	STDMETHOD(Initialize)( IUnknown * pCorProfilerInfoUnk ) 
 	{
-		//HRESULT hr = pCorProfilerInfoUnk->QueryInterface( IID_ICorProfilerInfo2, (void **)&profiler );
-		//if (FAILED(hr))
-		//	return E_INVALIDARG;
+		HRESULT hr = pCorProfilerInfoUnk->QueryInterface( IID_ICorProfilerInfo2, (void **)&profiler );
+		if (FAILED(hr))
+			return E_INVALIDARG;
 
-		//profiler->SetEventMask( eventMask );
+		profiler->SetEventMask( eventMask );
 		return S_OK;
 	}
 
