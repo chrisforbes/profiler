@@ -14,24 +14,28 @@ COM DLL
 	[x] Handle inner classes correctly
 	[ ] Distinguish overloads
 	[ ] Distinguish generic type instances
-[ ] Get target filename(s) from environment
+[x] Get target filename(s) from environment
 
 
 User Interface
 
-[ ] Fix Release-mode explosions!
+[ ] Handle tailcall records
+[ ] Option to fold filtered chains
+[ ] Option to fold recursion
+[ ] Option to merge multiple invocations (DAG)
+[ ] Backtraces
 
+[ ] Saving of profiler snapshots for later review!
+[ ] Deleting old temp traces!
+
+[x] Fix Release-mode explosions!
 [x] Auto-register profiler
 [x] Allow multiple profiler instances
 [x] Set target filename using environment vars
 [x] Load profile data
-[ ] Handle tailcall records
 [x] Build calltree
 [x] Filtering by classname 
-[ ] Option to fold filtered chains
-[ ] Option to fold recursion
-[ ] Multiple-view support (tabs)
-[ ] Rerooting of the tree into a new view
-	[ ] Option to merge multiple invocations
-[ ] Backtraces
-[ ] Show 'own time' as well as 'time including children'
+
+[x] Multiple-view support (tabs)
+[x] Rerooting of the tree into a new view
+[x] Show 'own time' as well as 'time including children'
