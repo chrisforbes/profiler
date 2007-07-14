@@ -5,20 +5,32 @@ class ProfilerBase : public ICorProfilerCallback2
 protected:
 	ICorProfilerInfo2 * profiler;
 	DWORD eventMask;
+	FILE * f;
 
 public:
-	ProfilerBase( DWORD eventMask ) : eventMask( eventMask ) { }
+	ProfilerBase( DWORD eventMask, std::string const& foo) : eventMask( eventMask ) 
+	{
+		f = fopen( foo.c_str(), "w" );
+	}
+
+	void Log( char const * s )
+	{
+		fprintf(f, "%s\n", s );
+		fflush(f);
+	}
 
 	STDMETHOD_(ULONG,AddRef)() { return S_OK; }
 	STDMETHOD_(ULONG,Release)() { return S_OK; }
 	STDMETHOD(QueryInterface)( IID const & riid, void ** ppInterface ) 
-	{ 
+	{
+		Log("Query Interface");
 		if (riid == IID_IUnknown || riid == IID_ICorProfilerCallback || riid == IID_ICorProfilerCallback2)
 		{
 			*ppInterface = (void*)this;
 			return S_OK;
 		}
 
+		Log("Asploded");
 		return E_NOINTERFACE;
 	}
 

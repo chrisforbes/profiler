@@ -39,26 +39,23 @@ class Profiler : public ProfilerBase
 {
 	std::map<UINT, bool> seen_function;
 	ProfileWriter writer;
-	FILE * f;
 
 public:
 	Profiler()
-		: ProfilerBase( COR_PRF_MONITOR_ENTERLEAVE ), 
+		: ProfilerBase( COR_PRF_MONITOR_ENTERLEAVE, GetEnv( txtProfileEnv ) ), 
 		writer( GetEnv( binProfileEnv ) )
 	{
 		__inst = this;
-		f = fopen( GetEnv( txtProfileEnv ).c_str(), "w" );
-	}
-
-	void Log( char const * s )
-	{
-		fprintf(f, "%s\n", s );
-		fflush(f);
 	}
 
 	STDMETHOD(Initialize)( IUnknown * pCorProfilerInfoUnk )
 	{
-		ProfilerBase::Initialize( pCorProfilerInfoUnk );
+		HRESULT hr;
+		if (FAILED(hr = ProfilerBase::Initialize( pCorProfilerInfoUnk )))
+		{
+			Log("Failed to initialize");
+			return hr;
+		}
 		profiler->SetEnterLeaveFunctionHooks( __funcEnter, __funcLeave, __funcTail );
 		writer.WriteClockFrequency();
 		return S_OK;
