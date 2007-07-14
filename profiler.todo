@@ -19,9 +19,11 @@ COM DLL
 
 User Interface
 
+[ ] Fix Release-mode explosions!
+
 [x] Auto-register profiler
-[ ] Allow multiple profiler instances
-[ ] Set target filename using environment vars
+[x] Allow multiple profiler instances
+[x] Set target filename using environment vars
 [x] Load profile data
 [ ] Handle tailcall records
 [x] Build calltree

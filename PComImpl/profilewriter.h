@@ -124,7 +124,7 @@ private:
 		DWORD b;
 		if (cur + length >= buffer + BUFFER_SIZE)
 		{
-			WriteFile( fh, buffer, cur - buffer, &b, NULL );
+			WriteFile( fh, buffer, (DWORD)(cur - buffer), &b, NULL );
 			cur = buffer;
 		}
 
@@ -139,7 +139,7 @@ private:
 		if (cur != buffer)
 		{
 			DWORD b;
-			WriteFile( fh, buffer, cur - buffer, &b, NULL );
+			WriteFile( fh, buffer, (DWORD)(cur - buffer), &b, NULL );
 		}
 
 		LeaveCriticalSection( &cs );

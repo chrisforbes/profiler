@@ -5,20 +5,9 @@ class ProfilerBase : public ICorProfilerCallback2
 protected:
 	ICorProfilerInfo2 * profiler;
 	DWORD eventMask;
-	FILE * f;
 
 public:
-	ProfilerBase( DWORD eventMask )
-		: eventMask( eventMask )
-	{
-		f = fopen( "c:\\profile.txt", "w" );
-	}
-
-	void Log( char const * s )
-	{
-		fprintf(f, "%s\n", s );
-		fflush(f);
-	}
+	ProfilerBase( DWORD eventMask ) : eventMask( eventMask ) { }
 
 	STDMETHOD_(ULONG,AddRef)() { return S_OK; }
 	STDMETHOD_(ULONG,Release)() { return S_OK; }
@@ -35,18 +24,15 @@ public:
 
 	STDMETHOD(Initialize)( IUnknown * pCorProfilerInfoUnk ) 
 	{
-		HRESULT hr = pCorProfilerInfoUnk->QueryInterface( IID_ICorProfilerInfo2, (void **)&profiler );
-		if (FAILED(hr))
-			return E_INVALIDARG;
+		//HRESULT hr = pCorProfilerInfoUnk->QueryInterface( IID_ICorProfilerInfo2, (void **)&profiler );
+		//if (FAILED(hr))
+		//	return E_INVALIDARG;
 
-		profiler->SetEventMask( eventMask );
+		//profiler->SetEventMask( eventMask );
 		return S_OK;
 	}
 
-	STDMETHOD(Shutdown)()
-	{
-		return S_OK;
-	}
+	STDMETHOD(Shutdown)() { return S_OK; }
 
 	STDMETHOD(AppDomainCreationStarted)(UINT appDomainId) { return E_NOTIMPL; }
 	STDMETHOD(AppDomainCreationFinished)(UINT appDomainId, HRESULT hrStatus ) { return E_NOTIMPL; }

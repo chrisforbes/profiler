@@ -10,7 +10,8 @@
 
 #pragma comment(lib, "corguids.lib")
 
-extern const GUID __declspec( selectany ) CLSID_PROFILER = { 0xc1e9fe1f, 0xf517, 0x45c0, { 0xbb, 0x0e, 0xef, 0xae, 0xcc, 0x94, 0x01, 0xfc }};
+extern const GUID __declspec( selectany ) CLSID_PROFILER = 
+	{ 0xc1e9fe1f, 0xf517, 0x45c0, { 0xbb, 0x0e, 0xef, 0xae, 0xcc, 0x94, 0x01, 0xfc }};
 
 #include "profiler_base.h"
 #include "profilewriter.h"
@@ -21,24 +22,45 @@ void __funcEnter( UINT functionId );
 void __funcLeave( UINT functionId );
 void __funcTail( UINT functionId );
 
+char const * txtProfileEnv = "ijwprof_txt";
+char const * binProfileEnv = "ijwprof_bin";
+
+namespace
+{
+	std::string GetEnv( std::string const & name )
+	{
+		static char buf[MAX_PATH];
+		GetEnvironmentVariableA( name.c_str(), buf, MAX_PATH );
+		return buf;
+	}
+}
+
 class Profiler : public ProfilerBase
 {
 	std::map<UINT, bool> seen_function;
 	ProfileWriter writer;
+	FILE * f;
 
 public:
 	Profiler()
 		: ProfilerBase( COR_PRF_MONITOR_ENTERLEAVE | COR_PRF_MONITOR_THREADS ), 
-		writer( "c:\\profile.bin" )
+		writer( GetEnv( binProfileEnv ) )
 	{
 		__inst = this;
+		f = fopen( GetEnv( txtProfileEnv ).c_str(), "w" );
+	}
+
+	void Log( char const * s )
+	{
+		fprintf(f, "%s\n", s );
+		fflush(f);
 	}
 
 	STDMETHOD(Initialize)( IUnknown * pCorProfilerInfoUnk )
 	{
 		ProfilerBase::Initialize( pCorProfilerInfoUnk );
-		profiler->SetEnterLeaveFunctionHooks( __funcEnter, __funcLeave, __funcTail );
-		writer.WriteClockFrequency();
+	//	profiler->SetEnterLeaveFunctionHooks( __funcEnter, __funcLeave, __funcTail );
+	//	writer.WriteClockFrequency();
 		return S_OK;
 	}
 

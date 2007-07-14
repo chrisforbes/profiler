@@ -14,6 +14,8 @@ namespace ProfilerUi
 	{
 		public Form1() { InitializeComponent(); }
 
+		string profilerTextOutput, profilerBinOutput;
+
 		void ProfileProcess(string processName)
 		{
 			using (new ComServerRegistration("pcomimpl.dll"))
@@ -23,6 +25,15 @@ namespace ProfilerUi
 				info.UseShellExecute = false;
 				info.EnvironmentVariables["Cor_Enable_Profiling"] = "1";
 				info.EnvironmentVariables["COR_PROFILER"] = "{C1E9FE1F-F517-45c0-BB0E-EFAECC9401FC}";
+
+				profilerTextOutput = Path.GetTempFileName();
+				profilerBinOutput = Path.GetTempFileName();
+
+				info.EnvironmentVariables["ijwprof_txt"] = profilerTextOutput;
+				info.EnvironmentVariables["ijwprof_bin"] = profilerBinOutput;
+
+				MessageBox.Show("txt: " + profilerTextOutput + "\n"
+					+ "bin: " + profilerBinOutput);
 
 				Process.Start(info).WaitForExit();
 			}
@@ -59,9 +70,9 @@ namespace ProfilerUi
 
 		void LoadLastRun(object sender, EventArgs e)
 		{
-			FunctionNameProvider names = new FunctionNameProvider("c:\\profile.txt");
+			FunctionNameProvider names = new FunctionNameProvider(profilerTextOutput);
 
-			CallTree tree = new CallTree("c:\\profile.bin", names);
+			CallTree tree = new CallTree(profilerBinOutput, names);
 
 			CallTreeView view = CreateNewView("Profile #" + ++runCount);
 

@@ -38,7 +38,8 @@ namespace ProfilerUi
 				while (t.activations.Count > 0)
 					t.activations.Pop().Complete(finalTime, frequency);
 
-			currentThread.Complete(finalTime, frequency);
+			if (currentThread != null)
+				currentThread.Complete(finalTime, frequency);
 		}
 
 		void OnThreadTransition(ProfileEvent e)
