@@ -1,3 +1,4 @@
+using System.IO;
 namespace ProfilerUi
 {
 	partial class Form1
@@ -17,6 +18,8 @@ namespace ProfilerUi
 			{
 				components.Dispose();
 			}
+			File.Delete(profilerBinOutput);
+			File.Delete(profilerTextOutput);
 			base.Dispose(disposing);
 		}
 

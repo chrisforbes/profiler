@@ -17,21 +17,22 @@ namespace ProfilerUi
 		{
 			this.names = names;
 			Stream s = new FileStream(filename, FileMode.Open, FileAccess.Read);
-			BinaryReader reader = new BinaryReader(s);
 
 			ulong finalTime = 0;
-
-			foreach (ProfileEvent e in ProfileEvent.GetEvents(reader))
+			using (BinaryReader reader = new BinaryReader(s))
 			{
-				switch (e.opcode)
+				foreach (ProfileEvent e in ProfileEvent.GetEvents(reader))
 				{
-					case Opcode.SetClockFrequency: frequency = e.timestamp; break;
-					case Opcode.ThreadTransition: OnThreadTransition(e); break;
-					case Opcode.EnterFunction: OnEnterFunction(e); break;
-					case Opcode.LeaveFunction: OnLeaveFunction(e); break;
-				}
+					switch (e.opcode)
+					{
+						case Opcode.SetClockFrequency: frequency = e.timestamp; break;
+						case Opcode.ThreadTransition: OnThreadTransition(e); break;
+						case Opcode.EnterFunction: OnEnterFunction(e); break;
+						case Opcode.LeaveFunction: OnLeaveFunction(e); break;
+					}
 
-				finalTime = e.timestamp;
+					finalTime = e.timestamp;
+				}
 			}
 
 			foreach (Thread t in threads.Values)

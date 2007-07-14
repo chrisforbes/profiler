@@ -26,7 +26,7 @@ User Interface
 [ ] Backtraces
 
 [ ] Saving of profiler snapshots for later review!
-[ ] Deleting old temp traces!
+[x] Deleting old temp traces! ~beedee
 
 [x] Fix Release-mode explosions!
 [x] Auto-register profiler
