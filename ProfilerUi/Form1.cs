@@ -13,18 +13,8 @@ namespace ProfilerUi
 	public partial class Form1 : Form
 	{
 		public Form1() 
-		{ 
-			InitializeComponent();
-			Text = "IJW Profiler 0.2.7";
-			ImageList images = new ImageList();
-			images.TransparentColor = Color.Fuchsia;
-			images.Images.Add("collapsed", Image.FromFile("res/collapsed.bmp"));
-			images.Images.Add("expanded", Image.FromFile("res/expanded.bmp"));
-			images.Images.Add("thread", Image.FromFile("res/thread.bmp"));
-			images.Images.Add("prop_set", Image.FromFile("res/prop_set.bmp"));
-			images.Images.Add("prop_get", Image.FromFile("res/prop_get.bmp"));
-			images.Images.Add("method", Image.FromFile("res/method.bmp"));
-			tabControl1.ImageList = images;
+		{
+			InitializeComponent(); Text = "IJW Profiler 0.2.7"; tabControl1.ImageList = Monkey.images;
 		}
 
 		Run ProfileProcess(string processName)
@@ -51,12 +41,6 @@ namespace ProfilerUi
 		CallTreeView CreateNewView(string name, Monkey node)
 		{
 			TabPage page = new TabPage(name);
-			if (node != null)
-			{
-				if (node.Tag is Function)
-					page.Text = node.TabName;
-				page.ImageKey = node.Key;
-			}
 			CallTreeView view = new CallTreeView( GetFunctionFilter() );
 			page.Controls.Add(view);
 			page.Tag = view;
@@ -64,6 +48,14 @@ namespace ProfilerUi
 
 			tabControl1.Controls.Add(page);
 			tabControl1.SelectedTab = page;
+
+			if (node != null)
+			{
+				if (node.Tag is Function)
+					page.Text = node.TabName;
+				page.ImageKey = node.Key;
+			}
+
 			return view;
 		}
 
@@ -114,7 +106,7 @@ namespace ProfilerUi
 
 		void OnCloseClicked(object sender, EventArgs e) { Close(); }
 
-		TreeNode GetSelectedNode()
+		Monkey GetSelectedNode()
 		{
 			if (tabControl1.SelectedTab == null)
 				return null;
@@ -123,18 +115,18 @@ namespace ProfilerUi
 			if (view == null)
 				return null;
 
-			return view.SelectedNode;
+			return view.SelectedNode as Monkey;
 		}
 
 		void OnOpenInNewTab(object sender, EventArgs e)
 		{
-			TreeNode n = GetSelectedNode();
+			Monkey n = GetSelectedNode();
 			if (n == null)
 				return;
 
-			IProfilerElement t = n.Tag as IProfilerElement;
+			IProfilerElement t = n.Element;
 
-			CallTreeView v = CreateNewView(t.TabTitle, n as Monkey);
+			CallTreeView v = CreateNewView(t.TabTitle, n);
 			TreeNode n2 = t.CreateView(t.TotalTime);
 			v.Nodes.Add(n2);
 			v.SelectedNode = n2;
