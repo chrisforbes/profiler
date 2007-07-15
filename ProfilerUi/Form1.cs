@@ -12,8 +12,33 @@ namespace ProfilerUi
 {
 	public partial class Form1 : Form
 	{
-		CallTreeTabStrip tabStrip = new CallTreeTabStrip();
-		public Form1() { InitializeComponent(); Text = "IJW Profiler 0.2.7"; }
+		CallTreeView currentView = null;
+
+		public Form1()
+		{
+			InitializeComponent(); 
+			Text = "IJW Profiler 0.3";
+			tabStrip.Height = 20;
+
+			workspace.ContentPanel.BackColor = SystemColors.AppWorkspace;
+
+			tabStrip.Changed += delegate
+			{
+				if (currentView != null)
+					workspace.ContentPanel.Controls.Remove(currentView);
+
+				currentView = tabStrip.CurrentCallTree;
+
+				if (currentView != null)
+				{
+					workspace.ContentPanel.Controls.Add(currentView);
+					currentView.BorderStyle = BorderStyle.None;
+					currentView.Anchor = AnchorStyles.Left | AnchorStyles.Right | AnchorStyles.Top | AnchorStyles.Bottom;
+					currentView.Bounds = new Rectangle(1, 20, workspace.ContentPanel.ClientSize.Width - 2, 
+						workspace.ContentPanel.ClientSize.Height - 21);
+				}
+			};
+		}
 
 		Run ProfileProcess(string processName)
 		{
@@ -39,10 +64,8 @@ namespace ProfilerUi
 		CallTreeView CreateNewView(string name, Node node)
 		{
 			CallTreeView view = new CallTreeView( GetFunctionFilter() );
-			Tab page = new Tab(view, tabStrip); 
-			view.Dock = DockStyle.Fill;
-
 			view.Text = name;
+			tabStrip.Add(view);
 
 			tabStrip.SelectCallTree(view);
 

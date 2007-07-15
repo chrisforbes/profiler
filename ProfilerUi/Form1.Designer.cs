@@ -30,7 +30,7 @@ namespace ProfilerUi
 		{
 			System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(Form1));
 			this.workspace = new System.Windows.Forms.ToolStripContainer();
-			this.tabControl1 = new System.Windows.Forms.TabControl();
+			this.tabStrip = new ProfilerUi.CallTreeTabStrip();
 			this.menuStrip1 = new System.Windows.Forms.MenuStrip();
 			this.fileToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
 			this.newSessionToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
@@ -49,7 +49,7 @@ namespace ProfilerUi
 			// 
 			// workspace.ContentPanel
 			// 
-			this.workspace.ContentPanel.Controls.Add(this.tabControl1);
+			this.workspace.ContentPanel.Controls.Add(this.tabStrip);
 			this.workspace.ContentPanel.Size = new System.Drawing.Size(647, 418);
 			this.workspace.Dock = System.Windows.Forms.DockStyle.Fill;
 			this.workspace.Location = new System.Drawing.Point(0, 0);
@@ -62,14 +62,16 @@ namespace ProfilerUi
 			// 
 			this.workspace.TopToolStripPanel.Controls.Add(this.menuStrip1);
 			// 
-			// tabControl1
+			// tabStrip
 			// 
-			this.tabControl1.Dock = System.Windows.Forms.DockStyle.Fill;
-			this.tabControl1.Location = new System.Drawing.Point(0, 0);
-			this.tabControl1.Name = "tabControl1";
-			this.tabControl1.SelectedIndex = 0;
-			this.tabControl1.Size = new System.Drawing.Size(647, 418);
-			this.tabControl1.TabIndex = 0;
+			this.tabStrip.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
+						| System.Windows.Forms.AnchorStyles.Right)));
+			this.tabStrip.BackColor = System.Drawing.SystemColors.ButtonFace;
+			this.tabStrip.Location = new System.Drawing.Point(0, 0);
+			this.tabStrip.Name = "tabStrip";
+			this.tabStrip.Size = new System.Drawing.Size(647, 23);
+			this.tabStrip.TabIndex = 0;
+			this.tabStrip.Text = "callTreeTabStrip1";
 			// 
 			// menuStrip1
 			// 
@@ -159,7 +161,7 @@ namespace ProfilerUi
 		private System.Windows.Forms.ToolStripMenuItem exitToolStripMenuItem;
 		private System.Windows.Forms.ToolStripMenuItem viewToolStripMenuItem;
 		private System.Windows.Forms.ToolStripMenuItem openInNewTabToolStripMenuItem;
-		private System.Windows.Forms.TabControl tabControl1;
+		private CallTreeTabStrip tabStrip;
 
 	}
 }
