@@ -36,9 +36,8 @@ namespace ProfilerUi
 
 		public TreeNode CreateView( double rootTime )
 		{
-			TreeNode n = new TreeNode(string.Format("{0} - {1} calls - {4:F1}% {2:F1}ms - [{3:F1}ms]",
+			TreeNode n = new Monkey( this, string.Format("{0} - {1} calls - {4:F1}% {2:F1}ms - [{3:F1}ms]",
 				name, calls, time, OwnTime, 100.0 * time / rootTime));
-			n.Tag = this;
 
 			List<Function> fns = new List<Function>(children.Values);
 			fns.Sort(ByTimeDecreasing);

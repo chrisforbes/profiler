@@ -38,7 +38,7 @@ namespace ProfilerUi
 		CallTreeView CreateNewView(string name)
 		{
 			TabPage page = new TabPage(name);
-			CallTreeView view = new CallTreeView();
+			CallTreeView view = new CallTreeView( GetFunctionFilter() );
 			page.Controls.Add(view);
 			page.Tag = view;
 			view.Dock = DockStyle.Fill;
@@ -84,8 +84,6 @@ namespace ProfilerUi
 				foreach (Thread thread in tree.threads.Values)
 					view.Nodes.Add(thread.CreateView(thread.TotalTime));
 
-				view.Filter = GetFunctionFilter();
-
 				Text = baseText;
 			}
 		}
@@ -120,9 +118,8 @@ namespace ProfilerUi
 			CallTreeView v = CreateNewView(t.TabTitle);
 			TreeNode n2 = t.CreateView(t.TotalTime);
 			v.Nodes.Add(n2);
-			v.Filter = GetFunctionFilter();
-			v.Focus();
 			v.SelectedNode = n2;
+			v.Focus();
 		}
 	}
 }

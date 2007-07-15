@@ -11,13 +11,16 @@ namespace ProfilerUi
 	class CallTreeView : TreeView
 	{
 		ImageList images = new ImageList();
+		Predicate<Function> filter;
 
-		public CallTreeView()
+		public CallTreeView( Predicate<Function> filter )
 			: base()
 		{
 			DrawMode = TreeViewDrawMode.OwnerDrawAll;
 			SetStyle(ControlStyles.OptimizedDoubleBuffer, true);
 			UpdateStyles();
+
+			this.filter = filter;
 
 			try
 			{
@@ -34,10 +37,10 @@ namespace ProfilerUi
 
 		Brush selected = new SolidBrush(Color.FromArgb(0xee, 0xee, 0xff));
 
-		bool IsPropGetter(TreeNode n) { return n.Text.Contains("get_"); }
-		bool IsPropSetter(TreeNode n) { return n.Text.Contains("set_"); }
+		bool IsPropGetter(Monkey n) { return n.Text.Contains("get_"); }
+		bool IsPropSetter(Monkey n) { return n.Text.Contains("set_"); }
 
-		string GetEffectiveName(TreeNode n)
+		string GetEffectiveName(Monkey n)
 		{
 			if (IsPropGetter(n))
 				return n.Text.Replace("get_", "");
@@ -48,7 +51,7 @@ namespace ProfilerUi
 			return n.Text;
 		}
 
-		string GetImageKey(TreeNode n)
+		string GetImageKey(Monkey n)
 		{
 			if (IsPropGetter(n))
 				return "prop_get";
@@ -60,45 +63,36 @@ namespace ProfilerUi
 			return "method";
 		}
 
+		void Draw(Graphics g, Monkey monkey, Rectangle bounds)
+		{
+			g.Clip = new Region(new Rectangle(new Point(0, monkey.Bounds.Top), new Size(Width, monkey.Bounds.Height)));
+			g.FillRectangle((monkey == SelectedNode) ? selected : SystemBrushes.Window, bounds);
+
+			ItemPainter painter = new ItemPainter(g, monkey.Bounds.Location);
+			painter.DrawImage(images.Images[GetImageKey(monkey)]);
+			painter.Pad(2);
+			painter.DrawText(GetEffectiveName(monkey), Font, GetBrush(monkey.Element as Function), 1);
+
+			if (monkey.Nodes.Count > 0)
+			{
+				Image i = images.Images[monkey.IsExpanded ? "expanded" : "collapsed"];
+				g.DrawImage(i, monkey.Bounds.Left - 16, monkey.Bounds.Top);
+			}
+		}
+
 		protected override void OnDrawNode(DrawTreeNodeEventArgs e)
 		{
 			e.DrawDefault = false;
-
 			GraphicsState gs = e.Graphics.Save();
-			e.Graphics.Clip = new Region(new Rectangle(new Point(0, e.Node.Bounds.Top), new Size(Width, e.Node.Bounds.Height)));
-
-			e.Graphics.FillRectangle((e.Node == SelectedNode) ? selected : SystemBrushes.Window, e.Bounds);
-
-			ItemPainter painter = new ItemPainter(e.Graphics, e.Node.Bounds.Location);
-			painter.DrawImage(images.Images[GetImageKey(e.Node)]);
-			painter.Pad(2);
-			painter.DrawText(GetEffectiveName(e.Node), Font, GetBrush(e.Node.Tag as Function), 1);
-
-			if (e.Node.Nodes.Count > 0)
-			{
-				Image i = images.Images[e.Node.IsExpanded ? "expanded" : "collapsed"];
-				e.Graphics.DrawImage(i, e.Node.Bounds.Left - 16, e.Node.Bounds.Top);
-			}
-
+			Draw(e.Graphics, e.Node as Monkey, e.Bounds);
 			e.Graphics.Restore(gs);
 			base.OnDrawNode(e);
 		}
 
 		Brush GetBrush(Function function)
 		{
-			if (filter == null || function == null)
-				return Brushes.Black;
-
-			return filter(function) ? Brushes.Gray : Brushes.Black;
-		}
-
-		Predicate<Function> filter = null;
-
-		[DefaultValue(null)]
-		public Predicate<Function> Filter
-		{
-			get { return filter; }
-			set { filter = value; Invalidate(); }
+			return (filter == null || function == null || !filter(function)) ?
+				Brushes.Black : Brushes.Gray;
 		}
 	}
 }

@@ -54,6 +54,7 @@
     <Compile Include="FunctionNameProvider.cs" />
     <Compile Include="IActivatible.cs" />
     <Compile Include="ItemPainter.cs" />
+    <Compile Include="Monkey.cs" />
     <Compile Include="ProfileEvent.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
