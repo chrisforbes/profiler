@@ -12,10 +12,8 @@ namespace ProfilerUi
 {
 	public partial class Form1 : Form
 	{
-		public Form1() 
-		{
-			InitializeComponent(); Text = "IJW Profiler 0.2.7"; tabControl1.ImageList = Node.images;
-		}
+		CallTreeTabStrip tabStrip = new CallTreeTabStrip();
+		public Form1() { InitializeComponent(); Text = "IJW Profiler 0.2.7"; }
 
 		Run ProfileProcess(string processName)
 		{
@@ -40,24 +38,20 @@ namespace ProfilerUi
 
 		CallTreeView CreateNewView(string name, Node node)
 		{
-			TabPage page = new TabPage(name);
 			CallTreeView view = new CallTreeView( GetFunctionFilter() );
-			page.Controls.Add(view);
-			page.Tag = view;
+			Tab page = new Tab(view, tabStrip); 
 			view.Dock = DockStyle.Fill;
 
-			tabControl1.Controls.Add(page);
-			tabControl1.SelectedTab = page;
+			view.Text = name;
+
+			tabStrip.SelectCallTree(view);
 
 			if (node != null)
 			{
 				if (node.Tag is Function)
-					page.Text = node.TabName;
-				page.ImageKey = node.Key;
+					view.Text = node.TabName;
+				//page.ImageKey = node.Key;
 			}
-			else
-				page.ImageKey = "app";
-
 			return view;
 		}
 
@@ -110,14 +104,10 @@ namespace ProfilerUi
 
 		Node GetSelectedNode()
 		{
-			if (tabControl1.SelectedTab == null)
+			if (tabStrip.CurrentCallTree == null)
 				return null;
 
-			CallTreeView view = tabControl1.SelectedTab.Tag as CallTreeView;
-			if (view == null)
-				return null;
-
-			return view.SelectedNode as Node;
+			return tabStrip.CurrentCallTree.SelectedNode as Node;
 		}
 
 		void OnOpenInNewTab(object sender, EventArgs e)

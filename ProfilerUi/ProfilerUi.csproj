@@ -42,7 +42,11 @@
     <Compile Include="CallTreeView.cs">
       <SubType>Component</SubType>
     </Compile>
+    <Compile Include="CloseBox.cs" />
     <Compile Include="ComServerRegistration.cs" />
+    <Compile Include="CallTreeTabStrip.cs">
+      <SubType>Component</SubType>
+    </Compile>
     <Compile Include="Form1.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -81,6 +85,8 @@
       <DesignTimeSharedInput>True</DesignTimeSharedInput>
     </Compile>
     <Compile Include="Run.cs" />
+    <Compile Include="Tab.cs" />
+    <Compile Include="TabIterator.cs" />
     <Compile Include="Thread.cs" />
   </ItemGroup>
   <ItemGroup>

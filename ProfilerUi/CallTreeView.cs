@@ -12,6 +12,14 @@ namespace ProfilerUi
 	{
 		Predicate<Function> filter;
 
+		string text;
+
+		public override string Text
+		{
+			get { return text; }
+			set { text = value; }
+		}
+
 		public CallTreeView( Predicate<Function> filter )
 			: base()
 		{
