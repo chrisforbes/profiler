@@ -6,6 +6,7 @@ COM DLL
 [ ] Use .NET 2.0 Hi-perf function hooks
 [ ] Distinguish function overloads
 [ ] Distinguish generic type instances
+[ ] Do tree-building in COM! (make MUCH smaller tracefile)
 
 User Interface
 
@@ -15,3 +16,4 @@ User Interface
 [ ] Option to merge multiple invocations (DAG)
 [ ] Backtraces
 [ ] Saving of profiler snapshots for later review!
+[ ] Loader for small (preprocessed) tracefile

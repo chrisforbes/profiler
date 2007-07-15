@@ -3,15 +3,17 @@ using System.Collections.Generic;
 using System.Text;
 using System.Windows.Forms;
 using System.Drawing;
+using System.Text.RegularExpressions;
 
 namespace ProfilerUi
 {
 	class Monkey : TreeNode
 	{
 		public IProfilerElement Element { get { return Tag as IProfilerElement; } }
+		static Regex r = new Regex(@"`\d+");
 
 		public Monkey(IProfilerElement e, string text)
-			: base(text)
+			: base(r.Replace( text, "<>"))
 		{
 			Tag = e;
 		}
