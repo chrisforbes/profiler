@@ -22,10 +22,13 @@ namespace ProfilerUi
 					continue;
 
 				uint functionId = uint.Parse( m.Groups[ 1 ].Value, NumberStyles.HexNumber );
-				string functionName = m.Groups[ 2 ].Value;
-
-				names.Add( functionId, functionName );
+				names.Add(functionId, HackName(m.Groups[2].Value));
 			}
+		}
+
+		static string HackName(string s)
+		{
+			return (s.Contains("get_") || s.Contains("set_")) ? s : s + "()";
 		}
 
 		public string GetName(uint functionId)
