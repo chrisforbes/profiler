@@ -10,7 +10,6 @@ namespace ProfilerUi
 {
 	class CallTreeView : TreeView
 	{
-		ImageList images = new ImageList();
 		Predicate<Function> filter;
 
 		public CallTreeView( Predicate<Function> filter )
@@ -21,47 +20,9 @@ namespace ProfilerUi
 			UpdateStyles();
 
 			this.filter = filter;
-
-			try
-			{
-				images.TransparentColor = Color.Fuchsia;
-				images.Images.Add("collapsed", Image.FromFile("res/collapsed.bmp"));
-				images.Images.Add("expanded", Image.FromFile("res/expanded.bmp"));
-				images.Images.Add("thread", Image.FromFile("res/thread.bmp"));
-				images.Images.Add("prop_set", Image.FromFile("res/prop_set.bmp"));
-				images.Images.Add("prop_get", Image.FromFile("res/prop_get.bmp"));
-				images.Images.Add("method", Image.FromFile("res/method.bmp"));
-			}
-			catch { }
 		}
 
 		Brush selected = new SolidBrush(Color.FromArgb(0xee, 0xee, 0xff));
-
-		bool IsPropGetter(Monkey n) { return n.Text.Contains("get_"); }
-		bool IsPropSetter(Monkey n) { return n.Text.Contains("set_"); }
-
-		string GetEffectiveName(Monkey n)
-		{
-			if (IsPropGetter(n))
-				return n.Text.Replace("get_", "");
-
-			if (IsPropSetter(n))
-				return n.Text.Replace("set_", "");
-
-			return n.Text;
-		}
-
-		string GetImageKey(Monkey n)
-		{
-			if (IsPropGetter(n))
-				return "prop_get";
-			if (IsPropSetter(n))
-				return "prop_set";
-			if (n.Tag is Thread)
-				return "thread";
-
-			return "method";
-		}
 
 		void Draw(Graphics g, Monkey monkey, Rectangle bounds)
 		{
@@ -69,13 +30,13 @@ namespace ProfilerUi
 			g.FillRectangle((monkey == SelectedNode) ? selected : SystemBrushes.Window, bounds);
 
 			ItemPainter painter = new ItemPainter(g, monkey.Bounds.Location);
-			painter.DrawImage(images.Images[GetImageKey(monkey)]);
+			painter.DrawImage(Monkey.images.Images[monkey.Key]);
 			painter.Pad(2);
-			painter.DrawText(GetEffectiveName(monkey), Font, GetBrush(monkey.Element as Function), 1);
+			painter.DrawText(monkey.EffectiveName, Font, GetBrush(monkey.Element as Function), 1);
 
 			if (monkey.Nodes.Count > 0)
 			{
-				Image i = images.Images[monkey.IsExpanded ? "expanded" : "collapsed"];
+				Image i = Monkey.images.Images[monkey.IsExpanded ? "expanded" : "collapsed"];
 				g.DrawImage(i, monkey.Bounds.Left - 16, monkey.Bounds.Top);
 			}
 		}
