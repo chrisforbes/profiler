@@ -25,13 +25,9 @@ namespace ProfilerUi
 		{
 			get
 			{
-				if (IsPropGetter)
-					return "prop_get";
-				if (IsPropSetter)
-					return "prop_set";
-				if (Tag is Thread)
-					return "thread";
-
+				if (IsPropGetter) return "prop_get";
+				if (IsPropSetter) return "prop_set";
+				if (Tag is Thread) return "thread";
 				return "method";
 			}
 		}
@@ -40,12 +36,8 @@ namespace ProfilerUi
 		{
 			get
 			{
-				if (IsPropGetter)
-					return Text.Replace("get_", "");
-
-				if (IsPropSetter)
-					return Text.Replace("set_", "");
-
+				if (IsPropGetter) return Text.Replace("get_", "");
+				if (IsPropSetter) return Text.Replace("set_", "");
 				return Text;
 			}
 		}
@@ -55,7 +47,6 @@ namespace ProfilerUi
 			get
 			{
 				int start = EffectiveName.IndexOf("::") + 2;
-
 				return EffectiveName.Substring(start, EffectiveName.IndexOf(' ') - start); 
 			}
 		}
@@ -73,6 +64,7 @@ namespace ProfilerUi
 				images.Images.Add("prop_set", Image.FromFile("res/prop_set.bmp"));
 				images.Images.Add("prop_get", Image.FromFile("res/prop_get.bmp"));
 				images.Images.Add("method", Image.FromFile("res/method.bmp"));
+				images.Images.Add("app", Image.FromFile("res/app.bmp"));
 			}
 			catch { }
 		}

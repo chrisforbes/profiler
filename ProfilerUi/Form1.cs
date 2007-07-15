@@ -55,6 +55,8 @@ namespace ProfilerUi
 					page.Text = node.TabName;
 				page.ImageKey = node.Key;
 			}
+			else
+				page.ImageKey = "app";
 
 			return view;
 		}
