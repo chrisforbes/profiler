@@ -22,7 +22,7 @@ namespace ProfilerUi
 
 			workspace.ContentPanel.BackColor = SystemColors.AppWorkspace;
 
-			tabStrip.Changed += delegate
+			EventHandler e = delegate
 			{
 				if (currentView != null)
 					workspace.ContentPanel.Controls.Remove(currentView);
@@ -38,6 +38,9 @@ namespace ProfilerUi
 						workspace.ContentPanel.ClientSize.Height - 21);
 				}
 			};
+
+			tabStrip.Iterator.Changed += e;
+			tabStrip.Changed += e;
 		}
 
 		Run ProfileProcess(string processName)
@@ -145,7 +148,6 @@ namespace ProfilerUi
 			TreeNode n2 = t.CreateView(t.TotalTime);
 			v.Nodes.Add(n2);
 			v.SelectedNode = n2;
-			v.Focus();
 		}
 	}
 }
