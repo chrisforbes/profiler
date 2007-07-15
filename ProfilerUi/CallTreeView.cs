@@ -24,19 +24,19 @@ namespace ProfilerUi
 
 		Brush selected = new SolidBrush(Color.FromArgb(0xee, 0xee, 0xff));
 
-		void Draw(Graphics g, Monkey monkey, Rectangle bounds)
+		void Draw(Graphics g, Node monkey, Rectangle bounds)
 		{
 			g.Clip = new Region(new Rectangle(new Point(0, monkey.Bounds.Top), new Size(Width, monkey.Bounds.Height)));
 			g.FillRectangle((monkey == SelectedNode) ? selected : SystemBrushes.Window, bounds);
 
 			ItemPainter painter = new ItemPainter(g, monkey.Bounds.Location);
-			painter.DrawImage(Monkey.images.Images[monkey.Key]);
+			painter.DrawImage(Node.images.Images[monkey.Key]);
 			painter.Pad(2);
 			painter.DrawText(monkey.EffectiveName, Font, GetBrush(monkey.Element as Function), 1);
 
 			if (monkey.Nodes.Count > 0)
 			{
-				Image i = Monkey.images.Images[monkey.IsExpanded ? "expanded" : "collapsed"];
+				Image i = Node.images.Images[monkey.IsExpanded ? "expanded" : "collapsed"];
 				g.DrawImage(i, monkey.Bounds.Left - 16, monkey.Bounds.Top);
 			}
 		}
@@ -45,7 +45,7 @@ namespace ProfilerUi
 		{
 			e.DrawDefault = false;
 			GraphicsState gs = e.Graphics.Save();
-			Draw(e.Graphics, e.Node as Monkey, e.Bounds);
+			Draw(e.Graphics, e.Node as Node, e.Bounds);
 			e.Graphics.Restore(gs);
 			base.OnDrawNode(e);
 		}

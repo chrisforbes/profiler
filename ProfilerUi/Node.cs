@@ -7,12 +7,12 @@ using System.Text.RegularExpressions;
 
 namespace ProfilerUi
 {
-	class Monkey : TreeNode
+	class Node : TreeNode
 	{
 		public IProfilerElement Element { get { return Tag as IProfilerElement; } }
 		static Regex r = new Regex(@"`\d+");
 
-		public Monkey(IProfilerElement e, string text)
+		public Node(IProfilerElement e, string text)
 			: base(r.Replace( text, "<>"))
 		{
 			Tag = e;
@@ -62,7 +62,7 @@ namespace ProfilerUi
 
 		internal static ImageList images = new ImageList();
 		
-		static Monkey()
+		static Node()
 		{
 			try
 			{

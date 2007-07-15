@@ -14,7 +14,7 @@ namespace ProfilerUi
 	{
 		public Form1() 
 		{
-			InitializeComponent(); Text = "IJW Profiler 0.2.7"; tabControl1.ImageList = Monkey.images;
+			InitializeComponent(); Text = "IJW Profiler 0.2.7"; tabControl1.ImageList = Node.images;
 		}
 
 		Run ProfileProcess(string processName)
@@ -38,7 +38,7 @@ namespace ProfilerUi
 			}
 		}
 
-		CallTreeView CreateNewView(string name, Monkey node)
+		CallTreeView CreateNewView(string name, Node node)
 		{
 			TabPage page = new TabPage(name);
 			CallTreeView view = new CallTreeView( GetFunctionFilter() );
@@ -106,7 +106,7 @@ namespace ProfilerUi
 
 		void OnCloseClicked(object sender, EventArgs e) { Close(); }
 
-		Monkey GetSelectedNode()
+		Node GetSelectedNode()
 		{
 			if (tabControl1.SelectedTab == null)
 				return null;
@@ -115,12 +115,12 @@ namespace ProfilerUi
 			if (view == null)
 				return null;
 
-			return view.SelectedNode as Monkey;
+			return view.SelectedNode as Node;
 		}
 
 		void OnOpenInNewTab(object sender, EventArgs e)
 		{
-			Monkey n = GetSelectedNode();
+			Node n = GetSelectedNode();
 			if (n == null)
 				return;
 

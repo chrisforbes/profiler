@@ -32,7 +32,7 @@ namespace ProfilerUi
 
 		public TreeNode CreateView( double totalTime )
 		{
-			TreeNode n = new Monkey(this, "Thread #" + id.ToString() + " - " + time.ToString("F1") + "ms");
+			TreeNode n = new Node(this, "Thread #" + id.ToString() + " - " + time.ToString("F1") + "ms");
 
 			List<Function> fns = new List<Function>(roots.Values);
 			fns.Sort(Function.ByTimeDecreasing);
