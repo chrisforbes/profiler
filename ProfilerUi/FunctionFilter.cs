@@ -22,5 +22,6 @@ namespace ProfilerUi
 		}
 
 		public bool Evaluate(Function f) { return regex.IsMatch(f.name); }
+		public bool EvalString(string f) { return regex.IsMatch(f); }
 	}
 }

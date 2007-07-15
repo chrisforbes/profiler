@@ -109,7 +109,10 @@ namespace ProfilerUi
 					Text = baseText + " - Slurping " + frac.ToString("P0");
 				};
 
-				CallTree tree = new CallTree(run.binFile, names, progressCallback);
+				Predicate<string> shouldHideFunction = delegate { return false; };
+				//	= GetFunctionFilterS();
+
+				CallTree tree = new CallTree(run.binFile, names, shouldHideFunction, progressCallback);
 				CallTreeView view = CreateNewView(run.name, null);
 
 				Text = baseText + " - Preparing view...";
@@ -125,6 +128,11 @@ namespace ProfilerUi
 		Predicate<Function> GetFunctionFilter()
 		{
 			return new FunctionFilter("System.", "Microsoft.").Evaluate;
+		}
+
+		Predicate<string> GetFunctionFilterS()
+		{
+			return new FunctionFilter("System.", "Microsoft.").EvalString;
 		}
 
 		void OnCloseClicked(object sender, EventArgs e) { Close(); }

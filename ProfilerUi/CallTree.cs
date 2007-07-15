@@ -12,34 +12,34 @@ namespace ProfilerUi
 		Activation<Thread> currentThread = null;
 		ulong frequency;
 
-		public CallTree(string filename, FunctionNameProvider names, Action<float> progressCallback)
+		public CallTree(string filename, FunctionNameProvider names, Predicate<string> filter, Action<float> progressCallback)
 		{
 			ulong finalTime = 0;
 			float lastFrac = -1;
 
 			using (Stream s = File.OpenRead(filename))
-				using (BinaryReader reader = new BinaryReader(s))
+			using (BinaryReader reader = new BinaryReader(s))
+			{
+				foreach (ProfileEvent e in ProfileEvent.GetEvents(reader))
 				{
-					foreach (ProfileEvent e in ProfileEvent.GetEvents(reader))
+					switch (e.opcode)
 					{
-						switch (e.opcode)
-						{
-							case Opcode.SetClockFrequency: frequency = e.timestamp; break;
-							case Opcode.ThreadTransition: OnThreadTransition(e); break;
-							case Opcode.EnterFunction: OnEnterFunction(e, names); break;
-							case Opcode.LeaveFunction: OnLeaveFunction(e); break;
-						}
+						case Opcode.SetClockFrequency: frequency = e.timestamp; break;
+						case Opcode.ThreadTransition: OnThreadTransition(e); break;
+						case Opcode.EnterFunction: OnEnterFunction(e, names, filter); break;
+						case Opcode.LeaveFunction: OnLeaveFunction(e, names, filter); break;
+					}
 
-						finalTime = e.timestamp;
+					finalTime = e.timestamp;
 
-						float frac = (float)s.Position / (float)s.Length;
-						if (frac >= lastFrac + 1e-2f)
-						{
-							progressCallback(frac);
-							lastFrac = frac;
-						}
+					float frac = (float)s.Position / (float)s.Length;
+					if (frac >= lastFrac + 1e-2f)
+					{
+						progressCallback(frac);
+						lastFrac = frac;
 					}
 				}
+			}
 
 			foreach (Thread t in threads.Values)
 				while (t.activations.Count > 0)
@@ -62,7 +62,7 @@ namespace ProfilerUi
 			currentThread = new Activation<Thread>(t, e.timestamp);
 		}
 
-		void OnEnterFunction(ProfileEvent e, FunctionNameProvider nameProvider)
+		void OnEnterFunction(ProfileEvent e, FunctionNameProvider nameProvider, Predicate<string> filter)
 		{
 			Thread t = currentThread.Target;
 			Dictionary<uint, Function> dict = (t.activations.Count == 0)
@@ -70,15 +70,23 @@ namespace ProfilerUi
 
 			Function f;
 
-			if (!dict.TryGetValue(e.id, out f))
-				dict.Add(e.id, f = new Function(e.id, nameProvider.GetName(e.id)));
+			string name = nameProvider.GetName(e.id);
+			if (!filter(name))
+			{
 
-			t.activations.Push(new Activation<Function>(f, e.timestamp));
+				if (!dict.TryGetValue(e.id, out f))
+					dict.Add(e.id, f = new Function(e.id, nameProvider.GetName(e.id)));
+
+				t.activations.Push(new Activation<Function>(f, e.timestamp));
+			}
 		}
 
-		void OnLeaveFunction(ProfileEvent e)
+		void OnLeaveFunction(ProfileEvent e, FunctionNameProvider nameProvider, Predicate<string> filter)
 		{
-			currentThread.Target.activations.Pop().Complete(e.timestamp, frequency);
+			string name = nameProvider.GetName(e.id);
+
+			if (!filter(name))
+				currentThread.Target.activations.Pop().Complete(e.timestamp, frequency);
 		}
 	}
 }

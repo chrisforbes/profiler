@@ -17,3 +17,9 @@ User Interface
 [ ] Backtraces
 [ ] Saving of profiler snapshots for later review!
 [ ] Loader for small (preprocessed) tracefile
+
+[ ] Start page
+	[ ] Recently profiled applications
+	[ ] Tutorial?
+	[ ] New Session... wizard
+		[ ] Allow people to choose working directory, command-line args, etc
