@@ -50,6 +50,16 @@ namespace ProfilerUi
 			}
 		}
 
+		public string TabName
+		{
+			get
+			{
+				int start = EffectiveName.IndexOf("::") + 2;
+
+				return EffectiveName.Substring(start, EffectiveName.IndexOf(' ') - start); 
+			}
+		}
+
 		internal static ImageList images = new ImageList();
 		
 		static Monkey()

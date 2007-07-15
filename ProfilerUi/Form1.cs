@@ -52,7 +52,11 @@ namespace ProfilerUi
 		{
 			TabPage page = new TabPage(name);
 			if (node != null)
+			{
+				if (node.Tag is Function)
+					page.Text = node.TabName;
 				page.ImageKey = node.Key;
+			}
 			CallTreeView view = new CallTreeView( GetFunctionFilter() );
 			page.Controls.Add(view);
 			page.Tag = view;
