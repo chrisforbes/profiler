@@ -33,6 +33,7 @@ namespace ProfilerUi
 				{
 					workspace.ContentPanel.Controls.Add(currentView);
 					currentView.BorderStyle = BorderStyle.None;
+					currentView.Focus();
 					currentView.Anchor = AnchorStyles.Left | AnchorStyles.Right | AnchorStyles.Top | AnchorStyles.Bottom;
 					currentView.Bounds = new Rectangle(1, 20, workspace.ContentPanel.ClientSize.Width - 2, 
 						workspace.ContentPanel.ClientSize.Height - 21);
