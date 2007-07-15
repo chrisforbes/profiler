@@ -82,7 +82,7 @@ namespace ProfilerUi
 
 				view.Nodes.Clear();
 				foreach (Thread thread in tree.threads.Values)
-					view.Nodes.Add(thread.CreateView());
+					view.Nodes.Add(thread.CreateView(thread.TotalTime));
 
 				view.Filter = GetFunctionFilter();
 
@@ -92,14 +92,10 @@ namespace ProfilerUi
 
 		Predicate<Function> GetFunctionFilter()
 		{
-			string[] filters = { "System.", "Microsoft." };
-			return new FunctionFilter(filters).Evaluate;
+			return new FunctionFilter("System.", "Microsoft.").Evaluate;
 		}
 
-		void OnCloseClicked(object sender, EventArgs e)
-		{
-			Close();
-		}
+		void OnCloseClicked(object sender, EventArgs e) { Close(); }
 
 		TreeNode GetSelectedNode()
 		{
@@ -119,29 +115,14 @@ namespace ProfilerUi
 			if (n == null)
 				return;
 
-			Thread t = n.Tag as Thread;
-			if (t != null)
-			{
-				CallTreeView v = CreateNewView("Thread #" + t.Id);
-				TreeNode n2 = t.CreateView();
-				v.Nodes.Add(n2);
-				v.Filter = GetFunctionFilter();
-				v.Focus();
-				v.SelectedNode = n2;
-				return;
-			}
+			IProfilerElement t = n.Tag as IProfilerElement;
 
-			Function f = n.Tag as Function;
-			if (f != null)
-			{
-				CallTreeView v = CreateNewView(f.name.Substring(f.name.IndexOf("::") + 2));
-				TreeNode n2 = f.CreateView(f.TotalTime);
-				v.Nodes.Add(n2);	//todo: offer to merge
-				v.Filter = GetFunctionFilter();
-				v.Focus();
-				v.SelectedNode = n2;
-				return;
-			}
+			CallTreeView v = CreateNewView(t.TabTitle);
+			TreeNode n2 = t.CreateView(t.TotalTime);
+			v.Nodes.Add(n2);
+			v.Filter = GetFunctionFilter();
+			v.Focus();
+			v.SelectedNode = n2;
 		}
 	}
 }

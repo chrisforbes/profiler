@@ -5,21 +5,32 @@ using System.Windows.Forms;
 
 namespace ProfilerUi
 {
-	class Thread : IActivatible
+	interface IProfilerElement
+	{
+		TreeNode CreateView(double totalTime);
+		string TabTitle { get; }
+		double TotalTime { get; }
+	}
+
+	class Thread : IActivatible, IProfilerElement
 	{
 		public Dictionary<uint, Function> roots = new Dictionary<uint, Function>();
 
 		public Stack<Activation<Function>> activations = new Stack<Activation<Function>>();
 
 		readonly uint id;
-		public double time = 0.0;
+		double time = 0.0;
 		public ulong lastEntryTime = 0;
+
+		public double TotalTime { get { return time; } }
 
 		public uint Id { get { return id; } }
 
 		public Thread(uint id) { this.id = id; }
 
-		public TreeNode CreateView()
+		public string TabTitle { get { return "Thread #" + id; } }
+
+		public TreeNode CreateView( double totalTime )
 		{
 			TreeNode n = new TreeNode("Thread #" + id.ToString() + " - " + time.ToString("F1") + "ms");
 			n.Tag = this;

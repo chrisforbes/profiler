@@ -6,7 +6,7 @@ using System.Text.RegularExpressions;
 
 namespace ProfilerUi
 {
-	class Function : IActivatible
+	class Function : IActivatible, IProfilerElement
 	{
 		public Function(uint id, string name) { this.id = id; this.name = name; }
 
@@ -31,6 +31,8 @@ namespace ProfilerUi
 
 		public double OwnTime { get { return time - TimeInChildren; } }
 		public double TotalTime { get { return time; } }
+
+		public string TabTitle { get { return name.Substring(name.IndexOf("::") + 2); } }
 
 		public TreeNode CreateView( double rootTime )
 		{

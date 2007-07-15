@@ -9,7 +9,7 @@ namespace ProfilerUi
 	{
 		Regex regex;
 
-		public FunctionFilter(string[] patterns)
+		public FunctionFilter(params string[] patterns)
 		{
 			string p = "";
 			foreach (string s in patterns)
