@@ -14,25 +14,24 @@ namespace ProfilerUi
 	{
 		public Form1() { InitializeComponent(); Text = "IJW Profiler 0.2.7"; }
 
-		string profilerTextOutput, profilerBinOutput;
-
-		void ProfileProcess(string processName)
+		Run ProfileProcess(string processName)
 		{
 			using (new ComServerRegistration("pcomimpl.dll"))
 			{
+				Run run = new Run();
+
 				ProcessStartInfo info = new ProcessStartInfo(processName);
 				info.WorkingDirectory = Path.GetDirectoryName(processName);
 				info.UseShellExecute = false;
 				info.EnvironmentVariables["Cor_Enable_Profiling"] = "1";
 				info.EnvironmentVariables["COR_PROFILER"] = "{C1E9FE1F-F517-45c0-BB0E-EFAECC9401FC}";
 
-				profilerTextOutput = Path.GetTempFileName();
-				profilerBinOutput = Path.GetTempFileName();
-
-				info.EnvironmentVariables["ijwprof_txt"] = profilerTextOutput;
-				info.EnvironmentVariables["ijwprof_bin"] = profilerBinOutput;
+				info.EnvironmentVariables["ijwprof_txt"] = run.txtFile;
+				info.EnvironmentVariables["ijwprof_bin"] = run.binFile;
 
 				Process.Start(info).WaitForExit();
+
+				return run;
 			}
 		}
 
@@ -58,48 +57,46 @@ namespace ProfilerUi
 			if (DialogResult.OK != d.ShowDialog())
 				return;
 
-			ProfileProcess(d.FileName);
+			Run run = ProfileProcess(d.FileName);
 
-			LoadTraceData();
+			LoadTraceData(run);
 		}
 
 		int runCount = 0;
 
-		void LoadTraceData()
+		void LoadTraceData( Run run )
 		{
-			FunctionNameProvider names = new FunctionNameProvider(profilerTextOutput);
-
-			string baseText = Text;
-
-			Action<float> progressCallback = delegate(float frac)
+			using (run)
 			{
-				Text = baseText + " - Slurping " + frac.ToString("P0");
-				Application.DoEvents();
-			};
+				FunctionNameProvider names = new FunctionNameProvider(run.txtFile);
 
-			CallTree tree = new CallTree(profilerBinOutput, names, progressCallback);
+				string baseText = Text;
 
-			CallTreeView view = CreateNewView("Profile #" + ++runCount);
+				Action<float> progressCallback = delegate(float frac)
+				{
+					Text = baseText + " - Slurping " + frac.ToString("P0");
+				};
 
-			Text = baseText + " - Preparing view...";
-			Application.DoEvents();
+				CallTree tree = new CallTree(run.binFile, names, progressCallback);
 
-			view.Nodes.Clear();
-			foreach (Thread thread in tree.threads.Values)
-				view.Nodes.Add(thread.CreateView());
+				CallTreeView view = CreateNewView("Profile #" + ++runCount);
 
-			view.Filter = GetFunctionFilter();
+				Text = baseText + " - Preparing view...";
 
-			Text = baseText;
+				view.Nodes.Clear();
+				foreach (Thread thread in tree.threads.Values)
+					view.Nodes.Add(thread.CreateView());
+
+				view.Filter = GetFunctionFilter();
+
+				Text = baseText;
+			}
 		}
 
 		Predicate<Function> GetFunctionFilter()
 		{
-			string filterText = "System.*, Microsoft.*";
-			FunctionFilter filter = new FunctionFilter(filterText.Replace("*", "").Split(new char[] { ' ', ',' },
-				StringSplitOptions.RemoveEmptyEntries));
-
-			return filter.Evaluate;
+			string[] filters = { "System.", "Microsoft." };
+			return new FunctionFilter(filters).Evaluate;
 		}
 
 		void OnCloseClicked(object sender, EventArgs e)
@@ -148,14 +145,6 @@ namespace ProfilerUi
 				v.SelectedNode = n2;
 				return;
 			}
-		}
-
-		void OnClose(object sender, FormClosedEventArgs e)
-		{
-			if (profilerTextOutput != null)
-				File.Delete(profilerTextOutput);
-			if (profilerBinOutput != null)
-				File.Delete(profilerBinOutput);
 		}
 	}
 }

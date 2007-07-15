@@ -139,8 +139,6 @@ namespace ProfilerUi
 			this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
 			this.MainMenuStrip = this.menuStrip1;
 			this.Name = "Form1";
-			this.Text = "IJW Profiler 0.2.2";
-			this.FormClosed += new System.Windows.Forms.FormClosedEventHandler(this.OnClose);
 			this.workspace.ContentPanel.ResumeLayout(false);
 			this.workspace.TopToolStripPanel.ResumeLayout(false);
 			this.workspace.TopToolStripPanel.PerformLayout();
