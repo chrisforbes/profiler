@@ -12,7 +12,7 @@ namespace ProfilerUi
 {
 	public partial class Form1 : Form
 	{
-		public Form1() { InitializeComponent(); }
+		public Form1() { InitializeComponent(); Text = "IJW Profiler 0.2.7"; }
 
 		string profilerTextOutput, profilerBinOutput;
 
@@ -60,24 +60,37 @@ namespace ProfilerUi
 
 			ProfileProcess(d.FileName);
 
-			LoadLastRun(sender, e);
+			LoadTraceData();
 		}
 
 		int runCount = 0;
 
-		void LoadLastRun(object sender, EventArgs e)
+		void LoadTraceData()
 		{
 			FunctionNameProvider names = new FunctionNameProvider(profilerTextOutput);
 
-			CallTree tree = new CallTree(profilerBinOutput, names);
+			string baseText = Text;
+
+			Action<float> progressCallback = delegate(float frac)
+			{
+				Text = baseText + " - Slurping " + frac.ToString("P0");
+				Application.DoEvents();
+			};
+
+			CallTree tree = new CallTree(profilerBinOutput, names, progressCallback);
 
 			CallTreeView view = CreateNewView("Profile #" + ++runCount);
+
+			Text = baseText + " - Preparing view...";
+			Application.DoEvents();
 
 			view.Nodes.Clear();
 			foreach (Thread thread in tree.threads.Values)
 				view.Nodes.Add(thread.CreateView());
 
 			view.Filter = GetFunctionFilter();
+
+			Text = baseText;
 		}
 
 		Predicate<Function> GetFunctionFilter()
@@ -139,8 +152,10 @@ namespace ProfilerUi
 
 		void OnClose(object sender, FormClosedEventArgs e)
 		{
-			File.Delete(profilerTextOutput);
-			File.Delete(profilerBinOutput);
+			if (profilerTextOutput != null)
+				File.Delete(profilerTextOutput);
+			if (profilerBinOutput != null)
+				File.Delete(profilerBinOutput);
 		}
 	}
 }

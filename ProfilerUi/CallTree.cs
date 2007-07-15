@@ -13,12 +13,14 @@ namespace ProfilerUi
 		FunctionNameProvider names;
 		ulong frequency;
 
-		public CallTree(string filename, FunctionNameProvider names)
+		public CallTree(string filename, FunctionNameProvider names, Action<float> progressCallback)
 		{
 			this.names = names;
-			Stream s = new FileStream(filename, FileMode.Open, FileAccess.Read);
+			Stream s = File.OpenRead(filename);
 
 			ulong finalTime = 0;
+			float lastFrac = -1;
+
 			using (BinaryReader reader = new BinaryReader(s))
 			{
 				foreach (ProfileEvent e in ProfileEvent.GetEvents(reader))
@@ -32,6 +34,13 @@ namespace ProfilerUi
 					}
 
 					finalTime = e.timestamp;
+
+					float frac = (float)s.Position / (float)s.Length;
+					if (frac >= lastFrac + 1e-2f)
+					{
+						progressCallback(frac);
+						lastFrac = frac;
+					}
 				}
 			}
 

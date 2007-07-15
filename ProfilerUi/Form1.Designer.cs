@@ -34,7 +34,6 @@ namespace ProfilerUi
 			this.menuStrip1 = new System.Windows.Forms.MenuStrip();
 			this.fileToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
 			this.newSessionToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-			this.openToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
 			this.toolStripMenuItem1 = new System.Windows.Forms.ToolStripSeparator();
 			this.exitToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
 			this.viewToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
@@ -89,7 +88,6 @@ namespace ProfilerUi
 			// 
 			this.fileToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.newSessionToolStripMenuItem,
-            this.openToolStripMenuItem,
             this.toolStripMenuItem1,
             this.exitToolStripMenuItem});
 			this.fileToolStripMenuItem.Name = "fileToolStripMenuItem";
@@ -102,13 +100,6 @@ namespace ProfilerUi
 			this.newSessionToolStripMenuItem.Size = new System.Drawing.Size(157, 22);
 			this.newSessionToolStripMenuItem.Text = "&New Session...";
 			this.newSessionToolStripMenuItem.Click += new System.EventHandler(this.NewRun);
-			// 
-			// openToolStripMenuItem
-			// 
-			this.openToolStripMenuItem.Name = "openToolStripMenuItem";
-			this.openToolStripMenuItem.Size = new System.Drawing.Size(157, 22);
-			this.openToolStripMenuItem.Text = "&Open...";
-			this.openToolStripMenuItem.Click += new System.EventHandler(this.LoadLastRun);
 			// 
 			// toolStripMenuItem1
 			// 
@@ -167,7 +158,6 @@ namespace ProfilerUi
 		private System.Windows.Forms.MenuStrip menuStrip1;
 		private System.Windows.Forms.ToolStripMenuItem fileToolStripMenuItem;
 		private System.Windows.Forms.ToolStripMenuItem newSessionToolStripMenuItem;
-		private System.Windows.Forms.ToolStripMenuItem openToolStripMenuItem;
 		private System.Windows.Forms.ToolStripSeparator toolStripMenuItem1;
 		private System.Windows.Forms.ToolStripMenuItem exitToolStripMenuItem;
 		private System.Windows.Forms.ToolStripMenuItem viewToolStripMenuItem;
