@@ -62,8 +62,6 @@ namespace ProfilerUi
 			LoadTraceData(run);
 		}
 
-		int runCount = 0;
-
 		void LoadTraceData( Run run )
 		{
 			using (run)
@@ -78,8 +76,7 @@ namespace ProfilerUi
 				};
 
 				CallTree tree = new CallTree(run.binFile, names, progressCallback);
-
-				CallTreeView view = CreateNewView("Profile #" + ++runCount);
+				CallTreeView view = CreateNewView(run.name);
 
 				Text = baseText + " - Preparing view...";
 

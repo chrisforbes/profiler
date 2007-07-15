@@ -9,6 +9,7 @@ namespace ProfilerUi
 	{
 		public readonly string binFile = Path.GetTempFileName();
 		public readonly string txtFile = Path.GetTempFileName();
+		public readonly string name = "Run #" + ++runCount;
 
 		bool disposed = false;
 
@@ -24,5 +25,7 @@ namespace ProfilerUi
 		}
 
 		~Run() { Dispose(); }
+
+		static int runCount;
 	}
 }
