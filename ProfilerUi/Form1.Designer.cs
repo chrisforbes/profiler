@@ -30,7 +30,6 @@ namespace ProfilerUi
 		{
 			System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(Form1));
 			this.workspace = new System.Windows.Forms.ToolStripContainer();
-			this.tabStrip = new ProfilerUi.CallTreeTabStrip();
 			this.menuStrip1 = new System.Windows.Forms.MenuStrip();
 			this.fileToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
 			this.newSessionToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
@@ -38,6 +37,7 @@ namespace ProfilerUi
 			this.exitToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
 			this.viewToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
 			this.openInNewTabToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+			this.tabStrip = new ProfilerUi.CallTreeTabStrip();
 			this.workspace.ContentPanel.SuspendLayout();
 			this.workspace.TopToolStripPanel.SuspendLayout();
 			this.workspace.SuspendLayout();
@@ -61,17 +61,6 @@ namespace ProfilerUi
 			// workspace.TopToolStripPanel
 			// 
 			this.workspace.TopToolStripPanel.Controls.Add(this.menuStrip1);
-			// 
-			// tabStrip
-			// 
-			this.tabStrip.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
-						| System.Windows.Forms.AnchorStyles.Right)));
-			this.tabStrip.BackColor = System.Drawing.SystemColors.ButtonFace;
-			this.tabStrip.Location = new System.Drawing.Point(0, 0);
-			this.tabStrip.Name = "tabStrip";
-			this.tabStrip.Size = new System.Drawing.Size(647, 23);
-			this.tabStrip.TabIndex = 0;
-			this.tabStrip.Text = "callTreeTabStrip1";
 			// 
 			// menuStrip1
 			// 
@@ -129,6 +118,17 @@ namespace ProfilerUi
 			this.openInNewTabToolStripMenuItem.Size = new System.Drawing.Size(202, 22);
 			this.openInNewTabToolStripMenuItem.Text = "&Open in new tab";
 			this.openInNewTabToolStripMenuItem.Click += new System.EventHandler(this.OnOpenInNewTab);
+			// 
+			// tabStrip
+			// 
+			this.tabStrip.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
+						| System.Windows.Forms.AnchorStyles.Right)));
+			this.tabStrip.BackColor = System.Drawing.SystemColors.ButtonFace;
+			this.tabStrip.Location = new System.Drawing.Point(0, 0);
+			this.tabStrip.Name = "tabStrip";
+			this.tabStrip.Size = new System.Drawing.Size(647, 23);
+			this.tabStrip.TabIndex = 0;
+			this.tabStrip.Text = "callTreeTabStrip1";
 			// 
 			// Form1
 			// 
