@@ -3,19 +3,9 @@ IJW Profiler
 
 COM DLL
 
-[x] Stub implementation of ICorProfilerCallback2
-[?] Hooks
-	[x] Basic enter/leave hooks - thiscall implementation in asm
-	[x] Tailcalls
-	[ ] Use .NET 2.0 Hi-perf function hooks
-	
-[?] Lookup function names
-	[x] Function/class name lookup
-	[x] Handle inner classes correctly
-	[ ] Distinguish overloads
-	[ ] Distinguish generic type instances
-[x] Get target filename(s) from environment
-
+[ ] Use .NET 2.0 Hi-perf function hooks
+[ ] Distinguish function overloads
+[ ] Distinguish generic type instances
 
 User Interface
 
@@ -24,18 +14,4 @@ User Interface
 [ ] Option to fold recursion
 [ ] Option to merge multiple invocations (DAG)
 [ ] Backtraces
-
 [ ] Saving of profiler snapshots for later review!
-[x] Deleting old temp traces! ~beedee
-
-[x] Fix Release-mode explosions!
-[x] Auto-register profiler
-[x] Allow multiple profiler instances
-[x] Set target filename using environment vars
-[x] Load profile data
-[x] Build calltree
-[x] Filtering by classname 
-
-[x] Multiple-view support (tabs)
-[x] Rerooting of the tree into a new view
-[x] Show 'own time' as well as 'time including children'
