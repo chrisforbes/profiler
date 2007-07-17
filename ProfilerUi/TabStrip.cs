@@ -7,51 +7,52 @@ using System.Drawing;
 
 namespace ProfilerUi
 {
-	class CallTreeTabStrip : Control
+	class TabStrip<T> : Control
+		where T : class
 	{
-		readonly List<Tab> tabs = new List<Tab>();
-		readonly TabIterator iterator;
+		readonly List<Tab<T>> tabs = new List<Tab<T>>();
+		readonly TabIterator<T> iterator;
 
-		public TabIterator Iterator { get { return iterator; } }
+		public TabIterator<T> Iterator { get { return iterator; } }
 		public int Count { get { return tabs.Count; } }
 
-		CloseBox closeBox;
+		CloseBox<T> closeBox;
 
 		public event EventHandler Changed = delegate { };
 
-		public CallTreeTabStrip()
+		public TabStrip()
 		{
 			BackColor = SystemColors.ButtonFace;
 			SetStyle(ControlStyles.OptimizedDoubleBuffer, true);
 			UpdateStyles();
 
-			closeBox = new CloseBox(this);
+			closeBox = new CloseBox<T>(this);
 			closeBox.CloseClicked += delegate { CloseCurrent(); };
-			iterator = new TabIterator(this);
+			iterator = new TabIterator<T>(this);
 		}
 
-		public IEnumerable<CallTreeView> CallTrees
+		public IEnumerable<T> Items
 		{
 			get
 			{
-				foreach (Tab tab in tabs)
-					yield return tab.CallTree;
+				foreach (Tab<T> tab in tabs)
+					yield return tab.Content;
 			}
 		}
 
-		Tab GetTab(CallTreeView callTree)
+		Tab<T> GetTab(T item)
 		{
-			if (callTree == null)
+			if (item == null)
 				throw new ArgumentNullException("document");
 
-			foreach (Tab tab in tabs)
-				if (tab.CallTree == callTree)
+			foreach (Tab<T> tab in tabs)
+				if (tab.Content == item)
 					return tab;
 
 			return null;
 		}
 
-		internal Tab GetTab(int index)
+		internal Tab<T> GetTab(int index)
 		{
 			if (index < 0)
 				return null;
@@ -59,29 +60,29 @@ namespace ProfilerUi
 			return tabs[index];
 		}
 
-		public CallTreeView CurrentCallTree
+		public T Current
 		{
 			get
 			{
 				if (iterator.Current == null)
 					return null;
-				return iterator.Current.CallTree;
+				return iterator.Current.Content;
 			}
 		}
 
-		public void Add(CallTreeView callTree)
+		public void Add(T item)
 		{
-			Tab tab = GetTab(callTree);
+			Tab<T> tab = GetTab(item);
 			if (tab == null)
-				tabs.Add(tab = new Tab(callTree, this));
+				tabs.Add(tab = new Tab<T>(item, this));
 
 			Changed(this, EventArgs.Empty);
-			SelectCallTree( callTree );
+			Select( item );
 		}
 
-		public void SelectCallTree( CallTreeView callTree )
+		public void Select( T item )
 		{
-			Tab tab = GetTab( callTree );
+			Tab<T> tab = GetTab( item );
 			if( tab != null )
 				iterator.Current = tab;
 		}
@@ -98,7 +99,7 @@ namespace ProfilerUi
 				ButtonBorderStyle.Solid);
 
 			int x = 1;
-			foreach (Tab d in tabs)
+			foreach (Tab<T> d in tabs)
 				d.Paint(g, ref x, iterator.Current == d, ClientRectangle);
 
 			closeBox.Paint(g);
@@ -108,7 +109,7 @@ namespace ProfilerUi
 		{
 			base.OnMouseUp(e);
 
-			Tab tab = GetTab(e.Location);
+			Tab<T> tab = GetTab(e.Location);
 			if (tab == null)
 				return;
 
@@ -118,7 +119,7 @@ namespace ProfilerUi
 					iterator.Current = tab;
 					break;
 				case MouseButtons.Middle:
-					CloseCallTree(tab.CallTree);
+					Close(tab.Content);
 					break;
 
 				default:
@@ -134,34 +135,27 @@ namespace ProfilerUi
 			return true;
 		}
 
-		public void CloseCallTree(CallTreeView callTree)
+		public void Close(T item)
 		{
-			if (callTree == null)
+			if (item == null)
 				return;
-			Tab tab = GetTab(callTree);
+			Tab<T> tab = GetTab(item);
 			tabs.Remove(tab);
 			tab.Dispose();
 			Changed(this, EventArgs.Empty);
 			Invalidate();
 		}
 
-		Tab GetTab(Point p)
+		Tab<T> GetTab(Point p)
 		{
-			foreach (Tab t in tabs)
+			foreach (Tab<T> t in tabs)
 				if (t.Bounds.Contains(p))
 					return t;
 
 			return null;
 		}
 
-		internal int IndexOf(Tab t)
-		{
-			return tabs.IndexOf(t);
-		}
-
-		public void CloseCurrent()
-		{
-			CloseCallTree(CurrentCallTree);
-		}
+		internal int IndexOf(Tab<T> t) { return tabs.IndexOf(t); }
+		public void CloseCurrent() { Close(Current); }
 	}
 }

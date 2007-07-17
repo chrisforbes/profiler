@@ -6,7 +6,8 @@ using System.Windows.Forms;
 
 namespace ProfilerUi
 {
-	class CloseBox
+	class CloseBox<T>
+		where T : class
 	{
 		Control host;
 		bool hover;
@@ -59,7 +60,7 @@ namespace ProfilerUi
 
 		public void Paint(Graphics g)
 		{
-			if ((host as CallTreeTabStrip) != null && (host as CallTreeTabStrip).CurrentCallTree == null)
+			if ((host as TabStrip<CallTreeView>) != null && (host as TabStrip<CallTreeView>).Current == null)
 				return;
 
 			if (Hover)

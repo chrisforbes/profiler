@@ -10,17 +10,12 @@ namespace ProfilerUi
 {
 	class CallTreeView : TreeView
 	{
-		Predicate<string> filter;
+		readonly Predicate<string> filter;
+		readonly string text;
 
-		string text;
+		public override string ToString() { return text; }
 
-		public override string Text
-		{
-			get { return text; }
-			set { text = value; }
-		}
-
-		public CallTreeView( Predicate<string> filter )
+		public CallTreeView( Predicate<string> filter, string text )
 			: base()
 		{
 			DrawMode = TreeViewDrawMode.OwnerDrawAll;
@@ -28,6 +23,7 @@ namespace ProfilerUi
 			UpdateStyles();
 
 			this.filter = filter;
+			this.text = text;
 		}
 
 		Brush selected = new SolidBrush(Color.FromArgb(0xee, 0xee, 0xff));

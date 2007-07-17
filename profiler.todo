@@ -6,20 +6,23 @@ COM DLL
 [ ] Use .NET 2.0 Hi-perf function hooks
 [ ] Distinguish function overloads
 [ ] Distinguish generic type instances
-[ ] Do tree-building in COM! (make MUCH smaller tracefile)
+[ ] Named-pipe trace connector client
 
 User Interface
 
 [ ] Handle tailcall records
 [ ] Option to fold filtered chains
 [ ] Option to fold recursion
-[ ] Option to merge multiple invocations (DAG)
+
 [ ] Backtraces
 [ ] Saving of profiler snapshots for later review!
-[ ] Loader for small (preprocessed) tracefile
+[ ] Named-pipe trace connector server
 
 [ ] Start page
 	[ ] Recently profiled applications
 	[ ] Tutorial?
 	[ ] New Session... wizard
 		[ ] Allow people to choose working directory, command-line args, etc
+		
+[x] Option to merge multiple invocations on Ctrl+T
+[x] Fix sucky lack of generality in TabStrip!!!

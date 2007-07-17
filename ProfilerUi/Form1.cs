@@ -13,21 +13,31 @@ namespace ProfilerUi
 	public partial class Form1 : Form
 	{
 		CallTreeView currentView = null;
+		TabStrip<CallTreeView> tabStrip;
+
+		static TabStrip<CallTreeView> CreateTabStrip(Control host)
+		{
+			TabStrip<CallTreeView> ts = new TabStrip<CallTreeView>();
+			ts.Anchor = AnchorStyles.Top | AnchorStyles.Left | AnchorStyles.Right;
+			ts.Bounds = new Rectangle(0, 0, 647, 20);
+			host.Controls.Add(ts);
+			return ts;
+		}
 
 		public Form1()
 		{
 			InitializeComponent(); 
 			Text = "IJW Profiler 0.3.1";
-			tabStrip.Height = 20;
 
 			workspace.ContentPanel.BackColor = SystemColors.AppWorkspace;
+			tabStrip = CreateTabStrip(workspace.ContentPanel);
 
 			EventHandler e = delegate
 			{
 				if (currentView != null)
 					workspace.ContentPanel.Controls.Remove(currentView);
 
-				currentView = tabStrip.CurrentCallTree;
+				currentView = tabStrip.Current;
 
 				if (currentView != null)
 				{
@@ -67,11 +77,10 @@ namespace ProfilerUi
 
 		CallTreeView CreateNewView(string name, Node node)
 		{
-			CallTreeView view = new CallTreeView( Filter );
-			view.Text = name;
+			CallTreeView view = new CallTreeView( Filter, name );
 			tabStrip.Add(view);
 
-			tabStrip.SelectCallTree(view);
+			tabStrip.Select(view);
 
 			if (node != null)
 			{
@@ -118,10 +127,10 @@ namespace ProfilerUi
 
 		Node GetSelectedNode()
 		{
-			if (tabStrip.CurrentCallTree == null)
+			if (tabStrip.Current == null)
 				return null;
 
-			return tabStrip.CurrentCallTree.SelectedNode as Node;
+			return tabStrip.Current.SelectedNode as Node;
 		}
 
 		void OnOpenInNewTab(object sender, EventArgs e)

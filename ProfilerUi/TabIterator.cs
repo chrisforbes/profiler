@@ -4,13 +4,14 @@ using System.Text;
 
 namespace ProfilerUi
 {
-	class TabIterator
+	class TabIterator<T>
+		where T : class
 	{
 		int index;
-		CallTreeTabStrip outer;
-		Tab current;
+		TabStrip<T> outer;
+		Tab<T> current;
 
-		public TabIterator(CallTreeTabStrip outer)
+		public TabIterator(TabStrip<T> outer)
 		{
 			this.outer = outer;
 			outer.Changed += delegate { Update(); };
@@ -44,7 +45,7 @@ namespace ProfilerUi
 			outer.Invalidate();
 		}
 
-		public Tab Current
+		public Tab<T> Current
 		{
 			get { return current; }
 			set

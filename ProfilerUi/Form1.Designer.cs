@@ -37,7 +37,7 @@ namespace ProfilerUi
 			this.exitToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
 			this.viewToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
 			this.openInNewTabToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-			this.tabStrip = new ProfilerUi.CallTreeTabStrip();
+			
 			this.workspace.ContentPanel.SuspendLayout();
 			this.workspace.TopToolStripPanel.SuspendLayout();
 			this.workspace.SuspendLayout();
@@ -49,7 +49,6 @@ namespace ProfilerUi
 			// 
 			// workspace.ContentPanel
 			// 
-			this.workspace.ContentPanel.Controls.Add(this.tabStrip);
 			this.workspace.ContentPanel.Size = new System.Drawing.Size(647, 418);
 			this.workspace.Dock = System.Windows.Forms.DockStyle.Fill;
 			this.workspace.Location = new System.Drawing.Point(0, 0);
@@ -119,17 +118,6 @@ namespace ProfilerUi
 			this.openInNewTabToolStripMenuItem.Text = "&Open in new tab";
 			this.openInNewTabToolStripMenuItem.Click += new System.EventHandler(this.OnOpenInNewTab);
 			// 
-			// tabStrip
-			// 
-			this.tabStrip.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
-						| System.Windows.Forms.AnchorStyles.Right)));
-			this.tabStrip.BackColor = System.Drawing.SystemColors.ButtonFace;
-			this.tabStrip.Location = new System.Drawing.Point(0, 0);
-			this.tabStrip.Name = "tabStrip";
-			this.tabStrip.Size = new System.Drawing.Size(647, 23);
-			this.tabStrip.TabIndex = 0;
-			this.tabStrip.Text = "callTreeTabStrip1";
-			// 
 			// Form1
 			// 
 			this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -161,7 +149,7 @@ namespace ProfilerUi
 		private System.Windows.Forms.ToolStripMenuItem exitToolStripMenuItem;
 		private System.Windows.Forms.ToolStripMenuItem viewToolStripMenuItem;
 		private System.Windows.Forms.ToolStripMenuItem openInNewTabToolStripMenuItem;
-		private CallTreeTabStrip tabStrip;
+		
 
 	}
 }
