@@ -12,7 +12,7 @@ namespace ProfilerUi
 
 		int calls;
 		double time;
-		uint id;
+		public readonly uint id;
 
 		public Dictionary<uint, Function> children = new Dictionary<uint, Function>();
 		public string name;
@@ -56,5 +56,52 @@ namespace ProfilerUi
 
 		public static Comparison<Function> ByTimeDecreasing =
 			delegate(Function a, Function b) { return b.time.CompareTo(a.time); };
+
+		// note: this just collects top-level invocations.
+
+		public List<Function> CollectInvocations(uint functionId)
+		{
+			List<Function> result = new List<Function>();
+			CollectInvocationsInto(result, functionId);
+			return result;
+		}
+
+		void CollectInvocationsInto(List<Function> list, uint functionId)
+		{
+			if (id == functionId)
+				list.Add(this);
+			else
+				foreach (Function f in children.Values)
+					f.CollectInvocationsInto(list, functionId);
+		}
+
+		static IEnumerable<T> Yield<T>(params T[] t) { return t; }
+
+		public static Function Merge(IEnumerable<Function> invocations)
+		{
+			Function f = null;
+
+			foreach (Function i in invocations)
+			{
+				if (f == null)
+					f = new Function(i.id, i.name);
+
+				f.calls += i.calls;
+				f.time += i.time;
+
+				foreach (Function c in i.children.Values)
+				{
+					Function oc;
+					if (!f.children.TryGetValue(c.id, out oc))
+						oc = c;
+					else
+						oc = Merge(Yield(oc, c));
+
+					f.children[oc.id] = oc;
+				}
+			}
+
+			return f;
+		}
 	}
 }

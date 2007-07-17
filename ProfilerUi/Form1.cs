@@ -17,7 +17,7 @@ namespace ProfilerUi
 		public Form1()
 		{
 			InitializeComponent(); 
-			Text = "IJW Profiler 0.3";
+			Text = "IJW Profiler 0.3.1";
 			tabStrip.Height = 20;
 
 			workspace.ContentPanel.BackColor = SystemColors.AppWorkspace;
@@ -151,12 +151,49 @@ namespace ProfilerUi
 			if (n == null)
 				return;
 
+			Node p = GetRoot(n);
+			
+			// WANT REFACTORING
+
+			if (p != null)
+			{
+				Function fp = p.Element as Function;
+				Function np = n.Element as Function;
+
+				if (fp != null && np != null)
+				{
+					List<Function> invocations = fp.CollectInvocations(np.id);
+					if (invocations.Count > 1)
+					{
+						if (DialogResult.Yes == MessageBox.Show(
+							"There are multiple invocations of this function in the call tree. Would you like to merge them?",
+							"Merge multiple instances?",
+							MessageBoxButtons.YesNo))
+						{
+							Function merged = Function.Merge(invocations);
+							n = (Node)merged.CreateView(merged.TotalTime);
+						}
+					}
+				}
+			}
+
 			IProfilerElement t = n.Element;
 
 			CallTreeView v = CreateNewView(t.TabTitle, n);
 			TreeNode n2 = t.CreateView(t.TotalTime);
 			v.Nodes.Add(n2);
 			v.SelectedNode = n2;
+		}
+
+		Node GetRoot(Node n)
+		{
+			if (!(n.Element is Function))
+				return null;
+
+			while (n != null && n.Parent != null && ((Node)n.Parent).Element is Function)
+				n = n.Parent as Node;
+
+			return n;
 		}
 	}
 }
