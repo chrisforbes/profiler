@@ -57,6 +57,7 @@
     <Compile Include="FunctionFilter.cs" />
     <Compile Include="FunctionNameProvider.cs" />
     <Compile Include="IActivatible.cs" />
+    <Compile Include="IProfilerElement.cs" />
     <Compile Include="ItemPainter.cs" />
     <Compile Include="Node.cs" />
     <Compile Include="ProfileEvent.cs" />

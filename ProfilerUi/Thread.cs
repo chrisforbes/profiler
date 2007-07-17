@@ -5,13 +5,6 @@ using System.Windows.Forms;
 
 namespace ProfilerUi
 {
-	interface IProfilerElement
-	{
-		TreeNode CreateView(double totalTime);
-		string TabTitle { get; }
-		double TotalTime { get; }
-	}
-
 	class Thread : IActivatible, IProfilerElement
 	{
 		public Dictionary<uint, Function> roots = new Dictionary<uint, Function>();
@@ -46,6 +39,15 @@ namespace ProfilerUi
 		public void Complete(double milliseconds)
 		{
 			time += milliseconds;
+		}
+
+		public List<Function> CollectInvocations(uint functionId)
+		{
+			List<Function> result = new List<Function>();
+			foreach( Function f in roots.Values )
+				f.CollectInvocationsInto(result, functionId);
+
+			return result;
 		}
 	}
 }

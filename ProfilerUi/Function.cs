@@ -66,7 +66,7 @@ namespace ProfilerUi
 			return result;
 		}
 
-		void CollectInvocationsInto(List<Function> list, uint functionId)
+		internal void CollectInvocationsInto(List<Function> list, uint functionId)
 		{
 			if (id == functionId)
 				list.Add(this);

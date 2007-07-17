@@ -51,6 +51,22 @@ namespace ProfilerUi
 			}
 		}
 
+		public Node RootFunction
+		{
+			get
+			{
+				if (!(Element is Function))
+					return null;
+
+				Node n = this;
+
+				while (n != null && n.Parent != null)
+					n = n.Parent as Node;
+
+				return n;
+			}
+		}
+
 		internal static ImageList images = new ImageList();
 		
 		static Node()

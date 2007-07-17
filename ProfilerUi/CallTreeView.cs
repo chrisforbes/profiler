@@ -10,7 +10,7 @@ namespace ProfilerUi
 {
 	class CallTreeView : TreeView
 	{
-		Predicate<Function> filter;
+		Predicate<string> filter;
 
 		string text;
 
@@ -20,7 +20,7 @@ namespace ProfilerUi
 			set { text = value; }
 		}
 
-		public CallTreeView( Predicate<Function> filter )
+		public CallTreeView( Predicate<string> filter )
 			: base()
 		{
 			DrawMode = TreeViewDrawMode.OwnerDrawAll;
@@ -60,7 +60,7 @@ namespace ProfilerUi
 
 		Brush GetBrush(Function function)
 		{
-			return (filter == null || function == null || !filter(function)) ?
+			return (filter == null || function == null || !filter(function.name)) ?
 				Brushes.Black : Brushes.Gray;
 		}
 	}

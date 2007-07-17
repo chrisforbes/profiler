@@ -67,7 +67,7 @@ namespace ProfilerUi
 
 		CallTreeView CreateNewView(string name, Node node)
 		{
-			CallTreeView view = new CallTreeView( GetFunctionFilter() );
+			CallTreeView view = new CallTreeView( Filter );
 			view.Text = name;
 			tabStrip.Add(view);
 
@@ -77,7 +77,6 @@ namespace ProfilerUi
 			{
 				if (node.Tag is Function)
 					view.Text = node.TabName;
-				//page.ImageKey = node.Key;
 			}
 			return view;
 		}
@@ -88,52 +87,32 @@ namespace ProfilerUi
 			d.Filter = "Application|*.exe";
 			d.RestoreDirectory = true;
 
-			if (DialogResult.OK != d.ShowDialog())
-				return;
-
-			Run run = ProfileProcess(d.FileName);
-
-			LoadTraceData(run);
+			if (DialogResult.OK == d.ShowDialog())
+				using (Run run = ProfileProcess(d.FileName))
+					LoadTraceData(run);
 		}
 
-		void LoadTraceData( Run run )
+		void LoadTraceData(Run run)
 		{
-			using (run)
-			{
-				FunctionNameProvider names = new FunctionNameProvider(run.txtFile);
+			FunctionNameProvider names = new FunctionNameProvider(run.txtFile);
+			string baseText = Text;
+			Action<float> progressCallback = delegate(float frac) { Text = baseText + " - Slurping " + frac.ToString("P0"); };
 
-				string baseText = Text;
+			Predicate<string> shouldHideFunction = delegate { return false; };
 
-				Action<float> progressCallback = delegate(float frac)
-				{
-					Text = baseText + " - Slurping " + frac.ToString("P0");
-				};
+			CallTree tree = new CallTree(run.binFile, names, shouldHideFunction, progressCallback);
+			CallTreeView view = CreateNewView(run.name, null);
 
-				Predicate<string> shouldHideFunction = delegate { return false; };
-				//	= GetFunctionFilterS();
+			Text = baseText + " - Preparing view...";
 
-				CallTree tree = new CallTree(run.binFile, names, shouldHideFunction, progressCallback);
-				CallTreeView view = CreateNewView(run.name, null);
+			view.Nodes.Clear();
+			foreach (Thread thread in tree.threads.Values)
+				view.Nodes.Add(thread.CreateView(thread.TotalTime));
 
-				Text = baseText + " - Preparing view...";
-
-				view.Nodes.Clear();
-				foreach (Thread thread in tree.threads.Values)
-					view.Nodes.Add(thread.CreateView(thread.TotalTime));
-
-				Text = baseText;
-			}
+			Text = baseText;
 		}
 
-		Predicate<Function> GetFunctionFilter()
-		{
-			return new FunctionFilter("System.", "Microsoft.").Evaluate;
-		}
-
-		Predicate<string> GetFunctionFilterS()
-		{
-			return new FunctionFilter("System.", "Microsoft.").EvalString;
-		}
+		Predicate<string> Filter = new FunctionFilter("System.", "Microsoft.").EvalString;
 
 		void OnCloseClicked(object sender, EventArgs e) { Close(); }
 
@@ -147,22 +126,21 @@ namespace ProfilerUi
 
 		void OnOpenInNewTab(object sender, EventArgs e)
 		{
-			Node n = GetSelectedNode();
-			if (n == null)
+			Node selectedNode = GetSelectedNode();
+			if (selectedNode == null)
 				return;
 
-			Node p = GetRoot(n);
+			Node rootNode = selectedNode.RootFunction;
 			
-			// WANT REFACTORING
-
-			if (p != null)
+			if (rootNode != null)
 			{
-				Function fp = p.Element as Function;
-				Function np = n.Element as Function;
+				IProfilerElement rootFunction = rootNode.Element;
+				Function selectedFunction = selectedNode.Element as Function;
 
-				if (fp != null && np != null)
+				if (rootFunction != null && selectedFunction != null)
 				{
-					List<Function> invocations = fp.CollectInvocations(np.id);
+					List<Function> invocations = rootFunction.CollectInvocations(selectedFunction.id);
+
 					if (invocations.Count > 1)
 					{
 						if (DialogResult.Yes == MessageBox.Show(
@@ -171,29 +149,18 @@ namespace ProfilerUi
 							MessageBoxButtons.YesNo))
 						{
 							Function merged = Function.Merge(invocations);
-							n = (Node)merged.CreateView(merged.TotalTime);
+							selectedNode = (Node)merged.CreateView(merged.TotalTime);
 						}
 					}
 				}
 			}
 
-			IProfilerElement t = n.Element;
+			IProfilerElement t = selectedNode.Element;
 
-			CallTreeView v = CreateNewView(t.TabTitle, n);
+			CallTreeView v = CreateNewView(t.TabTitle, selectedNode);
 			TreeNode n2 = t.CreateView(t.TotalTime);
 			v.Nodes.Add(n2);
 			v.SelectedNode = n2;
-		}
-
-		Node GetRoot(Node n)
-		{
-			if (!(n.Element is Function))
-				return null;
-
-			while (n != null && n.Parent != null && ((Node)n.Parent).Element is Function)
-				n = n.Parent as Node;
-
-			return n;
 		}
 	}
 }
