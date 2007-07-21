@@ -75,9 +75,9 @@ namespace ProfilerUi
 			}
 		}
 
-		CallTreeView CreateNewView(string name, Node node)
+		CallTreeView CreateNewView(string name, Node node, CallTree src)
 		{
-			CallTreeView view = new CallTreeView( Filter, name );
+			CallTreeView view = new CallTreeView( Filter, name, src );
 			tabStrip.Add(view);
 
 			tabStrip.Select(view);
@@ -110,7 +110,7 @@ namespace ProfilerUi
 			Predicate<string> shouldHideFunction = delegate { return false; };
 
 			CallTree tree = new CallTree(run.binFile, names, shouldHideFunction, progressCallback);
-			CallTreeView view = CreateNewView(run.name, null);
+			CallTreeView view = CreateNewView(run.name, null, tree);
 
 			Text = baseText + " - Preparing view...";
 
@@ -166,10 +166,25 @@ namespace ProfilerUi
 
 			IProfilerElement t = selectedNode.Element;
 
-			CallTreeView v = CreateNewView(t.TabTitle, selectedNode);
+			CallTreeView v = CreateNewView(t.TabTitle, selectedNode, currentView.src);
 			TreeNode n2 = t.CreateView(t.TotalTime);
 			v.Nodes.Add(n2);
 			v.SelectedNode = n2;
+		}
+
+		void OnSave(object sender, EventArgs e)
+		{
+			if (currentView == null)
+				return;
+
+			SaveFileDialog sfd = new SaveFileDialog();
+			sfd.RestoreDirectory = true;
+			sfd.Filter = "Snapshot files (*.xml)|*.xml";
+
+			if (DialogResult.OK != sfd.ShowDialog())
+				return;
+
+			currentView.src.WriteTo(sfd.FileName);
 		}
 	}
 }

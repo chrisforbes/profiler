@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Text;
 using System.Windows.Forms;
+using System.Xml;
 
 namespace ProfilerUi
 {
@@ -48,6 +49,18 @@ namespace ProfilerUi
 				f.CollectInvocationsInto(result, functionId);
 
 			return result;
+		}
+
+		public void WriteTo(XmlWriter writer)
+		{
+			writer.WriteStartElement("thread");
+			writer.WriteAttributeString("id", id.ToString());
+			writer.WriteAttributeString("time", time.ToString());
+
+			foreach (Function f in roots.Values )
+				f.WriteTo(writer);
+
+			writer.WriteEndElement();
 		}
 	}
 }

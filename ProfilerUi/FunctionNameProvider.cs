@@ -39,5 +39,10 @@ namespace ProfilerUi
 
 			return value;
 		}
+
+		public IEnumerable<KeyValuePair<uint, string>> Everything
+		{
+			get { return names; }
+		}
 	}
 }

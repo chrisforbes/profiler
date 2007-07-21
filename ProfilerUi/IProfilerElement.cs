@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Text;
 using System.Windows.Forms;
+using System.Xml;
 
 namespace ProfilerUi
 {
@@ -12,5 +13,6 @@ namespace ProfilerUi
 		double TotalTime { get; }
 
 		List<Function> CollectInvocations(uint functionId);
+		void WriteTo(XmlWriter writer);
 	}
 }

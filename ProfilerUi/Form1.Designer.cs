@@ -37,8 +37,7 @@ namespace ProfilerUi
 			this.exitToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
 			this.viewToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
 			this.openInNewTabToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-			
-			this.workspace.ContentPanel.SuspendLayout();
+			this.toolStripMenuItem2 = new System.Windows.Forms.ToolStripMenuItem();
 			this.workspace.TopToolStripPanel.SuspendLayout();
 			this.workspace.SuspendLayout();
 			this.menuStrip1.SuspendLayout();
@@ -77,6 +76,7 @@ namespace ProfilerUi
 			// 
 			this.fileToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.newSessionToolStripMenuItem,
+            this.toolStripMenuItem2,
             this.toolStripMenuItem1,
             this.exitToolStripMenuItem});
 			this.fileToolStripMenuItem.Name = "fileToolStripMenuItem";
@@ -86,19 +86,19 @@ namespace ProfilerUi
 			// newSessionToolStripMenuItem
 			// 
 			this.newSessionToolStripMenuItem.Name = "newSessionToolStripMenuItem";
-			this.newSessionToolStripMenuItem.Size = new System.Drawing.Size(157, 22);
+			this.newSessionToolStripMenuItem.Size = new System.Drawing.Size(195, 22);
 			this.newSessionToolStripMenuItem.Text = "&New Session...";
 			this.newSessionToolStripMenuItem.Click += new System.EventHandler(this.NewRun);
 			// 
 			// toolStripMenuItem1
 			// 
 			this.toolStripMenuItem1.Name = "toolStripMenuItem1";
-			this.toolStripMenuItem1.Size = new System.Drawing.Size(154, 6);
+			this.toolStripMenuItem1.Size = new System.Drawing.Size(192, 6);
 			// 
 			// exitToolStripMenuItem
 			// 
 			this.exitToolStripMenuItem.Name = "exitToolStripMenuItem";
-			this.exitToolStripMenuItem.Size = new System.Drawing.Size(157, 22);
+			this.exitToolStripMenuItem.Size = new System.Drawing.Size(195, 22);
 			this.exitToolStripMenuItem.Text = "E&xit";
 			this.exitToolStripMenuItem.Click += new System.EventHandler(this.OnCloseClicked);
 			// 
@@ -118,6 +118,14 @@ namespace ProfilerUi
 			this.openInNewTabToolStripMenuItem.Text = "&Open in new tab";
 			this.openInNewTabToolStripMenuItem.Click += new System.EventHandler(this.OnOpenInNewTab);
 			// 
+			// toolStripMenuItem2
+			// 
+			this.toolStripMenuItem2.Name = "toolStripMenuItem2";
+			this.toolStripMenuItem2.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.S)));
+			this.toolStripMenuItem2.Size = new System.Drawing.Size(195, 22);
+			this.toolStripMenuItem2.Text = "Save Snapshot";
+			this.toolStripMenuItem2.Click += new System.EventHandler(this.OnSave);
+			// 
 			// Form1
 			// 
 			this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -128,7 +136,6 @@ namespace ProfilerUi
 			this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
 			this.MainMenuStrip = this.menuStrip1;
 			this.Name = "Form1";
-			this.workspace.ContentPanel.ResumeLayout(false);
 			this.workspace.TopToolStripPanel.ResumeLayout(false);
 			this.workspace.TopToolStripPanel.PerformLayout();
 			this.workspace.ResumeLayout(false);
@@ -149,6 +156,7 @@ namespace ProfilerUi
 		private System.Windows.Forms.ToolStripMenuItem exitToolStripMenuItem;
 		private System.Windows.Forms.ToolStripMenuItem viewToolStripMenuItem;
 		private System.Windows.Forms.ToolStripMenuItem openInNewTabToolStripMenuItem;
+		private System.Windows.Forms.ToolStripMenuItem toolStripMenuItem2;
 		
 
 	}

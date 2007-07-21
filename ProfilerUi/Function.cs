@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Text;
 using System.Windows.Forms;
 using System.Text.RegularExpressions;
+using System.Xml;
 
 namespace ProfilerUi
 {
@@ -102,6 +103,19 @@ namespace ProfilerUi
 			}
 
 			return f;
+		}
+
+		public void WriteTo(XmlWriter writer)
+		{
+			writer.WriteStartElement("function");
+			writer.WriteAttributeString("id", id.ToString());
+			writer.WriteAttributeString("calls", calls.ToString());
+			writer.WriteAttributeString("time", time.ToString());
+
+			foreach (Function f in children.Values)
+				f.WriteTo(writer);
+
+			writer.WriteEndElement();
 		}
 	}
 }

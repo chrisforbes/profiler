@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Text;
 using System.IO;
 using System.Windows.Forms;
+using System.Xml;
 
 namespace ProfilerUi
 {
@@ -10,12 +11,15 @@ namespace ProfilerUi
 	{
 		public Dictionary<uint, Thread> threads = new Dictionary<uint, Thread>();
 		Activation<Thread> currentThread = null;
+		FunctionNameProvider names;
 		ulong frequency;
 
 		public CallTree(string filename, FunctionNameProvider names, Predicate<string> filter, Action<float> progressCallback)
 		{
 			ulong finalTime = 0;
 			float lastFrac = -1;
+
+			this.names = names;
 
 			using (Stream s = File.OpenRead(filename))
 			using (BinaryReader reader = new BinaryReader(s))
@@ -87,6 +91,42 @@ namespace ProfilerUi
 
 			if (!filter(name))
 				currentThread.Target.activations.Pop().Complete(e.timestamp, frequency);
+		}
+
+		public void WriteTo(XmlWriter writer)
+		{
+			writer.WriteStartElement("run");
+
+			writer.WriteStartElement("trace");
+
+			foreach (Thread t in threads.Values)
+				t.WriteTo(writer);
+
+			writer.WriteEndElement();
+
+			writer.WriteStartElement("names");
+
+			foreach (KeyValuePair<uint, string> name in names.Everything)
+			{
+				writer.WriteStartElement("func");
+				writer.WriteAttributeString("id", name.Key.ToString());
+				writer.WriteAttributeString("name", name.Value);
+				writer.WriteEndElement();
+			}
+
+			writer.WriteEndElement();
+
+			writer.WriteEndElement();
+		}
+
+		public void WriteTo(string filename)
+		{
+			XmlWriterSettings settings = new XmlWriterSettings();
+			settings.Indent = true;
+			settings.IndentChars = "  ";
+
+			using (XmlWriter writer = XmlWriter.Create(filename, settings))
+				WriteTo(writer);
 		}
 	}
 }
