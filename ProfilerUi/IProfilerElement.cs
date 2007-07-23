@@ -8,7 +8,7 @@ namespace ProfilerUi
 {
 	interface IProfilerElement
 	{
-		TreeNode CreateView(double totalTime);
+		TreeNode CreateView(double totalTime, Predicate<string> f);
 		string TabTitle { get; }
 		double TotalTime { get; }
 

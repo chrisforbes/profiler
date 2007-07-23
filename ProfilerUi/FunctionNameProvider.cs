@@ -28,7 +28,8 @@ namespace ProfilerUi
 
 		static string HackName(string s)
 		{
-			return (s.Contains("get_") || s.Contains("set_")) ? s : s + "()";
+			return (s.Contains("get_") || s.Contains("set_")
+				|| s.Contains("add_") || s.Contains("remove_")) ? s : s + "()";
 		}
 
 		public string GetName(uint functionId)

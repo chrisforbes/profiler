@@ -18,7 +18,7 @@ namespace ProfilerUi
 				p = string.IsNullOrEmpty(p) ? r : p + "|" + r;
 			}
 
-			regex = new Regex(p);
+			regex = new Regex("^" + p);
 		}
 
 		public bool Evaluate(Function f) { return regex.IsMatch(f.name); }

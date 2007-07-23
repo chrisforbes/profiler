@@ -24,19 +24,6 @@ namespace ProfilerUi
 
 		public string TabTitle { get { return "Thread #" + id; } }
 
-		public TreeNode CreateView( double totalTime )
-		{
-			TreeNode n = new Node(this, "Thread #" + id.ToString() + " - " + time.ToString("F1") + "ms");
-
-			List<Function> fns = new List<Function>(roots.Values);
-			fns.Sort(Function.ByTimeDecreasing);
-
-			foreach (Function f in fns)
-				n.Nodes.Add(f.CreateView(time));
-
-			return n;
-		}
-
 		public void Complete(double milliseconds)
 		{
 			time += milliseconds;
@@ -61,6 +48,19 @@ namespace ProfilerUi
 				f.WriteTo(writer);
 
 			writer.WriteEndElement();
+		}
+
+		public TreeNode CreateView(double totalTime, Predicate<string> filter)
+		{
+			TreeNode n = new Node(this, "Thread #" + id.ToString() + " - " + time.ToString("F1") + "ms");
+
+			List<Function> fns = new List<Function>(roots.Values);
+			fns.Sort(Function.ByTimeDecreasing);
+
+			foreach (Function f in fns)
+				n.Nodes.Add(f.CreateView(time,filter));
+
+			return n;
 		}
 	}
 }

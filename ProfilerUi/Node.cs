@@ -20,6 +20,8 @@ namespace ProfilerUi
 
 		bool IsPropGetter { get { return Text.Contains("get_"); } }
 		bool IsPropSetter { get { return Text.Contains("set_"); } }
+		bool IsEventAdd { get { return Text.Contains("add_"); } }
+		bool IsEventRemove { get { return Text.Contains("remove_"); } }
 
 		public string Key
 		{
@@ -27,6 +29,8 @@ namespace ProfilerUi
 			{
 				if (IsPropGetter) return "prop_get";
 				if (IsPropSetter) return "prop_set";
+				if (IsEventAdd) return "event_add";
+				if (IsEventRemove) return "event_remove";
 				if (Tag is Thread) return "thread";
 				return "method";
 			}
@@ -38,6 +42,8 @@ namespace ProfilerUi
 			{
 				if (IsPropGetter) return Text.Replace("get_", "");
 				if (IsPropSetter) return Text.Replace("set_", "");
+				if (IsEventAdd) return Text.Replace("add_", "");
+				if (IsEventRemove) return Text.Replace("remove_", "");
 				return Text;
 			}
 		}
@@ -81,6 +87,8 @@ namespace ProfilerUi
 				images.Images.Add("prop_get", Image.FromFile("res/prop_get.bmp"));
 				images.Images.Add("method", Image.FromFile("res/method.bmp"));
 				images.Images.Add("app", Image.FromFile("res/app.bmp"));
+				images.Images.Add("event_add", Image.FromFile("res/event_add.bmp"));
+				images.Images.Add("event_remove", Image.FromFile("res/event_remove.bmp"));
 			}
 			catch { }
 		}

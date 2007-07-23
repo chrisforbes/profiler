@@ -35,16 +35,17 @@ namespace ProfilerUi
 
 		public string TabTitle { get { return name.Substring(name.IndexOf("::") + 2); } }
 
-		public TreeNode CreateView( double rootTime )
+		public TreeNode CreateView( double rootTime, Predicate<string> filter )
 		{
 			TreeNode n = new Node( this, string.Format("{0} - {1} calls - {4:F1}% {2:F1}ms - [{3:F1}ms]",
 				name, calls, time, OwnTime, 100.0 * time / rootTime));
 
-			List<Function> fns = new List<Function>(children.Values);
+			//List<Function> fns = new List<Function>(children.Values);
+			List<Function> fns = new List<Function>(WantedChildren(filter));
 			fns.Sort(ByTimeDecreasing);
 
 			foreach (Function f in fns)
-				n.Nodes.Add(f.CreateView(rootTime));
+				n.Nodes.Add(f.CreateView(rootTime, filter));
 
 			return n;
 		}
@@ -103,6 +104,29 @@ namespace ProfilerUi
 			}
 
 			return f;
+		}
+
+		public IEnumerable<Function> WantedChildren(Predicate<string> f)
+		{
+			return f(name) ? WantedChildrenInternal(f) : children.Values;
+		}
+
+		IEnumerable<Function> WantedChildrenInternal(Predicate<string> f)
+		{
+			Queue<Function> q = new Queue<Function>();
+
+			foreach (Function child in children.Values)
+				q.Enqueue(child);
+
+			while (q.Count > 0)
+			{
+				Function current = q.Dequeue();
+				if (!f(current.name))
+					yield return current;
+				else
+					foreach (Function cc in current.children.Values)
+						q.Enqueue(cc);
+			}
 		}
 
 		public void WriteTo(XmlWriter writer)

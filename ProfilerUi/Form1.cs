@@ -27,7 +27,7 @@ namespace ProfilerUi
 		public Form1()
 		{
 			InitializeComponent(); 
-			Text = "IJW Profiler 0.3.1";
+			Text = "IJW Profiler 0.3.3";
 
 			workspace.ContentPanel.BackColor = SystemColors.AppWorkspace;
 			tabStrip = CreateTabStrip(workspace.ContentPanel);
@@ -116,12 +116,12 @@ namespace ProfilerUi
 
 			view.Nodes.Clear();
 			foreach (Thread thread in tree.threads.Values)
-				view.Nodes.Add(thread.CreateView(thread.TotalTime));
+				view.Nodes.Add(thread.CreateView(thread.TotalTime, Filter));
 
 			Text = baseText;
 		}
 
-		Predicate<string> Filter = new FunctionFilter("System.", "Microsoft.").EvalString;
+		Predicate<string> Filter = new FunctionFilter("System.", "Microsoft.", "MS.Internal.").EvalString;
 
 		void OnCloseClicked(object sender, EventArgs e) { Close(); }
 
@@ -158,7 +158,7 @@ namespace ProfilerUi
 							MessageBoxButtons.YesNo))
 						{
 							Function merged = Function.Merge(invocations);
-							selectedNode = (Node)merged.CreateView(merged.TotalTime);
+							selectedNode = (Node)merged.CreateView(merged.TotalTime, Filter);
 						}
 					}
 				}
@@ -167,7 +167,7 @@ namespace ProfilerUi
 			IProfilerElement t = selectedNode.Element;
 
 			CallTreeView v = CreateNewView(t.TabTitle, selectedNode, currentView.src);
-			TreeNode n2 = t.CreateView(t.TotalTime);
+			TreeNode n2 = t.CreateView(t.TotalTime, Filter);
 			v.Nodes.Add(n2);
 			v.SelectedNode = n2;
 		}
