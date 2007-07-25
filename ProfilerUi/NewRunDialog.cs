@@ -33,9 +33,7 @@ namespace ProfilerUi
 			if (DialogResult.OK == ofd.ShowDialog())
 			{
 				applicationBox.Text = ofd.FileName;
-				
-				if (workingDirectoryBox.Text == "")
-					workingDirectoryBox.Text = Path.GetDirectoryName(ofd.FileName);
+				workingDirectoryBox.Text = Path.GetDirectoryName(ofd.FileName);
 			}
 		}
 
