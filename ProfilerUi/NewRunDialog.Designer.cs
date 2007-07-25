@@ -42,27 +42,6 @@ namespace ProfilerUi
 			label3 = new System.Windows.Forms.Label();
 			this.SuspendLayout();
 			// 
-			// applicationBox
-			// 
-			this.applicationBox.Location = new System.Drawing.Point(115, 26);
-			this.applicationBox.Name = "applicationBox";
-			this.applicationBox.Size = new System.Drawing.Size(324, 20);
-			this.applicationBox.TabIndex = 0;
-			// 
-			// workingDirectoryBox
-			// 
-			this.workingDirectoryBox.Location = new System.Drawing.Point(115, 52);
-			this.workingDirectoryBox.Name = "workingDirectoryBox";
-			this.workingDirectoryBox.Size = new System.Drawing.Size(355, 20);
-			this.workingDirectoryBox.TabIndex = 1;
-			// 
-			// argumentsBox
-			// 
-			this.argumentsBox.Location = new System.Drawing.Point(115, 78);
-			this.argumentsBox.Name = "argumentsBox";
-			this.argumentsBox.Size = new System.Drawing.Size(355, 20);
-			this.argumentsBox.TabIndex = 2;
-			// 
 			// label1
 			// 
 			label1.AutoSize = true;
@@ -89,6 +68,27 @@ namespace ProfilerUi
 			label3.Size = new System.Drawing.Size(60, 13);
 			label3.TabIndex = 5;
 			label3.Text = "Arguments:";
+			// 
+			// applicationBox
+			// 
+			this.applicationBox.Location = new System.Drawing.Point(115, 26);
+			this.applicationBox.Name = "applicationBox";
+			this.applicationBox.Size = new System.Drawing.Size(324, 20);
+			this.applicationBox.TabIndex = 0;
+			// 
+			// workingDirectoryBox
+			// 
+			this.workingDirectoryBox.Location = new System.Drawing.Point(115, 52);
+			this.workingDirectoryBox.Name = "workingDirectoryBox";
+			this.workingDirectoryBox.Size = new System.Drawing.Size(355, 20);
+			this.workingDirectoryBox.TabIndex = 1;
+			// 
+			// argumentsBox
+			// 
+			this.argumentsBox.Location = new System.Drawing.Point(115, 78);
+			this.argumentsBox.Name = "argumentsBox";
+			this.argumentsBox.Size = new System.Drawing.Size(355, 20);
+			this.argumentsBox.TabIndex = 2;
 			// 
 			// browseButton
 			// 
@@ -140,7 +140,7 @@ namespace ProfilerUi
 			this.MaximizeBox = false;
 			this.Name = "NewRunDialog";
 			this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
-			this.Text = "New Run...";
+			this.Text = "New Session...";
 			this.ResumeLayout(false);
 			this.PerformLayout();
 
