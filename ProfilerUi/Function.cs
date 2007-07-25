@@ -106,7 +106,6 @@ namespace ProfilerUi
 			if (!f(name)) return children.Values;
 
 			Dictionary<uint, Function> result = new Dictionary<uint, Function>();
-			Function o;
 
 			foreach (Function func in WantedChildrenInternal(f))
 				MergeInto(result, func);
