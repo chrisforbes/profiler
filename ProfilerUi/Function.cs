@@ -4,6 +4,7 @@ using System.Text;
 using System.Windows.Forms;
 using System.Text.RegularExpressions;
 using System.Xml;
+using IjwFramework.Delegates;
 
 namespace ProfilerUi
 {
@@ -40,7 +41,6 @@ namespace ProfilerUi
 			TreeNode n = new Node( this, string.Format("{0} - {1} calls - {4:F1}% {2:F1}ms - [{3:F1}ms]",
 				name, calls, time, OwnTime, 100.0 * time / rootTime));
 
-			//List<Function> fns = new List<Function>(children.Values);
 			List<Function> fns = new List<Function>(WantedChildren(filter));
 			fns.Sort(ByTimeDecreasing);
 
@@ -59,8 +59,6 @@ namespace ProfilerUi
 		public static Comparison<Function> ByTimeDecreasing =
 			delegate(Function a, Function b) { return b.time.CompareTo(a.time); };
 
-		// note: this just collects top-level invocations.
-
 		public List<Function> CollectInvocations(uint functionId)
 		{
 			List<Function> result = new List<Function>();
@@ -77,7 +75,12 @@ namespace ProfilerUi
 					f.CollectInvocationsInto(list, functionId);
 		}
 
-		static IEnumerable<T> Yield<T>(params T[] t) { return t; }
+		static void MergeInto(Dictionary<uint, Function> dest, Function f)
+		{
+			Function o;
+			dest[f.id] = dest.TryGetValue(f.id, out o) ?
+				Merge(Iterators.Yield(o, f)) : f;
+		}
 
 		public static Function Merge(IEnumerable<Function> invocations)
 		{
@@ -92,23 +95,23 @@ namespace ProfilerUi
 				f.time += i.time;
 
 				foreach (Function c in i.children.Values)
-				{
-					Function oc;
-					if (!f.children.TryGetValue(c.id, out oc))
-						oc = c;
-					else
-						oc = Merge(Yield(oc, c));
-
-					f.children[oc.id] = oc;
-				}
+					MergeInto(f.children, c);
 			}
 
 			return f;
 		}
 
-		public IEnumerable<Function> WantedChildren(Predicate<string> f)
+		IEnumerable<Function> WantedChildren(Predicate<string> f)
 		{
-			return f(name) ? WantedChildrenInternal(f) : children.Values;
+			if (!f(name)) return children.Values;
+
+			Dictionary<uint, Function> result = new Dictionary<uint, Function>();
+			Function o;
+
+			foreach (Function func in WantedChildrenInternal(f))
+				MergeInto(result, func);
+
+			return result.Values;
 		}
 
 		IEnumerable<Function> WantedChildrenInternal(Predicate<string> f)

@@ -8,16 +8,19 @@ using System.Windows.Forms;
 using System.Diagnostics;
 using System.IO;
 
+using IjwFramework.TabStrip;
+using IjwFramework.Delegates;
+
 namespace ProfilerUi
 {
 	public partial class Form1 : Form
 	{
 		CallTreeView currentView = null;
-		TabStrip<CallTreeView> tabStrip;
+		TabStripControl<CallTreeView> tabStrip;
 
-		static TabStrip<CallTreeView> CreateTabStrip(Control host)
+		static TabStripControl<CallTreeView> CreateTabStrip(Control host)
 		{
-			TabStrip<CallTreeView> ts = new TabStrip<CallTreeView>();
+			TabStripControl<CallTreeView> ts = new TabStripControl<CallTreeView>();
 			ts.Anchor = AnchorStyles.Top | AnchorStyles.Left | AnchorStyles.Right;
 			ts.Bounds = new Rectangle(0, 0, 647, 20);
 			host.Controls.Add(ts);
@@ -27,7 +30,7 @@ namespace ProfilerUi
 		public Form1()
 		{
 			InitializeComponent(); 
-			Text = "IJW Profiler 0.3.3";
+			Text = "IJW Profiler 0.4";
 
 			workspace.ContentPanel.BackColor = SystemColors.AppWorkspace;
 			tabStrip = CreateTabStrip(workspace.ContentPanel);
@@ -54,14 +57,14 @@ namespace ProfilerUi
 			tabStrip.Changed += e;
 		}
 
-		Run ProfileProcess(string processName)
+		Run ProfileProcess(RunParameters p)
 		{
 			using (new ComServerRegistration("pcomimpl.dll"))
 			{
 				Run run = new Run();
 
-				ProcessStartInfo info = new ProcessStartInfo(processName);
-				info.WorkingDirectory = Path.GetDirectoryName(processName);
+				ProcessStartInfo info = new ProcessStartInfo(p.exePath);
+				info.WorkingDirectory = p.workingDirectory;
 				info.UseShellExecute = false;
 				info.EnvironmentVariables["Cor_Enable_Profiling"] = "1";
 				info.EnvironmentVariables["COR_PROFILER"] = "{C1E9FE1F-F517-45c0-BB0E-EFAECC9401FC}";
@@ -92,12 +95,10 @@ namespace ProfilerUi
 
 		void NewRun(object sender, EventArgs e)
 		{
-			OpenFileDialog d = new OpenFileDialog();
-			d.Filter = "Application|*.exe";
-			d.RestoreDirectory = true;
+			NewRunDialog dialog = new NewRunDialog(null);
 
-			if (DialogResult.OK == d.ShowDialog())
-				using (Run run = ProfileProcess(d.FileName))
+			if (DialogResult.OK == dialog.ShowDialog())
+				using (Run run = ProfileProcess(dialog.Parameters))
 					LoadTraceData(run);
 		}
 
@@ -105,14 +106,16 @@ namespace ProfilerUi
 		{
 			FunctionNameProvider names = new FunctionNameProvider(run.txtFile);
 			string baseText = Text;
-			Action<float> progressCallback = delegate(float frac) { Text = baseText + " - Slurping " + frac.ToString("P0"); };
+			Action<float> progressCallback =
+				delegate(float frac) { Text = baseText + " - Slurping " + frac.ToString("P0"); Application.DoEvents(); };
 
-			Predicate<string> shouldHideFunction = delegate { return false; };
+			Predicate<string> shouldHideFunction = Predicates.Never;
 
 			CallTree tree = new CallTree(run.binFile, names, shouldHideFunction, progressCallback);
 			CallTreeView view = CreateNewView(run.name, null, tree);
 
 			Text = baseText + " - Preparing view...";
+			Application.DoEvents();
 
 			view.Nodes.Clear();
 			foreach (Thread thread in tree.threads.Values)
@@ -127,10 +130,8 @@ namespace ProfilerUi
 
 		Node GetSelectedNode()
 		{
-			if (tabStrip.Current == null)
-				return null;
-
-			return tabStrip.Current.SelectedNode as Node;
+			return (tabStrip.Current == null) ? 
+				null : tabStrip.Current.SelectedNode as Node;
 		}
 
 		void OnOpenInNewTab(object sender, EventArgs e)
@@ -181,10 +182,8 @@ namespace ProfilerUi
 			sfd.RestoreDirectory = true;
 			sfd.Filter = "Snapshot files (*.xml)|*.xml";
 
-			if (DialogResult.OK != sfd.ShowDialog())
-				return;
-
-			currentView.src.WriteTo(sfd.FileName);
+			if (DialogResult.OK == sfd.ShowDialog())
+				currentView.src.WriteTo(sfd.FileName);
 		}
 	}
 }

@@ -96,14 +96,12 @@ namespace ProfilerUi
 		public void WriteTo(XmlWriter writer)
 		{
 			writer.WriteStartElement("run");
-
 			writer.WriteStartElement("trace");
 
 			foreach (Thread t in threads.Values)
 				t.WriteTo(writer);
 
 			writer.WriteEndElement();
-
 			writer.WriteStartElement("names");
 
 			foreach (KeyValuePair<uint, string> name in names.Everything)
@@ -115,7 +113,6 @@ namespace ProfilerUi
 			}
 
 			writer.WriteEndElement();
-
 			writer.WriteEndElement();
 		}
 

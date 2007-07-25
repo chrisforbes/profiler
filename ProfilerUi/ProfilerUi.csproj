@@ -29,6 +29,10 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="IjwFramework, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\IjwFramework\IjwFramework\bin\Debug\IjwFramework.dll</HintPath>
+    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Data" />
     <Reference Include="System.Deployment" />
@@ -42,11 +46,7 @@
     <Compile Include="CallTreeView.cs">
       <SubType>Component</SubType>
     </Compile>
-    <Compile Include="CloseBox.cs" />
     <Compile Include="ComServerRegistration.cs" />
-    <Compile Include="TabStrip.cs">
-      <SubType>Component</SubType>
-    </Compile>
     <Compile Include="Form1.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -59,6 +59,12 @@
     <Compile Include="IActivatible.cs" />
     <Compile Include="IProfilerElement.cs" />
     <Compile Include="ItemPainter.cs" />
+    <Compile Include="NewRunDialog.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="NewRunDialog.Designer.cs">
+      <DependentUpon>NewRunDialog.cs</DependentUpon>
+    </Compile>
     <Compile Include="Node.cs" />
     <Compile Include="ProfileEvent.cs" />
     <Compile Include="Program.cs" />
@@ -67,28 +73,13 @@
       <SubType>Designer</SubType>
       <DependentUpon>Form1.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="Properties\Resources.resx">
-      <Generator>ResXFileCodeGenerator</Generator>
-      <LastGenOutput>Resources.Designer.cs</LastGenOutput>
+    <EmbeddedResource Include="NewRunDialog.resx">
       <SubType>Designer</SubType>
+      <DependentUpon>NewRunDialog.cs</DependentUpon>
     </EmbeddedResource>
-    <Compile Include="Properties\Resources.Designer.cs">
-      <AutoGen>True</AutoGen>
-      <DependentUpon>Resources.resx</DependentUpon>
-    </Compile>
     <None Include="ProfilerUi.exe.manifest" />
-    <None Include="Properties\Settings.settings">
-      <Generator>SettingsSingleFileGenerator</Generator>
-      <LastGenOutput>Settings.Designer.cs</LastGenOutput>
-    </None>
-    <Compile Include="Properties\Settings.Designer.cs">
-      <AutoGen>True</AutoGen>
-      <DependentUpon>Settings.settings</DependentUpon>
-      <DesignTimeSharedInput>True</DesignTimeSharedInput>
-    </Compile>
     <Compile Include="Run.cs" />
-    <Compile Include="Tab.cs" />
-    <Compile Include="TabIterator.cs" />
+    <Compile Include="RunParameters.cs" />
     <Compile Include="Thread.cs" />
   </ItemGroup>
   <ItemGroup>
@@ -104,6 +95,7 @@
   -->
   <PropertyGroup>
     <PostBuildEvent>"$(DevEnvDir)..\..\SDK\v2.0\bin\mt.exe" -manifest "$(ProjectDir)$(TargetName).exe.manifest"  –outputresource:"$(TargetDir)$(TargetFileName)";#1
-copy "$(TargetPath)" "$(SolutionDir)debug\"</PostBuildEvent>
+copy "$(TargetPath)" "$(SolutionDir)debug\"
+copy "$(TargetDir)*.dll" "$(SolutionDir)debug\"</PostBuildEvent>
   </PropertyGroup>
 </Project>
