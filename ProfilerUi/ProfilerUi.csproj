@@ -67,6 +67,7 @@
     </Compile>
     <Compile Include="Node.cs" />
     <Compile Include="ProfileEvent.cs" />
+    <Compile Include="ProfilerView.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <EmbeddedResource Include="Form1.resx">

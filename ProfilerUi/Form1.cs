@@ -15,46 +15,13 @@ namespace ProfilerUi
 {
 	public partial class Form1 : Form
 	{
-		CallTreeView currentView = null;
-		TabStripControl<CallTreeView> tabStrip;
-
-		static TabStripControl<CallTreeView> CreateTabStrip(Control host)
-		{
-			TabStripControl<CallTreeView> ts = new TabStripControl<CallTreeView>();
-			ts.Anchor = AnchorStyles.Top | AnchorStyles.Left | AnchorStyles.Right;
-			ts.Bounds = new Rectangle(0, 0, 647, 20);
-			host.Controls.Add(ts);
-			return ts;
-		}
+		MultipleViewManager viewManager;
 
 		public Form1()
 		{
 			InitializeComponent(); 
 			Text = "IJW Profiler 0.4";
-
-			workspace.ContentPanel.BackColor = SystemColors.AppWorkspace;
-			tabStrip = CreateTabStrip(workspace.ContentPanel);
-
-			EventHandler e = delegate
-			{
-				if (currentView != null)
-					workspace.ContentPanel.Controls.Remove(currentView);
-
-				currentView = tabStrip.Current;
-
-				if (currentView != null)
-				{
-					workspace.ContentPanel.Controls.Add(currentView);
-					currentView.BorderStyle = BorderStyle.None;
-					currentView.Focus();
-					currentView.Anchor = AnchorStyles.Left | AnchorStyles.Right | AnchorStyles.Top | AnchorStyles.Bottom;
-					currentView.Bounds = new Rectangle(1, 20, workspace.ContentPanel.ClientSize.Width - 2, 
-						workspace.ContentPanel.ClientSize.Height - 21);
-				}
-			};
-
-			tabStrip.Iterator.Changed += e;
-			tabStrip.Changed += e;
+			viewManager = new MultipleViewManager(workspace.ContentPanel);
 		}
 
 		Run ProfileProcess(RunParameters p)
@@ -81,9 +48,9 @@ namespace ProfilerUi
 		CallTreeView CreateNewView(string name, Node node, CallTree src)
 		{
 			CallTreeView view = new CallTreeView( Filter, name, src );
-			tabStrip.Add(view);
-
-			tabStrip.Select(view);
+			ProfilerView viewWrapper = new ProfilerView(viewManager, view);
+			viewManager.Add(viewWrapper);
+			viewManager.Select(viewWrapper);
 
 			if (node != null)
 			{
@@ -109,9 +76,7 @@ namespace ProfilerUi
 			Action<float> progressCallback =
 				delegate(float frac) { Text = baseText + " - Slurping " + frac.ToString("P0"); Application.DoEvents(); };
 
-			Predicate<string> shouldHideFunction = Predicates.Never;
-
-			CallTree tree = new CallTree(run.binFile, names, shouldHideFunction, progressCallback);
+			CallTree tree = new CallTree(run.binFile, names, progressCallback);
 			CallTreeView view = CreateNewView(run.name, null, tree);
 
 			Text = baseText + " - Preparing view...";
@@ -130,8 +95,11 @@ namespace ProfilerUi
 
 		Node GetSelectedNode()
 		{
-			return (tabStrip.Current == null) ? 
-				null : tabStrip.Current.SelectedNode as Node;
+			ProfilerView current = viewManager.Current as ProfilerView;
+			if (current == null)
+				return null;
+
+			return current.view.SelectedNode as Node;
 		}
 
 		void OnOpenInNewTab(object sender, EventArgs e)
@@ -167,15 +135,24 @@ namespace ProfilerUi
 
 			IProfilerElement t = selectedNode.Element;
 
-			CallTreeView v = CreateNewView(t.TabTitle, selectedNode, currentView.src);
+			CallTreeView v = CreateNewView(t.TabTitle, selectedNode, CurrentView.src);
 			TreeNode n2 = t.CreateView(t.TotalTime, Filter);
 			v.Nodes.Add(n2);
 			v.SelectedNode = n2;
 		}
 
+		CallTreeView CurrentView
+		{
+			get
+			{
+				ProfilerView v = viewManager.Current as ProfilerView;
+				return (v == null) ? null : v.view;
+			}
+		}
+
 		void OnSave(object sender, EventArgs e)
 		{
-			if (currentView == null)
+			if (CurrentView == null)
 				return;
 
 			SaveFileDialog sfd = new SaveFileDialog();
@@ -183,7 +160,7 @@ namespace ProfilerUi
 			sfd.Filter = "Snapshot files (*.xml)|*.xml";
 
 			if (DialogResult.OK == sfd.ShowDialog())
-				currentView.src.WriteTo(sfd.FileName);
+				CurrentView.src.WriteTo(sfd.FileName);
 		}
 	}
 }

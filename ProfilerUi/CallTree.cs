@@ -14,7 +14,7 @@ namespace ProfilerUi
 		FunctionNameProvider names;
 		ulong frequency;
 
-		public CallTree(string filename, FunctionNameProvider names, Predicate<string> filter, Action<float> progressCallback)
+		public CallTree(string filename, FunctionNameProvider names, Action<float> progressCallback)
 		{
 			ulong finalTime = 0;
 			float lastFrac = -1;
@@ -30,8 +30,8 @@ namespace ProfilerUi
 					{
 						case Opcode.SetClockFrequency: frequency = e.timestamp; break;
 						case Opcode.ThreadTransition: OnThreadTransition(e); break;
-						case Opcode.EnterFunction: OnEnterFunction(e, names, filter); break;
-						case Opcode.LeaveFunction: OnLeaveFunction(e, names, filter); break;
+						case Opcode.EnterFunction: OnEnterFunction(e, names); break;
+						case Opcode.LeaveFunction: OnLeaveFunction(e); break;
 					}
 
 					finalTime = e.timestamp;
@@ -66,7 +66,7 @@ namespace ProfilerUi
 			currentThread = new Activation<Thread>(t, e.timestamp);
 		}
 
-		void OnEnterFunction(ProfileEvent e, FunctionNameProvider nameProvider, Predicate<string> filter)
+		void OnEnterFunction(ProfileEvent e, FunctionNameProvider nameProvider)
 		{
 			Thread t = currentThread.Target;
 			Dictionary<uint, Function> dict = (t.activations.Count == 0)
@@ -75,22 +75,16 @@ namespace ProfilerUi
 			Function f;
 
 			string name = nameProvider.GetName(e.id);
-			if (!filter(name))
-			{
 
-				if (!dict.TryGetValue(e.id, out f))
-					dict.Add(e.id, f = new Function(e.id, nameProvider.GetName(e.id)));
+			if (!dict.TryGetValue(e.id, out f))
+				dict.Add(e.id, f = new Function(e.id, nameProvider.GetName(e.id)));
 
-				t.activations.Push(new Activation<Function>(f, e.timestamp));
-			}
+			t.activations.Push(new Activation<Function>(f, e.timestamp));
 		}
 
-		void OnLeaveFunction(ProfileEvent e, FunctionNameProvider nameProvider, Predicate<string> filter)
+		void OnLeaveFunction(ProfileEvent e)
 		{
-			string name = nameProvider.GetName(e.id);
-
-			if (!filter(name))
-				currentThread.Target.activations.Pop().Complete(e.timestamp, frequency);
+			currentThread.Target.activations.Pop().Complete(e.timestamp, frequency);
 		}
 
 		public void WriteTo(XmlWriter writer)
