@@ -10,7 +10,13 @@
 			<body>
 				<h2>
 					<span class="x" >IJW Profiler</span>
-					<span class="y">0.5</span>
+					<span class="y">
+						<script>
+							<![CDATA[
+						document.write( window.external.GetVersion() );
+						]]>
+						</script>
+					</span>
 				</h2>
 				<div>
 					<div>

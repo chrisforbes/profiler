@@ -10,10 +10,12 @@ namespace ProfilerUi
 	public class StartPageController
 	{
 		readonly Action<RunParameters> a;
+		readonly string version;
 
-		internal StartPageController(Action<RunParameters> a)
+		internal StartPageController(string version, Action<RunParameters> a)
 		{
 			this.a = a;
+			this.version = version;
 		}
 
 		public void Run(string cmd, string dir, string args)
@@ -24,6 +26,11 @@ namespace ProfilerUi
 		public void Snapshot(string cmd)
 		{
 			MessageBox.Show("TODO: load snapshot `" + cmd + "`");
+		}
+
+		public string GetVersion()
+		{
+			return version;
 		}
 	}
 }

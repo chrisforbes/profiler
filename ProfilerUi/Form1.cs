@@ -19,12 +19,14 @@ namespace ProfilerUi
 
 		public Form1()
 		{
-			InitializeComponent(); 
-			Text = "IJW Profiler 0.5";
+			string version = "0.5";
+
+			InitializeComponent();
+			Text = "IJW Profiler " + version;
 			viewManager = new MultipleViewManager(workspace.ContentPanel);
 
 			viewManager.Add(new WebView(viewManager,
-				"file://" + Path.GetFullPath("mru.xml"), new StartPageController(NewRun)));
+				"file://" + Path.GetFullPath("mru.xml"), new StartPageController(version, NewRun)));
 		}
 
 		Run ProfileProcess(RunParameters p)
