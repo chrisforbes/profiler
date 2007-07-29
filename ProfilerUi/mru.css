@@ -1,0 +1,17 @@
+body
+{
+	font-family: Tahoma;
+	font-size: 8pt;
+}
+
+h2 span.x
+{
+	color: Black;
+}
+
+h2 span.y
+{
+	margin-left: 0.5em;
+	color: Gray;
+	font-size: 14pt;
+}

@@ -20,8 +20,11 @@ namespace ProfilerUi
 		public Form1()
 		{
 			InitializeComponent(); 
-			Text = "IJW Profiler 0.4";
+			Text = "IJW Profiler 0.5";
 			viewManager = new MultipleViewManager(workspace.ContentPanel);
+
+			viewManager.Add(new WebView(viewManager,
+				"file://" + Path.GetFullPath("mru.xml"), new StartPageController(NewRun)));
 		}
 
 		Run ProfileProcess(RunParameters p)
@@ -60,13 +63,18 @@ namespace ProfilerUi
 			return view;
 		}
 
-		void NewRun(object sender, EventArgs e)
+		void NewRun(RunParameters r)
 		{
-			NewRunDialog dialog = new NewRunDialog(null);
+			NewRunDialog dialog = new NewRunDialog(r);
 
 			if (DialogResult.OK == dialog.ShowDialog())
 				using (Run run = ProfileProcess(dialog.Parameters))
 					LoadTraceData(run);
+		}
+
+		void NewRun(object sender, EventArgs e)
+		{
+			NewRun(null);
 		}
 
 		void LoadTraceData(Run run)

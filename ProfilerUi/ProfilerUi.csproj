@@ -81,10 +81,20 @@
     <None Include="ProfilerUi.exe.manifest" />
     <Compile Include="Run.cs" />
     <Compile Include="RunParameters.cs" />
+    <Compile Include="StartPageController.cs" />
     <Compile Include="Thread.cs" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="icon.ico" />
+    <Content Include="mru.css">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="mru.xml">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="mru.xslt">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
@@ -97,6 +107,9 @@
   <PropertyGroup>
     <PostBuildEvent>"$(DevEnvDir)..\..\SDK\v2.0\bin\mt.exe" -manifest "$(ProjectDir)$(TargetName).exe.manifest"  –outputresource:"$(TargetDir)$(TargetFileName)";#1
 copy "$(TargetPath)" "$(SolutionDir)debug\"
-copy "$(TargetDir)*.dll" "$(SolutionDir)debug\"</PostBuildEvent>
+copy "$(TargetDir)*.dll" "$(SolutionDir)debug\"
+copy "$(TargetDir)*.xsl" "$(SolutionDir)debug\"
+copy "$(TargetDir)*.xml" "$(SolutionDir)debug\"
+copy "$(TargetDir)*.css" "$(SolutionDir)debug\"</PostBuildEvent>
   </PropertyGroup>
 </Project>
