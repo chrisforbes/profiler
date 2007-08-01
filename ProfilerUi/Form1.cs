@@ -8,7 +8,7 @@ using System.Windows.Forms;
 using System.Diagnostics;
 using System.IO;
 
-using IjwFramework.TabStrip;
+using IjwFramework.Ui;
 using IjwFramework.Delegates;
 
 namespace ProfilerUi

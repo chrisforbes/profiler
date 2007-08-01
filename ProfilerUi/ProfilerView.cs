@@ -1,7 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Text;
-using IjwFramework.TabStrip;
+using IjwFramework.Ui;
 using System.Windows.Forms;
 
 namespace ProfilerUi
