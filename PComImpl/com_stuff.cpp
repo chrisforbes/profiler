@@ -6,6 +6,8 @@
 #include <string>
 #include <map>
 
+#include <corhdr.h>
+
 #include "classfactory.h"
 
 #pragma comment(lib, "corguids.lib")
@@ -77,7 +79,13 @@ public:
 		writer.WriteTailFunction( functionId, profiler );
 	}
 
-	std::wstring GetFunctionName( UINT functionId )
+	bool IsPrivate( DWORD flags )
+	{
+		flags &= mdMemberAccessMask;
+		return (flags == mdPrivateScope || flags == mdPrivate || flags == mdFamANDAssem || flags == mdAssem);
+	}
+
+	std::wstring GetFunctionName( UINT functionId, bool& isPrivate )
 	{
 		mdToken methodToken, classToken, newClassToken;
 		IMetaDataImport * pm = NULL;
@@ -87,11 +95,14 @@ public:
 
 		wchar_t buf[512];
 		DWORD size = 512;
-		if (FAILED(pm->GetMethodProps( methodToken, &classToken, buf, size, &size, NULL, NULL, NULL, NULL, NULL )))
+		DWORD flags = 0;
+		if (FAILED(pm->GetMethodProps( methodToken, &classToken, buf, size, &size, &flags, NULL, NULL, NULL, NULL )))
 		{
 			pm->Release();
 			return L"<no metadata>";
 		}
+
+		isPrivate = IsPrivate( flags );
 
 		std::wstring class_buf_string;
 		while( true )
@@ -122,10 +133,17 @@ public:
 
 	bool ShouldHookFunction( UINT functionId )
 	{
+		bool isPrivate;
 		char sz[1024];
-		std::wstring ws = GetFunctionName( functionId );
+		std::wstring ws = GetFunctionName( functionId, isPrivate );
 		sprintf(sz, "0x%08x=%ws", functionId, ws.c_str());
 		Log(sz);
+
+		if (isPrivate)
+		{
+			sprintf(sz, "--- %ws is private", ws.c_str());
+			Log(sz);
+		}
 
 		return true;
 	}
