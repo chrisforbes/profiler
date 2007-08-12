@@ -18,9 +18,9 @@ extern const GUID __declspec( selectany ) CLSID_PROFILER =
 
 class Profiler * __inst;
 
-void __funcEnter( UINT functionId );
-void __funcLeave( UINT functionId );
-void __funcTail( UINT functionId );
+void __funcEnter( UINT functionId, UINT_PTR, COR_PRF_FRAME_INFO, COR_PRF_FUNCTION_ARGUMENT_INFO* );
+void __funcLeave( UINT functionId, UINT_PTR, COR_PRF_FRAME_INFO, COR_PRF_FUNCTION_ARGUMENT_RANGE* );
+void __funcTail( UINT functionId, UINT_PTR, COR_PRF_FRAME_INFO );
 UINT_PTR __stdcall __shouldHookFunction( UINT functionId, BOOL * shouldHook );
 
 char const * txtProfileEnv = "ijwprof_txt";
@@ -56,7 +56,7 @@ public:
 			Log("Failed to initialize");
 			return hr;
 		}
-		profiler->SetEnterLeaveFunctionHooks( __funcEnter, __funcLeave, __funcTail );
+		profiler->SetEnterLeaveFunctionHooks2( __funcEnter, __funcLeave, __funcTail );
 		profiler->SetFunctionIDMapper( __shouldHookFunction );
 		writer.WriteClockFrequency();
 		return S_OK;
@@ -137,7 +137,7 @@ UINT_PTR __stdcall __shouldHookFunction( UINT functionId, BOOL * shouldHook )
 	return functionId;
 }
 
-void __declspec(naked) __funcEnter ( UINT functionId )
+void __declspec(naked) __funcEnter ( UINT functionId, UINT_PTR, COR_PRF_FRAME_INFO, COR_PRF_FUNCTION_ARGUMENT_INFO* )
 {
 	__asm
 	{
@@ -150,11 +150,11 @@ void __declspec(naked) __funcEnter ( UINT functionId )
 		pop edx
 		pop ecx
 		pop eax
-		ret 4
+		ret 16
 	}
 }
 
-void __declspec(naked) __funcLeave ( UINT functionId )
+void __declspec(naked) __funcLeave ( UINT functionId, UINT_PTR, COR_PRF_FRAME_INFO, COR_PRF_FUNCTION_ARGUMENT_RANGE* )
 {
 	__asm
 	{
@@ -167,11 +167,11 @@ void __declspec(naked) __funcLeave ( UINT functionId )
 		pop edx
 		pop ecx
 		pop eax
-		ret 4
+		ret 16
 	}
 }
 
-void __declspec(naked) __funcTail ( UINT functionId )
+void __declspec(naked) __funcTail ( UINT functionId, UINT_PTR, COR_PRF_FRAME_INFO )
 {
 	__asm
 	{
@@ -184,7 +184,7 @@ void __declspec(naked) __funcTail ( UINT functionId )
 		pop edx
 		pop ecx
 		pop eax
-		ret 4
+		ret 12
 	}
 }
 

@@ -29,7 +29,6 @@ public:
 	{
 		Flush();
 		CloseHandle( fh );
-		delete[] buffer;
 		DeleteCriticalSection( &cs );
 	}
 
