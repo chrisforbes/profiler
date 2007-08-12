@@ -21,6 +21,7 @@ class Profiler * __inst;
 void __funcEnter( UINT functionId );
 void __funcLeave( UINT functionId );
 void __funcTail( UINT functionId );
+UINT_PTR __stdcall __shouldHookFunction( UINT functionId, BOOL * shouldHook );
 
 char const * txtProfileEnv = "ijwprof_txt";
 char const * binProfileEnv = "ijwprof_bin";
@@ -37,7 +38,6 @@ namespace
 
 class Profiler : public ProfilerBase
 {
-	std::map<UINT, bool> seen_function;
 	ProfileWriter writer;
 
 public:
@@ -57,21 +57,13 @@ public:
 			return hr;
 		}
 		profiler->SetEnterLeaveFunctionHooks( __funcEnter, __funcLeave, __funcTail );
+		profiler->SetFunctionIDMapper( __shouldHookFunction );
 		writer.WriteClockFrequency();
 		return S_OK;
 	}
 
 	void OnFunctionEnter( UINT functionId )
 	{
-		if (!seen_function[functionId])
-		{
-			char sz[1024];
-			std::wstring ws = GetFunctionName( functionId );
-			sprintf(sz, "0x%08x=%ws", functionId, ws.c_str());
-			Log(sz);
-
-			seen_function[functionId] = true;
-		}
 		writer.WriteEnterFunction( functionId, profiler );
 	}
 
@@ -127,7 +119,23 @@ public:
 
 		return class_buf_string + L"::" + std::wstring( buf );
 	}
+
+	bool ShouldHookFunction( UINT functionId )
+	{
+		char sz[1024];
+		std::wstring ws = GetFunctionName( functionId );
+		sprintf(sz, "0x%08x=%ws", functionId, ws.c_str());
+		Log(sz);
+
+		return true;
+	}
 };
+
+UINT_PTR __stdcall __shouldHookFunction( UINT functionId, BOOL * shouldHook )
+{
+	*shouldHook = __inst->ShouldHookFunction( functionId );
+	return functionId;
+}
 
 void __declspec(naked) __funcEnter ( UINT functionId )
 {

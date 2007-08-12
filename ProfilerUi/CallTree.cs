@@ -7,6 +7,31 @@ using System.Xml;
 
 namespace ProfilerUi
 {
+	class Interestingness
+	{
+		int totalCalls, interestingCalls;
+
+		public readonly Predicate<uint> Filter;
+
+		public Interestingness(Predicate<string> p, FunctionNameProvider n)
+		{
+			Filter = delegate(uint x)
+			{
+				++totalCalls;
+				if (!p(n.GetName(x)))
+					++interestingCalls;
+
+				return true;
+			};
+		}
+
+		public void Report()
+		{
+			MessageBox.Show( string.Format( "{0} of {1} calls were interesting. ({2:P}%)",
+				interestingCalls, totalCalls, (float)interestingCalls / (float)totalCalls));
+		}
+	}
+
 	class CallTree
 	{
 		public Dictionary<uint, Thread> threads = new Dictionary<uint, Thread>();
@@ -14,12 +39,15 @@ namespace ProfilerUi
 		FunctionNameProvider names;
 		ulong frequency;
 
-		public CallTree(string filename, FunctionNameProvider names, Action<float> progressCallback)
+		Interestingness hax;
+
+		public CallTree(string filename, FunctionNameProvider names, Action<float> progressCallback, Predicate<string> filter)
 		{
 			ulong finalTime = 0;
 			float lastFrac = -1;
 
 			this.names = names;
+			hax = new Interestingness(filter, names);
 
 			using (Stream s = File.OpenRead(filename))
 			using (BinaryReader reader = new BinaryReader(s))
@@ -30,7 +58,7 @@ namespace ProfilerUi
 					{
 						case Opcode.SetClockFrequency: frequency = e.timestamp; break;
 						case Opcode.ThreadTransition: OnThreadTransition(e); break;
-						case Opcode.EnterFunction: OnEnterFunction(e, names); break;
+						case Opcode.EnterFunction: OnEnterFunction(e); break;
 						case Opcode.LeaveFunction: OnLeaveFunction(e); break;
 					}
 
@@ -51,6 +79,8 @@ namespace ProfilerUi
 
 			if (currentThread != null)
 				currentThread.Complete(finalTime, frequency);
+
+			hax.Report();
 		}
 
 		void OnThreadTransition(ProfileEvent e)
@@ -66,24 +96,30 @@ namespace ProfilerUi
 			currentThread = new Activation<Thread>(t, e.timestamp);
 		}
 
-		void OnEnterFunction(ProfileEvent e, FunctionNameProvider nameProvider)
+		void OnEnterFunction(ProfileEvent e)
 		{
+			if (!hax.Filter(e.id))
+				return;
+
 			Thread t = currentThread.Target;
 			Dictionary<uint, Function> dict = (t.activations.Count == 0)
 				? t.roots : t.activations.Peek().Target.children;
 
 			Function f;
 
-			string name = nameProvider.GetName(e.id);
+			string name = names.GetName(e.id);
 
 			if (!dict.TryGetValue(e.id, out f))
-				dict.Add(e.id, f = new Function(e.id, nameProvider.GetName(e.id)));
+				dict.Add(e.id, f = new Function(e.id, name));
 
 			t.activations.Push(new Activation<Function>(f, e.timestamp));
 		}
 
 		void OnLeaveFunction(ProfileEvent e)
 		{
+			if (!hax.Filter(e.id))
+				return;
+
 			currentThread.Target.activations.Pop().Complete(e.timestamp, frequency);
 		}
 

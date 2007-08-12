@@ -86,7 +86,7 @@ namespace ProfilerUi
 			Action<float> progressCallback =
 				delegate(float frac) { Text = baseText + " - Slurping " + frac.ToString("P0"); Application.DoEvents(); };
 
-			CallTree tree = new CallTree(run.binFile, names, progressCallback);
+			CallTree tree = new CallTree(run.binFile, names, progressCallback, Filter);
 			CallTreeView view = CreateNewView(run.name, null, tree);
 
 			Text = baseText + " - Preparing view...";
