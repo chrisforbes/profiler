@@ -5,6 +5,8 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "PComImpl", "PComImpl\PComIm
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ProfilerUi", "ProfilerUi\ProfilerUi.csproj", "{37C66713-1DE2-4160-9157-D97F761EFDC2}"
 EndProject
+Project("{54435603-DBB4-11D2-8724-00A0C9A8B90C}") = "ProfilerSetup", "ProfilerSetup\ProfilerSetup.vdproj", "{E2D89611-2257-4770-B2F3-70595EACB6A2}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -35,6 +37,12 @@ Global
 		{37C66713-1DE2-4160-9157-D97F761EFDC2}.Release|Mixed Platforms.ActiveCfg = Release|Any CPU
 		{37C66713-1DE2-4160-9157-D97F761EFDC2}.Release|Mixed Platforms.Build.0 = Release|Any CPU
 		{37C66713-1DE2-4160-9157-D97F761EFDC2}.Release|Win32.ActiveCfg = Release|Any CPU
+		{E2D89611-2257-4770-B2F3-70595EACB6A2}.Debug|Any CPU.ActiveCfg = Debug
+		{E2D89611-2257-4770-B2F3-70595EACB6A2}.Debug|Mixed Platforms.ActiveCfg = Debug
+		{E2D89611-2257-4770-B2F3-70595EACB6A2}.Debug|Win32.ActiveCfg = Debug
+		{E2D89611-2257-4770-B2F3-70595EACB6A2}.Release|Any CPU.ActiveCfg = Release
+		{E2D89611-2257-4770-B2F3-70595EACB6A2}.Release|Mixed Platforms.ActiveCfg = Release
+		{E2D89611-2257-4770-B2F3-70595EACB6A2}.Release|Win32.ActiveCfg = Release
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

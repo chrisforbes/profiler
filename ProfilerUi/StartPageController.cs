@@ -25,7 +25,7 @@ namespace ProfilerUi
 
 		public void Snapshot(string cmd)
 		{
-			MessageBox.Show("TODO: load snapshot `" + cmd + "`");
+			//todo
 		}
 
 		public string GetVersion()
