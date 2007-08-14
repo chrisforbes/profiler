@@ -3,10 +3,10 @@ IJW Profiler
 
 COM DLL
 
-[ ] Use .NET 2.0 Hi-perf function hooks
+[x] Use .NET 2.0 Hi-perf function hooks
 [ ] Distinguish function overloads
 [ ] Distinguish generic type instances
-[ ] Named-pipe trace connector client
+[ ] Shared memory trace connector client
 
 User Interface
 
@@ -16,13 +16,12 @@ User Interface
 
 [ ] Backtraces
 [ ] Saving of profiler snapshots for later review!
-[ ] Named-pipe trace connector server
+[ ] Shared memory trace connector server
 
-[ ] Start page
-	[ ] Recently profiled applications
-	[ ] Tutorial?
-	[ ] New Session... wizard
-		[ ] Allow people to choose working directory, command-line args, etc
+[x] Start page
+	[x] Recently profiled applications
+	[x] New Session... wizard
+		[x] Allow people to choose working directory, command-line args, etc
 		
 [x] Option to merge multiple invocations on Ctrl+T
 [x] Fix sucky lack of generality in TabStrip!!!
