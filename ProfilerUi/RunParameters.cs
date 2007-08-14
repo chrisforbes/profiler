@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Text;
+using System.Xml;
 
 namespace ProfilerUi
 {
@@ -28,6 +29,22 @@ namespace ProfilerUi
 		public override int GetHashCode()
 		{
 			return exePath.GetHashCode() ^ workingDirectory.GetHashCode() ^ parameters.GetHashCode();
+		}
+
+		public RunParameters(XmlElement e)
+		{
+			exePath = e.SelectSingleNode("./cmd").InnerText;
+			workingDirectory = e.SelectSingleNode("./dir").InnerText;
+			parameters = e.SelectSingleNode("./args").InnerText;
+		}
+
+		public void WriteTo(XmlWriter writer)
+		{
+			writer.WriteStartElement("run");
+			writer.WriteElementString("cmd", exePath.Replace('\\', '/'));
+			writer.WriteElementString("dir", workingDirectory.Replace('\\', '/'));
+			writer.WriteElementString("args", parameters);
+			writer.WriteEndElement();
 		}
 	}
 }

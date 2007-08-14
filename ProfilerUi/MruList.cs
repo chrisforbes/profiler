@@ -2,18 +2,12 @@ using System;
 using System.Collections.Generic;
 using System.Text;
 using System.Xml;
+using System.Windows.Forms;
 
 namespace ProfilerUi
 {
 	static class MruList
 	{
-		static RunParameters Load(XmlElement e)
-		{
-			return new RunParameters(e.SelectSingleNode("./cmd").InnerText,
-				e.SelectSingleNode("./dir").InnerText,
-				e.SelectSingleNode("./args").InnerText);
-		}
-
 		const int maxItems = 5;
 
 		public static void AddRun(RunParameters p)
@@ -23,27 +17,22 @@ namespace ProfilerUi
 			doc.Load("mru.xml");
 
 			foreach (XmlElement e in doc.SelectNodes("/mru/run"))
-				l.Add(Load(e));
+				l.Add(new RunParameters(e));
 
 			UpdateList(l, p);
 
-			XmlWriterSettings settings= new XmlWriterSettings();
+			XmlWriterSettings settings = new XmlWriterSettings();
 			settings.Indent = true;
 			settings.IndentChars = "  ";
 
-			XmlWriter writer = XmlWriter.Create("mru.xml", settings);
-			writer.WriteStartElement("mru");
-
-			foreach (RunParameters r in l)
+			using (XmlWriter writer = XmlWriter.Create("mru.xml", settings))
 			{
-				writer.WriteStartElement("run");
-				writer.WriteElementString("cmd", r.exePath);
-				writer.WriteElementString("dir", r.workingDirectory);
-				writer.WriteElementString("args", r.parameters);
+				writer.WriteProcessingInstruction("xml-stylesheet", "href=\"mru.xslt\" type=\"text/xsl\"");
+				writer.WriteStartElement("mru");
+				foreach (RunParameters r in l)
+					r.WriteTo(writer);
 				writer.WriteEndElement();
 			}
-
-			writer.WriteEndElement();
 		}
 
 		static void UpdateList( List<RunParameters> list, RunParameters p )
