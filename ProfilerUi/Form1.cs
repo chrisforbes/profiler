@@ -19,7 +19,7 @@ namespace ProfilerUi
 
 		public Form1()
 		{
-			string version = "0.5";
+			string version = "0.6";
 
 			InitializeComponent();
 			Text = "IJW Profiler " + version;
