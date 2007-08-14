@@ -7,31 +7,6 @@ using System.Xml;
 
 namespace ProfilerUi
 {
-	class Interestingness
-	{
-		int totalCalls, interestingCalls;
-
-		public readonly Predicate<uint> Filter;
-
-		public Interestingness(Predicate<string> p, FunctionNameProvider n)
-		{
-			Filter = delegate(uint x)
-			{
-				++totalCalls;
-				if (!p(n.GetName(x)))
-					++interestingCalls;
-
-				return true;
-			};
-		}
-
-		public void Report()
-		{
-			MessageBox.Show( string.Format( "{0} of {1} calls were interesting. ({2:P}%)",
-				interestingCalls, totalCalls, (float)interestingCalls / (float)totalCalls));
-		}
-	}
-
 	class CallTree
 	{
 		public Dictionary<uint, Thread> threads = new Dictionary<uint, Thread>();
@@ -39,15 +14,12 @@ namespace ProfilerUi
 		FunctionNameProvider names;
 		ulong frequency;
 
-		Interestingness hax;
-
 		public CallTree(string filename, FunctionNameProvider names, Action<float> progressCallback, Predicate<string> filter)
 		{
 			ulong finalTime = 0;
 			float lastFrac = -1;
 
 			this.names = names;
-			hax = new Interestingness(filter, names);
 
 			using (Stream s = File.OpenRead(filename))
 			using (BinaryReader reader = new BinaryReader(s))
@@ -79,8 +51,6 @@ namespace ProfilerUi
 
 			if (currentThread != null)
 				currentThread.Complete(finalTime, frequency);
-
-			hax.Report();
 		}
 
 		void OnThreadTransition(ProfileEvent e)
@@ -98,9 +68,6 @@ namespace ProfilerUi
 
 		void OnEnterFunction(ProfileEvent e)
 		{
-			if (!hax.Filter(e.id))
-				return;
-
 			Thread t = currentThread.Target;
 			Dictionary<uint, Function> dict = (t.activations.Count == 0)
 				? t.roots : t.activations.Peek().Target.children;
@@ -117,9 +84,6 @@ namespace ProfilerUi
 
 		void OnLeaveFunction(ProfileEvent e)
 		{
-			if (!hax.Filter(e.id))
-				return;
-
 			currentThread.Target.activations.Pop().Complete(e.timestamp, frequency);
 		}
 

@@ -181,6 +181,10 @@
 			>
 		</File>
 		<File
+			RelativePath=".\function_stack.h"
+			>
+		</File>
+		<File
 			RelativePath=".\profiler_base.h"
 			>
 		</File>
@@ -190,6 +194,10 @@
 		</File>
 		<File
 			RelativePath=".\registry.cpp"
+			>
+		</File>
+		<File
+			RelativePath=".\thread_ptr.h"
 			>
 		</File>
 	</Files>

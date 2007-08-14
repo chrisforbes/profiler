@@ -59,6 +59,7 @@
     <Compile Include="IActivatible.cs" />
     <Compile Include="IProfilerElement.cs" />
     <Compile Include="ItemPainter.cs" />
+    <Compile Include="MruList.cs" />
     <Compile Include="NewRunDialog.cs">
       <SubType>Form</SubType>
     </Compile>

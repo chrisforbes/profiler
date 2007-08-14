@@ -31,6 +31,8 @@ namespace ProfilerUi
 
 		Run ProfileProcess(RunParameters p)
 		{
+			MruList.AddRun(p);
+
 			using (new ComServerRegistration("pcomimpl.dll"))
 			{
 				Run run = new Run();

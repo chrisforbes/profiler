@@ -19,6 +19,14 @@ public:
 		fflush(f);
 	}
 
+	void LogEx( char const * s, ... )
+	{
+		va_list l;
+		va_start( l, s );
+		vfprintf( f, s, l );
+		va_end( l );
+	}
+
 	STDMETHOD_(ULONG,AddRef)() { return S_OK; }
 	STDMETHOD_(ULONG,Release)() { return S_OK; }
 	STDMETHOD(QueryInterface)( IID const & riid, void ** ppInterface ) 

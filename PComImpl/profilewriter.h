@@ -132,6 +132,7 @@ private:
 		cur += length;
 	}
 
+public:
 	void Flush()
 	{
 		EnterCriticalSection( &cs );

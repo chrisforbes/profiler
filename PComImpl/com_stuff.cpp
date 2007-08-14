@@ -5,10 +5,14 @@
 #include <cstdio>
 #include <string>
 #include <map>
+#include <stack>
 
 #include <corhdr.h>
 
 #include "classfactory.h"
+
+#include "thread_ptr.h"
+#include "function_stack.h"
 
 #pragma comment(lib, "corguids.lib")
 
@@ -36,11 +40,39 @@ namespace
 		GetEnvironmentVariableA( name.c_str(), buf, MAX_PATH );
 		return buf;
 	}
+
+	template< typename T >
+	bool StringStartsWith( std::basic_string< T > const& s, std::basic_string< T > const& prefix )
+	{
+		std::basic_string<T>::const_iterator a = s.begin();
+		std::basic_string<T>::const_iterator b = prefix.begin();
+
+		while( b != prefix.end() )
+			if (*a++ != *b++)
+				return false;
+
+		return true;
+	}
+
+	template< typename T >
+	bool StringStartsWithAny( std::basic_string< T > const& s, 
+		std::basic_string< T > const * begin, 
+		std::basic_string< T > const * end )
+	{
+		std::basic_string< T > const * p = begin;
+		while( p != end )
+			if (StringStartsWith( s, *p++ ))
+				return true;
+
+		return false;
+	}
 }
 
 class Profiler : public ProfilerBase
 {
 	ProfileWriter writer;
+	std::map< UINT, bool > interesting;
+	FunctionStack fns;
 
 public:
 	Profiler()
@@ -64,19 +96,48 @@ public:
 		return S_OK;
 	}
 
+	STDMETHOD(Shutdown)()
+	{
+		writer.Flush();
+		return S_OK;
+	}
+
 	void OnFunctionEnter( UINT functionId )
 	{
-		writer.WriteEnterFunction( functionId, profiler );
+		bool parentInteresting = fns.Empty() || fns.Peek();
+		bool functionInteresting = interesting[ functionId ];
+
+		fns.Push(functionInteresting);
+
+		if (parentInteresting || functionInteresting)
+		{
+			LogEx( "-- %d %d\n", parentInteresting, functionInteresting );
+			writer.WriteEnterFunction( functionId, profiler );
+		}
 	}
 
 	void OnFunctionLeave( UINT functionId )
 	{
-		writer.WriteLeaveFunction( functionId, profiler );
+		bool functionInteresting = fns.Pop();
+		bool parentInteresting = fns.Empty() || fns.Peek();
+
+		if (parentInteresting || functionInteresting)
+		{
+			LogEx( "-- %d %d\n", parentInteresting, functionInteresting );
+			writer.WriteLeaveFunction( functionId, profiler );
+		}
 	}
 
 	void OnFunctionTail( UINT functionId )
 	{
-		writer.WriteTailFunction( functionId, profiler );
+		bool functionInteresting = fns.Pop();
+		bool parentInteresting = fns.Empty() || fns.Peek();
+
+		if (parentInteresting || functionInteresting)
+		{
+			LogEx( "-- %d %d\n", parentInteresting, functionInteresting );
+			writer.WriteTailFunction( functionId, profiler );
+		}
 	}
 
 	bool IsPrivate( DWORD flags )
@@ -118,7 +179,7 @@ public:
 
 			if( FAILED( pm->GetNestedClassProps( classToken, &newClassToken ) ) )
 				break;
-			if( newClassToken == classToken || newClassToken == 0 )
+			if( !newClassToken || newClassToken == classToken )
 				break;
 
 			class_buf_string = L"$" + class_buf_string;
@@ -139,12 +200,8 @@ public:
 		sprintf(sz, "0x%08x=%ws", functionId, ws.c_str());
 		Log(sz);
 
-		if (isPrivate)
-		{
-			sprintf(sz, "--- %ws is private", ws.c_str());
-			Log(sz);
-		}
-
+		static std::wstring str[] = { L"System.", L"Microsoft.", L"MS." };
+		interesting[ functionId ] = !StringStartsWithAny( ws, str, str + 3 );
 		return true;
 	}
 };
