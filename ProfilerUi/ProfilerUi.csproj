@@ -114,6 +114,7 @@ copy "$(TargetPath)" "$(SolutionDir)debug\"
 copy "$(TargetDir)*.dll" "$(SolutionDir)debug\"
 copy "$(TargetDir)*.xsl" "$(SolutionDir)debug\"
 copy "$(TargetDir)*.xml" "$(SolutionDir)debug\"
-copy "$(TargetDir)*.css" "$(SolutionDir)debug\"</PostBuildEvent>
+copy "$(TargetDir)*.css" "$(SolutionDir)debug\"
+copy "$(TargetDir)*.png" "$(SolutionDir)debug\"</PostBuildEvent>
   </PropertyGroup>
 </Project>
