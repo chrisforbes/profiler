@@ -39,6 +39,12 @@
         }
         "Entry"
         {
+        "MsmKey" = "8:_644F142F7739419DB5B5D7A9D2F9D21A"
+        "OwnerKey" = "8:_UNDEFINED"
+        "MsmSig" = "8:_UNDEFINED"
+        }
+        "Entry"
+        {
         "MsmKey" = "8:_6EFFB8E1834F465CB101FB57B5F48D0B"
         "OwnerKey" = "8:_UNDEFINED"
         "MsmSig" = "8:_UNDEFINED"
@@ -93,14 +99,14 @@
         }
         "Entry"
         {
-        "MsmKey" = "8:_C6E90E0AE64E4F76955E1B03D1083708"
-        "OwnerKey" = "8:_UNDEFINED"
+        "MsmKey" = "8:_B82C29847AB42BB7FB8EE0D2523AA288"
+        "OwnerKey" = "8:_E1A38C8C46124E83A2BDD72676D23354"
         "MsmSig" = "8:_UNDEFINED"
         }
         "Entry"
         {
-        "MsmKey" = "8:_D4BCE2EA87F2744BB645E8B85A0A21B2"
-        "OwnerKey" = "8:_E1A38C8C46124E83A2BDD72676D23354"
+        "MsmKey" = "8:_C6E90E0AE64E4F76955E1B03D1083708"
+        "OwnerKey" = "8:_UNDEFINED"
         "MsmSig" = "8:_UNDEFINED"
         }
         "Entry"
@@ -118,19 +124,19 @@
         "Entry"
         {
         "MsmKey" = "8:_UNDEFINED"
-        "OwnerKey" = "8:_D4BCE2EA87F2744BB645E8B85A0A21B2"
+        "OwnerKey" = "8:_E1A38C8C46124E83A2BDD72676D23354"
+        "MsmSig" = "8:_UNDEFINED"
+        }
+        "Entry"
+        {
+        "MsmKey" = "8:_UNDEFINED"
+        "OwnerKey" = "8:_B82C29847AB42BB7FB8EE0D2523AA288"
         "MsmSig" = "8:_UNDEFINED"
         }
         "Entry"
         {
         "MsmKey" = "8:_UNDEFINED"
         "OwnerKey" = "8:_41CB97E5B6BE4B77ABA899BB3FA50446"
-        "MsmSig" = "8:_UNDEFINED"
-        }
-        "Entry"
-        {
-        "MsmKey" = "8:_UNDEFINED"
-        "OwnerKey" = "8:_E1A38C8C46124E83A2BDD72676D23354"
         "MsmSig" = "8:_UNDEFINED"
         }
     }
@@ -151,6 +157,17 @@
         "PrivateKeyFile" = "8:"
         "TimeStampServer" = "8:"
         "InstallerBootstrapper" = "3:2"
+            "BootstrapperCfg:{63ACBE69-63AA-4F98-B2B6-99F9E24495F2}"
+            {
+            "Enabled" = "11:TRUE"
+            "PromptEnabled" = "11:TRUE"
+            "PrerequisitesLocation" = "2:1"
+            "Url" = "8:"
+            "ComponentsUrl" = "8:"
+                "Items"
+                {
+                }
+            }
         }
         "Release"
         {
@@ -167,6 +184,17 @@
         "PrivateKeyFile" = "8:"
         "TimeStampServer" = "8:"
         "InstallerBootstrapper" = "3:2"
+            "BootstrapperCfg:{63ACBE69-63AA-4F98-B2B6-99F9E24495F2}"
+            {
+            "Enabled" = "11:TRUE"
+            "PromptEnabled" = "11:TRUE"
+            "PrerequisitesLocation" = "2:1"
+            "Url" = "8:"
+            "ComponentsUrl" = "8:"
+                "Items"
+                {
+                }
+            }
         }
     }
     "Deployable"
@@ -271,6 +299,26 @@
                 }
             "SourcePath" = "8:..\\debug\\IjwFramework.dll"
             "TargetName" = "8:"
+            "Tag" = "8:"
+            "Folder" = "8:_5014C7B3CCD94F38B5B77C9F393D5C78"
+            "Condition" = "8:"
+            "Transitive" = "11:FALSE"
+            "Vital" = "11:TRUE"
+            "ReadOnly" = "11:FALSE"
+            "Hidden" = "11:FALSE"
+            "System" = "11:FALSE"
+            "Permanent" = "11:FALSE"
+            "SharedLegacy" = "11:FALSE"
+            "PackageAs" = "3:1"
+            "Register" = "3:1"
+            "Exclude" = "11:FALSE"
+            "IsDependency" = "11:FALSE"
+            "IsolateTo" = "8:"
+            }
+            "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_644F142F7739419DB5B5D7A9D2F9D21A"
+            {
+            "SourcePath" = "8:..\\ProfilerUi\\profiler_logo.png"
+            "TargetName" = "8:profiler_logo.png"
             "Tag" = "8:"
             "Folder" = "8:_5014C7B3CCD94F38B5B77C9F393D5C78"
             "Condition" = "8:"
@@ -467,34 +515,14 @@
             "IsDependency" = "11:FALSE"
             "IsolateTo" = "8:"
             }
-            "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_C6E90E0AE64E4F76955E1B03D1083708"
-            {
-            "SourcePath" = "8:..\\debug\\res\\event_remove.bmp"
-            "TargetName" = "8:event_remove.bmp"
-            "Tag" = "8:"
-            "Folder" = "8:_B1B5F13340174AA2B2A3EC9909069877"
-            "Condition" = "8:"
-            "Transitive" = "11:FALSE"
-            "Vital" = "11:TRUE"
-            "ReadOnly" = "11:FALSE"
-            "Hidden" = "11:FALSE"
-            "System" = "11:FALSE"
-            "Permanent" = "11:FALSE"
-            "SharedLegacy" = "11:FALSE"
-            "PackageAs" = "3:1"
-            "Register" = "3:1"
-            "Exclude" = "11:FALSE"
-            "IsDependency" = "11:FALSE"
-            "IsolateTo" = "8:"
-            }
-            "{9F6F8455-1EF1-4B85-886A-4223BCC8E7F7}:_D4BCE2EA87F2744BB645E8B85A0A21B2"
+            "{9F6F8455-1EF1-4B85-886A-4223BCC8E7F7}:_B82C29847AB42BB7FB8EE0D2523AA288"
             {
             "AssemblyRegister" = "3:1"
             "AssemblyIsInGAC" = "11:FALSE"
             "AssemblyAsmDisplayName" = "8:IjwFramework, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL"
                 "ScatterAssemblies"
                 {
-                    "_D4BCE2EA87F2744BB645E8B85A0A21B2"
+                    "_B82C29847AB42BB7FB8EE0D2523AA288"
                     {
                     "Name" = "8:IjwFramework.DLL"
                     "Attributes" = "3:512"
@@ -516,6 +544,26 @@
             "Register" = "3:1"
             "Exclude" = "11:FALSE"
             "IsDependency" = "11:TRUE"
+            "IsolateTo" = "8:"
+            }
+            "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_C6E90E0AE64E4F76955E1B03D1083708"
+            {
+            "SourcePath" = "8:..\\debug\\res\\event_remove.bmp"
+            "TargetName" = "8:event_remove.bmp"
+            "Tag" = "8:"
+            "Folder" = "8:_B1B5F13340174AA2B2A3EC9909069877"
+            "Condition" = "8:"
+            "Transitive" = "11:FALSE"
+            "Vital" = "11:TRUE"
+            "ReadOnly" = "11:FALSE"
+            "Hidden" = "11:FALSE"
+            "System" = "11:FALSE"
+            "Permanent" = "11:FALSE"
+            "SharedLegacy" = "11:FALSE"
+            "PackageAs" = "3:1"
+            "Register" = "3:1"
+            "Exclude" = "11:FALSE"
+            "IsDependency" = "11:FALSE"
             "IsolateTo" = "8:"
             }
             "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_E0672EE3FCAD4F9EAB868BC0789FFC82"

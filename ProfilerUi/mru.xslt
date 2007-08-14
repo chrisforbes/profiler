@@ -9,7 +9,10 @@
 			</head>
 			<body>
 				<h2>
-					<span class="x" >IJW Profiler</span>
+					<span class="x" >
+						<img src="profiler_logo.png" alt="Profiler Logo" style="vertical-align:middle"/>
+						IJW Profiler
+					</span>
 					<span class="y">
 						<script>
 							<![CDATA[

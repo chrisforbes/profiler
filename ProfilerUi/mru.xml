@@ -1,9 +1,4 @@
-﻿<?xml version="1.0" encoding="utf-8" ?>
+﻿<?xml version="1.0" encoding="utf-8"?>
 <?xml-stylesheet href="mru.xslt" type="text/xsl"?>
 <mru>
-	<run>
-		<cmd>c:/documents and settings/chrisf/desktop/svn/xmlide/bin/editor.exe</cmd>
-		<dir>c:/documents and settings/chrisf/desktop/svn/xmlide/bin/</dir>
-		<args></args>
-	</run>
 </mru>
