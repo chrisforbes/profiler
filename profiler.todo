@@ -6,17 +6,15 @@ COM DLL
 [x] Use .NET 2.0 Hi-perf function hooks
 [ ] Distinguish function overloads
 [ ] Distinguish generic type instances
-[ ] Shared memory trace connector client
 
 User Interface
 
-[ ] Handle tailcall records
-[ ] Option to fold filtered chains
+[x] Handle tailcall records
+[x] Fold filtered chains - NOW AT THE SOURCE
 [ ] Option to fold recursion
 
 [ ] Backtraces
-[ ] Saving of profiler snapshots for later review!
-[ ] Shared memory trace connector server
+[x] Saving of profiler snapshots for later review!
 
 [x] Start page
 	[x] Recently profiled applications

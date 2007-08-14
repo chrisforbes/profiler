@@ -28,10 +28,18 @@ namespace ProfilerUi
 				{
 					switch (e.opcode)
 					{
-						case Opcode.SetClockFrequency: frequency = e.timestamp; break;
-						case Opcode.ThreadTransition: OnThreadTransition(e); break;
-						case Opcode.EnterFunction: OnEnterFunction(e); break;
-						case Opcode.LeaveFunction: OnLeaveFunction(e); break;
+						case Opcode.SetClockFrequency: 
+							frequency = e.timestamp; break;
+						
+						case Opcode.ThreadTransition: 
+							OnThreadTransition(e); break;
+						
+						case Opcode.EnterFunction: 
+							OnEnterFunction(e); break;
+
+						case Opcode.LeaveViaTailCall:
+						case Opcode.LeaveFunction: 
+							OnLeaveFunction(e); break;
 					}
 
 					finalTime = e.timestamp;
