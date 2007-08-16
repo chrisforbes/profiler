@@ -30,20 +30,20 @@ namespace ProfilerUi
 
 		Brush selected = new SolidBrush(Color.FromArgb(0xee, 0xee, 0xff));
 
-		void Draw(Graphics g, Node monkey, Rectangle bounds)
+		void Draw(Graphics g, Node node, Rectangle bounds)
 		{
-			g.Clip = new Region(new Rectangle(new Point(0, monkey.Bounds.Top), new Size(Width, monkey.Bounds.Height)));
-			g.FillRectangle((monkey == SelectedNode) ? selected : SystemBrushes.Window, bounds);
+			g.Clip = new Region(new Rectangle(new Point(0, node.Bounds.Top), new Size(Width, node.Bounds.Height)));
+			g.FillRectangle((node == SelectedNode) ? selected : SystemBrushes.Window, bounds);
 
-			ItemPainter painter = new ItemPainter(g, monkey.Bounds.Location);
-			painter.DrawImage(Node.images.Images[monkey.Key]);
+			ItemPainter painter = new ItemPainter(g, node.Bounds.Location);
+			painter.DrawImage(Node.images.Images[node.Key]);
 			painter.Pad(2);
-			painter.DrawText(monkey.EffectiveName, Font, GetBrush(monkey.Element as Function), 1);
+			painter.DrawText(node.EffectiveName, Font, GetBrush(node.Element as Function), 1);
 
-			if (monkey.Nodes.Count > 0)
+			if (node.Nodes.Count > 0)
 			{
-				Image i = Node.images.Images[monkey.IsExpanded ? "expanded" : "collapsed"];
-				g.DrawImage(i, monkey.Bounds.Left - 16, monkey.Bounds.Top);
+				Image i = Node.images.Images[node.IsExpanded ? "expanded" : "collapsed"];
+				g.DrawImage(i, node.Bounds.Left - 16, node.Bounds.Top);
 			}
 		}
 

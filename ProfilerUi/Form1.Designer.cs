@@ -33,11 +33,11 @@ namespace ProfilerUi
 			this.menuStrip1 = new System.Windows.Forms.MenuStrip();
 			this.fileToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
 			this.newSessionToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+			this.toolStripMenuItem2 = new System.Windows.Forms.ToolStripMenuItem();
 			this.toolStripMenuItem1 = new System.Windows.Forms.ToolStripSeparator();
 			this.exitToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
 			this.viewToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
 			this.openInNewTabToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-			this.toolStripMenuItem2 = new System.Windows.Forms.ToolStripMenuItem();
 			this.workspace.TopToolStripPanel.SuspendLayout();
 			this.workspace.SuspendLayout();
 			this.menuStrip1.SuspendLayout();
@@ -90,6 +90,14 @@ namespace ProfilerUi
 			this.newSessionToolStripMenuItem.Text = "&New Session...";
 			this.newSessionToolStripMenuItem.Click += new System.EventHandler(this.NewRun);
 			// 
+			// toolStripMenuItem2
+			// 
+			this.toolStripMenuItem2.Name = "toolStripMenuItem2";
+			this.toolStripMenuItem2.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.S)));
+			this.toolStripMenuItem2.Size = new System.Drawing.Size(195, 22);
+			this.toolStripMenuItem2.Text = "Save Snapshot";
+			this.toolStripMenuItem2.Click += new System.EventHandler(this.OnSave);
+			// 
 			// toolStripMenuItem1
 			// 
 			this.toolStripMenuItem1.Name = "toolStripMenuItem1";
@@ -117,14 +125,6 @@ namespace ProfilerUi
 			this.openInNewTabToolStripMenuItem.Size = new System.Drawing.Size(202, 22);
 			this.openInNewTabToolStripMenuItem.Text = "&Open in new tab";
 			this.openInNewTabToolStripMenuItem.Click += new System.EventHandler(this.OnOpenInNewTab);
-			// 
-			// toolStripMenuItem2
-			// 
-			this.toolStripMenuItem2.Name = "toolStripMenuItem2";
-			this.toolStripMenuItem2.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.S)));
-			this.toolStripMenuItem2.Size = new System.Drawing.Size(195, 22);
-			this.toolStripMenuItem2.Text = "Save Snapshot";
-			this.toolStripMenuItem2.Click += new System.EventHandler(this.OnSave);
 			// 
 			// Form1
 			// 
