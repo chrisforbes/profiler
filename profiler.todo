@@ -3,23 +3,27 @@ IJW Profiler
 
 COM DLL
 
-[x] Use .NET 2.0 Hi-perf function hooks
 [ ] Distinguish function overloads
 [ ] Distinguish generic type instances
+[ ] Unmanaged <-> Managed transitions
 
 User Interface
 
-[x] Handle tailcall records
-[x] Fold filtered chains - NOW AT THE SOURCE
 [ ] Option to fold recursion
+[ ] Option to hide system calls completely
 
-[ ] Backtraces
-[x] Saving of profiler snapshots for later review!
+[ ] Back trace view
+[ ] Hotspot view
 
-[x] Start page
-	[x] Recently profiled applications
-	[x] New Session... wizard
-		[x] Allow people to choose working directory, command-line args, etc
-		
-[x] Option to merge multiple invocations on Ctrl+T
-[x] Fix sucky lack of generality in TabStrip!!!
+[ ] Left panel for icon legend + mode switching
+
+[ ] Merge in new TreeControl
+
+Snapshots
+
+[ ] Loading from XML
+[ ] Show on Start Page
+
+Way out there
+
+[ ] Sampling mode for low-impact profiling
