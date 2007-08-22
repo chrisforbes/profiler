@@ -5,19 +5,30 @@ using System.Windows.Forms;
 using System.Text.RegularExpressions;
 using System.Xml;
 using IjwFramework.Delegates;
+using IjwFramework.Ui.Tree;
 
 namespace ProfilerUi
 {
 	class Function : IActivatible, IProfilerElement
 	{
-		public Function(uint id, string name) { this.id = id; this.name = name; }
+		public Function(uint id, Name name, bool interesting)
+		{
+			this.id = id; 
+			this.name = name;
+			this.interesting = interesting;
+		}
 
 		int calls;
+
+		public int Calls { get { return calls; } }
+		public bool Interesting { get { return interesting; } }
+
+		bool interesting;
 		double time;
 		public readonly uint id;
 
 		public Dictionary<uint, Function> children = new Dictionary<uint, Function>();
-		public string name;
+		public Name name;
 
 		public double TimeInChildren
 		{
@@ -34,18 +45,19 @@ namespace ProfilerUi
 		public double OwnTime { get { return time - TimeInChildren; } }
 		public double TotalTime { get { return time; } }
 
-		public string TabTitle { get { return name.Substring(name.IndexOf("::") + 2); } }
+		public string TabTitle { get { return name.MethodName; } }
 
-		public TreeNode CreateView( double rootTime, Predicate<string> filter )
+		public Node CreateView( double rootTime )
 		{
-			TreeNode n = new Node( this, string.Format("{0} - {1} calls - {4:F1}% {2:F1}ms - [{3:F1}ms]",
-				name, calls, time, OwnTime, 100.0 * time / rootTime));
+			Node n = new CallTreeNode( this );
 
-			List<Function> fns = new List<Function>(WantedChildren(filter));
+			n.Collapse();
+
+			List<Function> fns = new List<Function>(children.Values);
 			fns.Sort(ByTimeDecreasing);
 
 			foreach (Function f in fns)
-				n.Nodes.Add(f.CreateView(rootTime, filter));
+				n.Add(f.CreateView(rootTime));
 
 			return n;
 		}
@@ -89,7 +101,7 @@ namespace ProfilerUi
 			foreach (Function i in invocations)
 			{
 				if (f == null)
-					f = new Function(i.id, i.name);
+					f = new Function(i.id, i.name, i.interesting);
 
 				f.calls += i.calls;
 				f.time += i.time;
@@ -99,36 +111,6 @@ namespace ProfilerUi
 			}
 
 			return f;
-		}
-
-		IEnumerable<Function> WantedChildren(Predicate<string> f)
-		{
-			if (!f(name)) return children.Values;
-
-			Dictionary<uint, Function> result = new Dictionary<uint, Function>();
-
-			foreach (Function func in WantedChildrenInternal(f))
-				MergeInto(result, func);
-
-			return result.Values;
-		}
-
-		IEnumerable<Function> WantedChildrenInternal(Predicate<string> f)
-		{
-			Queue<Function> q = new Queue<Function>();
-
-			foreach (Function child in children.Values)
-				q.Enqueue(child);
-
-			while (q.Count > 0)
-			{
-				Function current = q.Dequeue();
-				if (!f(current.name))
-					yield return current;
-				else
-					foreach (Function cc in current.children.Values)
-						q.Enqueue(cc);
-			}
 		}
 
 		public void WriteTo(XmlWriter writer)

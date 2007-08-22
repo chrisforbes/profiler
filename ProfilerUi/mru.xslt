@@ -11,7 +11,7 @@
 				<h2>
 					<div style="width:100%; background-color:#eeeeee;padding:4px">
 					<span class="x" style="margin-left:10px" >
-						<img src="profiler_logo.png" alt="Profiler Logo" style="vertical-align:middle"/>
+						<img src="profiler_logo.png" alt="Profiler Logo" style="vertical-align:middle;margin-right:5px"/>
 						IJW Profiler
 					</span>
 					<span class="y">
@@ -22,7 +22,7 @@
 					</div>
 				</h2>
 				<div>
-					<div>
+					<div style="width:100%; background-color:#eeeeee;padding:2px">
 						<a href="#" onclick="javascript:window.external.Run('','','')">Profile an application...</a>
 						<br/>
 						If you have profiled some application recently, select it from the list below:

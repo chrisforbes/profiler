@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Text;
 using System.Windows.Forms;
 using System.Xml;
+using IjwFramework.Ui.Tree;
 
 namespace ProfilerUi
 {
@@ -50,17 +51,30 @@ namespace ProfilerUi
 			writer.WriteEndElement();
 		}
 
-		public TreeNode CreateView(double totalTime, Predicate<string> filter)
+		public Node CreateView(double totalTime)
 		{
-			TreeNode n = new Node(this, "Thread #" + id.ToString() + " - " + time.ToString("F1") + "ms");
+			CallTreeNode n = new CallTreeNode(this);
+			n.Collapse();
+			//, "Thread #" + id.ToString() + " - " + time.ToString("F1") + "ms");
 
 			List<Function> fns = new List<Function>(roots.Values);
 			fns.Sort(Function.ByTimeDecreasing);
 
 			foreach (Function f in fns)
-				n.Nodes.Add(f.CreateView(time,filter));
+				n.Add(f.CreateView(time));
 
 			return n;
+		}
+
+		public bool IsGcThread
+		{
+			get
+			{
+				foreach (Function f in roots.Values)
+					if (f.name.MethodName == "Finalize()")
+						return true;
+				return false;
+			}
 		}
 	}
 }

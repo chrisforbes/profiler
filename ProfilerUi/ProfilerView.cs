@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Text;
 using IjwFramework.Ui;
 using System.Windows.Forms;
+using IjwFramework.Ui.Tree;
 
 namespace ProfilerUi
 {
@@ -14,7 +15,6 @@ namespace ProfilerUi
 			: base( host, v )
 		{
 			this.view = v;
-			view.BorderStyle = BorderStyle.None;
 		}
 
 		public override string ToString() { return view.ToString(); }

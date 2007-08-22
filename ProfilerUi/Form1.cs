@@ -10,23 +10,134 @@ using System.IO;
 
 using IjwFramework.Ui;
 using IjwFramework.Delegates;
+using IjwFramework.Ui.Tree;
 
 namespace ProfilerUi
 {
 	public partial class Form1 : Form
 	{
 		MultipleViewManager viewManager;
+		ViewBase startPage; 
+		ImageProvider imageProvider = new ImageProvider("res/");
+		ColumnCollection callTreeColumns = new ColumnCollection();
+
+		Font boldFont;
 
 		public Form1()
 		{
-			string version = "0.6";
+			string version = "0.65";
+
+			callTreeColumns.CreateAutoWidth("Function", RenderFunctionColumn);
+			callTreeColumns.CreateFixedWidth("Calls", 50, RenderCallsColumn);
+			callTreeColumns.CreateFixedWidth("Total Time", 70, RenderTotalTimeColumn);
+			callTreeColumns.CreateFixedWidth("Total Time", 70, RenderOwnTimeColumn);
+			callTreeColumns.CreateFixedWidth("", 16, delegate { });
 
 			InitializeComponent();
+
+			boldFont = new Font(Font, FontStyle.Bold);
+
 			Text = "IJW Profiler " + version;
 			viewManager = new MultipleViewManager(workspace.ContentPanel);
 
-			viewManager.Add(new WebView(viewManager,
-				"file://" + Path.GetFullPath("mru.xml"), new StartPageController(version, NewRun)));
+			startPage = new WebView(viewManager,
+				"file://" + Path.GetFullPath("mru.xml"), new StartPageController(version, NewRun));
+
+			viewManager.Add(startPage);
+		}
+
+		protected override void OnResize(EventArgs e)
+		{
+			base.OnResize(e);
+			callTreeColumns.WidthUpdatedHandler(ClientSize.Width);
+		}
+
+		Brush GetBrush(IProfilerElement e)
+		{
+			Function f = e as Function;
+			if (f == null || f.Interesting)
+				return SystemBrushes.WindowText;
+
+			return Brushes.Gray;
+		}
+
+		string GetImage(MethodType t)
+		{
+			switch (t)
+			{
+				case MethodType.Method: return "method";
+				case MethodType.PropertyGet: return "prop_get";
+				case MethodType.PropertySet: return "prop_set";
+				case MethodType.EventAdd: return "event_add";
+				case MethodType.EventRemove: return "event_remove";
+				case MethodType.Constructor: return "ctor";
+				default:
+					return "method";
+			}
+		}
+
+		void RenderFunctionColumn(IColumn c, Painter p, Node n)
+		{
+			CallTreeNode nn = (CallTreeNode)n;
+			IProfilerElement e = nn.Value;
+
+			Brush brush = GetBrush(e);
+
+			Function f = e as Function;
+			if (f != null)
+			{
+				Image i = imageProvider.GetImage(GetImage(f.name.Type));
+				p.DrawImage(i);
+				p.Pad(2);
+				p.DrawString(f.name.ClassName, Font, brush, 1, c.Left + c.Width);
+				p.DrawString((f.name.Type == MethodType.Constructor ? "  " : " .") + f.name.MethodName, boldFont, brush, 1, c.Left + c.Width);
+				return;
+			}
+
+			Thread t = e as Thread;
+			if (t != null)
+			{
+				p.DrawString("Thread #" + t.Id + (t.IsGcThread ? " (Garbage Collector)" : ""), Font, brush, 1, c.Left + c.Width);
+			}
+		}
+
+		void RenderTotalTimeColumn(IColumn c, Painter p, Node n)
+		{
+			CallTreeNode nn = (CallTreeNode)n;
+			IProfilerElement e = nn.Value;
+
+				p.SetPosition(c.Left + c.Width - 4);
+				p.Alignment = StringAlignment.Far;
+				p.DrawString(e.TotalTime.ToString("F1") + " ms", Font, GetBrush(e), 1, c.Left + c.Width);
+				p.Alignment = StringAlignment.Near;
+		}
+
+		void RenderOwnTimeColumn(IColumn c, Painter p, Node n)
+		{
+			CallTreeNode nn = (CallTreeNode)n;
+			Function e = nn.Value as Function;
+			if (e == null)
+				return;
+
+			p.SetPosition(c.Left + c.Width - 4);
+			p.Alignment = StringAlignment.Far;
+			p.DrawString(e.OwnTime.ToString("F1") + " ms", Font, GetBrush(e), 1, c.Left + c.Width);
+			p.Alignment = StringAlignment.Near;
+		}
+
+		void RenderCallsColumn(IColumn c, Painter p, Node n)
+		{
+			CallTreeNode nn = (CallTreeNode)n;
+			IProfilerElement e = nn.Value;
+
+			Function f = e as Function;
+			if (f != null)
+			{
+				p.SetPosition(c.Left + c.Width - 4);
+				p.Alignment = StringAlignment.Far;
+				p.DrawString(f.Calls.ToString(), Font, GetBrush(e), 1, c.Left + c.Width);
+				p.Alignment = StringAlignment.Near;
+			}
 		}
 
 		Run ProfileProcess(RunParameters p)
@@ -52,18 +163,16 @@ namespace ProfilerUi
 			}
 		}
 
-		CallTreeView CreateNewView(string name, Node node, CallTree src)
+		TreeControl CreateNewView(string name, CallTreeNode node, CallTree src)
 		{
-			CallTreeView view = new CallTreeView( Filter, name, src );
+			CallTreeView view = new CallTreeView( imageProvider, callTreeColumns, src, name );
 			ProfilerView viewWrapper = new ProfilerView(viewManager, view);
 			viewManager.Add(viewWrapper);
+			viewManager.Select(startPage);	//hack hack get around tree rendering bugs
+			Update();
 			viewManager.Select(viewWrapper);
+			Update();
 
-			if (node != null)
-			{
-				if (node.Tag is Function)
-					view.Text = node.TabName;
-			}
 			return view;
 		}
 
@@ -76,10 +185,7 @@ namespace ProfilerUi
 					LoadTraceData(run);
 		}
 
-		void NewRun(object sender, EventArgs e)
-		{
-			NewRun(null);
-		}
+		void NewRun(object sender, EventArgs e) { NewRun(null); }
 
 		void LoadTraceData(Run run)
 		{
@@ -89,14 +195,13 @@ namespace ProfilerUi
 				delegate(float frac) { Text = baseText + " - Slurping " + frac.ToString("P0"); Application.DoEvents(); };
 
 			CallTree tree = new CallTree(run.binFile, names, progressCallback, Filter);
-			CallTreeView view = CreateNewView(run.name, null, tree);
+			TreeControl view = CreateNewView(run.name, null, tree);
 
 			Text = baseText + " - Preparing view...";
 			Application.DoEvents();
 
-			view.Nodes.Clear();
 			foreach (Thread thread in tree.threads.Values)
-				view.Nodes.Add(thread.CreateView(thread.TotalTime, Filter));
+				view.Root.Add(thread.CreateView(thread.TotalTime));
 
 			Text = baseText;
 		}
@@ -105,27 +210,27 @@ namespace ProfilerUi
 
 		void OnCloseClicked(object sender, EventArgs e) { Close(); }
 
-		Node GetSelectedNode()
+		CallTreeNode GetSelectedNode()
 		{
 			ProfilerView current = viewManager.Current as ProfilerView;
 			if (current == null)
 				return null;
 
-			return current.view.SelectedNode as Node;
+			return current.view.SelectedNode as CallTreeNode;
 		}
 
 		void OnOpenInNewTab(object sender, EventArgs e)
 		{
-			Node selectedNode = GetSelectedNode();
+			CallTreeNode selectedNode = GetSelectedNode();
 			if (selectedNode == null)
 				return;
 
-			Node rootNode = selectedNode.RootFunction;
-			
+			CallTreeNode rootNode = selectedNode.RootFunction;
+
 			if (rootNode != null)
 			{
-				IProfilerElement rootFunction = rootNode.Element;
-				Function selectedFunction = selectedNode.Element as Function;
+				IProfilerElement rootFunction = rootNode.Value;
+				Function selectedFunction = selectedNode.Value as Function;
 
 				if (rootFunction != null && selectedFunction != null)
 				{
@@ -139,17 +244,17 @@ namespace ProfilerUi
 							MessageBoxButtons.YesNo))
 						{
 							Function merged = Function.Merge(invocations);
-							selectedNode = (Node)merged.CreateView(merged.TotalTime, Filter);
+							selectedNode = (CallTreeNode)merged.CreateView(merged.TotalTime);
 						}
 					}
 				}
 			}
 
-			IProfilerElement t = selectedNode.Element;
+			IProfilerElement t = selectedNode.Value;
 
-			CallTreeView v = CreateNewView(t.TabTitle, selectedNode, CurrentView.src);
-			TreeNode n2 = t.CreateView(t.TotalTime, Filter);
-			v.Nodes.Add(n2);
+			TreeControl v = CreateNewView(t.TabTitle, selectedNode, CurrentView.src);
+			Node n2 = t.CreateView(t.TotalTime);
+			v.Root.Add(n2);
 			v.SelectedNode = n2;
 		}
 
@@ -173,6 +278,53 @@ namespace ProfilerUi
 
 			if (DialogResult.OK == sfd.ShowDialog())
 				CurrentView.src.WriteTo(sfd.FileName);
+		}
+	}
+
+	class CallTreeView : TreeControl
+	{
+		public readonly CallTree src;
+
+		public CallTreeView(ImageProvider provider, ColumnCollection collection, CallTree src, string title)
+			: base(provider, collection)
+		{
+			this.src = src;
+			this.title = title;
+		}
+
+		string title;
+
+		public override string ToString()
+		{
+			return title;
+		}
+	}
+
+	class CallTreeNode : Node
+	{
+		public readonly IProfilerElement Value;
+
+		public CallTreeNode(IProfilerElement value)
+			: base()
+		{
+			Value = value;
+		}
+
+		public string TabName { get { return Value.TabTitle; } }
+
+		public CallTreeNode RootFunction
+		{
+			get
+			{
+				CallTreeNode n = this;
+				if (!(n.Value is Function))
+					return null;
+
+				while ((n.parent is CallTreeNode) && (n.parent as CallTreeNode).Value is Function)
+					n = n.parent as CallTreeNode;
+
+				return n;
+			}
 		}
 	}
 }

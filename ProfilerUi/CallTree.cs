@@ -12,6 +12,7 @@ namespace ProfilerUi
 		public Dictionary<uint, Thread> threads = new Dictionary<uint, Thread>();
 		Activation<Thread> currentThread = null;
 		FunctionNameProvider names;
+		Predicate<string> filter;
 		ulong frequency;
 
 		public CallTree(string filename, FunctionNameProvider names, Action<float> progressCallback, Predicate<string> filter)
@@ -20,6 +21,7 @@ namespace ProfilerUi
 			float lastFrac = -1;
 
 			this.names = names;
+			this.filter = filter;
 
 			using (Stream s = File.OpenRead(filename))
 			using (BinaryReader reader = new BinaryReader(s))
@@ -82,10 +84,10 @@ namespace ProfilerUi
 
 			Function f;
 
-			string name = names.GetName(e.id);
+			Name name = names.GetName(e.id);
 
 			if (!dict.TryGetValue(e.id, out f))
-				dict.Add(e.id, f = new Function(e.id, name));
+				dict.Add(e.id, f = new Function(e.id, name, !filter(name.ClassName)));
 
 			t.activations.Push(new Activation<Function>(f, e.timestamp));
 		}
@@ -106,11 +108,11 @@ namespace ProfilerUi
 			writer.WriteEndElement();
 			writer.WriteStartElement("names");
 
-			foreach (KeyValuePair<uint, string> name in names.Everything)
+			foreach (KeyValuePair<uint, Name> name in names.Everything)
 			{
 				writer.WriteStartElement("func");
 				writer.WriteAttributeString("id", name.Key.ToString());
-				writer.WriteAttributeString("name", name.Value);
+				writer.WriteAttributeString("name", name.Value.MethodName);
 				writer.WriteEndElement();
 			}
 

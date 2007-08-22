@@ -10,7 +10,7 @@ namespace ProfilerUi
 {
 	class FunctionNameProvider
 	{
-		Dictionary<uint, string> names = new Dictionary<uint,string>();
+		Dictionary<uint, Name> names = new Dictionary<uint,Name>();
 
 		public FunctionNameProvider( string filename )
 		{
@@ -22,26 +22,20 @@ namespace ProfilerUi
 					continue;
 
 				uint functionId = uint.Parse( m.Groups[ 1 ].Value, NumberStyles.HexNumber );
-				names.Add(functionId, HackName(m.Groups[2].Value));
+				names.Add(functionId, new Name(m.Groups[2].Value));
 			}
 		}
 
-		static string HackName(string s)
+		public Name GetName(uint functionId)
 		{
-			return (s.Contains("get_") || s.Contains("set_")
-				|| s.Contains("add_") || s.Contains("remove_")) ? s : s + "()";
-		}
-
-		public string GetName(uint functionId)
-		{
-			string value;
+			Name value;
 			if (!names.TryGetValue(functionId, out value))
-				return "<unbound " + functionId + " >";
+				return new Name("<unbound " + functionId + " >");
 
 			return value;
 		}
 
-		public IEnumerable<KeyValuePair<uint, string>> Everything
+		public IEnumerable<KeyValuePair<uint, Name>> Everything
 		{
 			get { return names; }
 		}
