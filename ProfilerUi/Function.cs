@@ -5,7 +5,7 @@ using System.Windows.Forms;
 using System.Text.RegularExpressions;
 using System.Xml;
 using IjwFramework.Delegates;
-using IjwFramework.Ui.Tree;
+using IjwFramework.Ui;
 
 namespace ProfilerUi
 {

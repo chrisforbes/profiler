@@ -10,7 +10,6 @@ using System.IO;
 
 using IjwFramework.Ui;
 using IjwFramework.Delegates;
-using IjwFramework.Ui.Tree;
 
 namespace ProfilerUi
 {

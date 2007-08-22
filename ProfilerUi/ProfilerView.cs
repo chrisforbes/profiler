@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.Text;
 using IjwFramework.Ui;
 using System.Windows.Forms;
-using IjwFramework.Ui.Tree;
 
 namespace ProfilerUi
 {
