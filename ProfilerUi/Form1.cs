@@ -19,17 +19,19 @@ namespace ProfilerUi
 		ViewBase startPage; 
 		ImageProvider imageProvider = new ImageProvider("res/");
 		ColumnCollection callTreeColumns = new ColumnCollection();
+		TreeColumnHeader header;
 
 		Font boldFont;
 
 		public Form1()
 		{
-			string version = "0.65";
+			string version = "0.7";
 
 			callTreeColumns.CreateAutoWidth("Function", RenderFunctionColumn);
 			callTreeColumns.CreateFixedWidth("Calls", 50, RenderCallsColumn);
+			callTreeColumns.CreateFixedWidth("Time %", 50, RenderPercentColumn);
 			callTreeColumns.CreateFixedWidth("Total Time", 70, RenderTotalTimeColumn);
-			callTreeColumns.CreateFixedWidth("Total Time", 70, RenderOwnTimeColumn);
+			callTreeColumns.CreateFixedWidth("Own Time", 70, RenderOwnTimeColumn);
 			callTreeColumns.CreateFixedWidth("", 16, delegate { });
 
 			InitializeComponent();
@@ -43,6 +45,7 @@ namespace ProfilerUi
 				"file://" + Path.GetFullPath("mru.xml"), new StartPageController(version, NewRun));
 
 			viewManager.Add(startPage);
+			header = new TreeColumnHeader(callTreeColumns);
 
 			callTreeColumns.WidthUpdatedHandler(ClientSize.Width);
 		}
@@ -98,8 +101,28 @@ namespace ProfilerUi
 			Thread t = e as Thread;
 			if (t != null)
 			{
+				Image i = imageProvider.GetImage("thread");
+				p.DrawImage(i);
+				p.Pad(2);
 				p.DrawString("Thread #" + t.Id + (t.IsGcThread ? " (Garbage Collector)" : ""), Font, brush, 1, c.Left + c.Width);
 			}
+		}
+
+		void RenderPercentColumn(IColumn c, Painter p, Node n)
+		{
+			CallTreeNode nn = (CallTreeNode)n;
+			Function e = nn.Value as Function;
+
+			if (e == null)
+				return;
+
+			p.SetPosition(c.Left + c.Width - 4);
+			p.Alignment = StringAlignment.Far;
+
+			double frac = e.TotalTime / nn.rootTime;
+
+			p.DrawString(frac.ToString("P1"), Font, GetBrush(e), 1, c.Left + c.Width);
+			p.Alignment = StringAlignment.Near;
 		}
 
 		void RenderTotalTimeColumn(IColumn c, Painter p, Node n)
@@ -107,10 +130,10 @@ namespace ProfilerUi
 			CallTreeNode nn = (CallTreeNode)n;
 			IProfilerElement e = nn.Value;
 
-				p.SetPosition(c.Left + c.Width - 4);
-				p.Alignment = StringAlignment.Far;
-				p.DrawString(e.TotalTime.ToString("F1") + " ms", Font, GetBrush(e), 1, c.Left + c.Width);
-				p.Alignment = StringAlignment.Near;
+			p.SetPosition(c.Left + c.Width - 4);
+			p.Alignment = StringAlignment.Far;
+			p.DrawString(e.TotalTime.ToString("F1") + " ms", Font, GetBrush(e), 1, c.Left + c.Width);
+			p.Alignment = StringAlignment.Near;
 		}
 
 		void RenderOwnTimeColumn(IColumn c, Painter p, Node n)
@@ -167,7 +190,7 @@ namespace ProfilerUi
 		TreeControl CreateNewView(string name, CallTreeNode node, CallTree src)
 		{
 			CallTreeView view = new CallTreeView( imageProvider, callTreeColumns, src, name );
-			ProfilerView viewWrapper = new ProfilerView(viewManager, view);
+			ProfilerView viewWrapper = ProfilerView.Create(viewManager, view, header);
 			viewManager.Add(viewWrapper);
 			viewManager.Select(viewWrapper);
 
@@ -196,7 +219,6 @@ namespace ProfilerUi
 			TreeControl view = CreateNewView(run.name, null, tree);
 
 			Text = baseText + " - Preparing view...";
-			//Application.DoEvents();
 
 			foreach (Thread thread in tree.threads.Values)
 			{
@@ -307,10 +329,13 @@ namespace ProfilerUi
 	{
 		public readonly IProfilerElement Value;
 
-		public CallTreeNode(IProfilerElement value)
+		public double rootTime;
+
+		public CallTreeNode(IProfilerElement value, double rootTime)
 			: base()
 		{
 			Value = value;
+			this.rootTime = rootTime;
 		}
 
 		public string TabName { get { return Value.TabTitle; } }

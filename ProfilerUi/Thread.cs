@@ -53,9 +53,8 @@ namespace ProfilerUi
 
 		public Node CreateView(double totalTime)
 		{
-			CallTreeNode n = new CallTreeNode(this);
+			CallTreeNode n = new CallTreeNode(this, totalTime);
 			n.Collapse();
-			//, "Thread #" + id.ToString() + " - " + time.ToString("F1") + "ms");
 
 			List<Function> fns = new List<Function>(roots.Values);
 			fns.Sort(Function.ByTimeDecreasing);
@@ -71,7 +70,7 @@ namespace ProfilerUi
 			get
 			{
 				foreach (Function f in roots.Values)
-					if (f.name.MethodName == "Finalize()")
+					if (f.name.MethodName == "Finalize")
 						return true;
 				return false;
 			}

@@ -45,7 +45,7 @@
     <Compile Include="CallTree.cs" />
     <Compile Include="ComServerRegistration.cs" />
     <Compile Include="Form1.cs">
-      <SubType>Component</SubType>
+      <SubType>Form</SubType>
     </Compile>
     <Compile Include="Form1.Designer.cs">
       <DependentUpon>Form1.cs</DependentUpon>

@@ -22,7 +22,7 @@
 					</div>
 				</h2>
 				<div>
-					<div style="width:100%; background-color:#eeeeee;padding:2px">
+					<div style="width:100%; ">
 						<a href="#" onclick="javascript:window.external.Run('','','')">Profile an application...</a>
 						<br/>
 						If you have profiled some application recently, select it from the list below:

@@ -49,7 +49,7 @@ namespace ProfilerUi
 
 		public Node CreateView( double rootTime )
 		{
-			Node n = new CallTreeNode( this );
+			Node n = new CallTreeNode( this, rootTime );
 
 			n.Collapse();
 
