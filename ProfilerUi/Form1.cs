@@ -44,6 +44,8 @@ namespace ProfilerUi
 				"file://" + Path.GetFullPath("mru.xml"), new StartPageController(version, NewRun));
 
 			viewManager.Add(startPage);
+
+			callTreeColumns.WidthUpdatedHandler(ClientSize.Width);
 		}
 
 		protected override void OnResize(EventArgs e)
@@ -168,10 +170,7 @@ namespace ProfilerUi
 			CallTreeView view = new CallTreeView( imageProvider, callTreeColumns, src, name );
 			ProfilerView viewWrapper = new ProfilerView(viewManager, view);
 			viewManager.Add(viewWrapper);
-			viewManager.Select(startPage);	//hack hack get around tree rendering bugs
-			Update();
 			viewManager.Select(viewWrapper);
-			Update();
 
 			return view;
 		}
@@ -198,10 +197,15 @@ namespace ProfilerUi
 			TreeControl view = CreateNewView(run.name, null, tree);
 
 			Text = baseText + " - Preparing view...";
-			Application.DoEvents();
+			//Application.DoEvents();
 
 			foreach (Thread thread in tree.threads.Values)
-				view.Root.Add(thread.CreateView(thread.TotalTime));
+			{
+				Node n = thread.CreateView(thread.TotalTime);
+				
+				view.Root.Add(n);
+				n.Expand();
+			}
 
 			Text = baseText;
 		}
