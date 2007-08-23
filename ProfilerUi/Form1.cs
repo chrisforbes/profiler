@@ -21,22 +21,20 @@ namespace ProfilerUi
 		ColumnCollection callTreeColumns = new ColumnCollection();
 		TreeColumnHeader header;
 
-		Font boldFont;
-
 		public Form1()
 		{
 			string version = "0.7";
 
-			callTreeColumns.CreateAutoWidth("Function", RenderFunctionColumn);
-			callTreeColumns.CreateFixedWidth("Calls", 50, RenderCallsColumn);
-			callTreeColumns.CreateFixedWidth("Time %", 50, RenderPercentColumn);
-			callTreeColumns.CreateFixedWidth("Total Time", 70, RenderTotalTimeColumn);
-			callTreeColumns.CreateFixedWidth("Own Time", 70, RenderOwnTimeColumn);
+			Columns cc = new Columns(Font, new Font(Font, FontStyle.Bold), imageProvider);
+
+			callTreeColumns.CreateAutoWidth("Function", cc.RenderFunctionColumn);
+			callTreeColumns.CreateFixedWidth("Calls", 50, cc.RenderCallsColumn);
+			callTreeColumns.CreateFixedWidth("Time %", 50, cc.RenderPercentColumn);
+			callTreeColumns.CreateFixedWidth("Total Time", 70, cc.RenderTotalTimeColumn);
+			callTreeColumns.CreateFixedWidth("Own Time", 70, cc.RenderOwnTimeColumn);
 			callTreeColumns.CreateFixedWidth("", 16, delegate { });
 
 			InitializeComponent();
-
-			boldFont = new Font(Font, FontStyle.Bold);
 
 			Text = "IJW Profiler " + version;
 			viewManager = new MultipleViewManager(workspace.ContentPanel);
@@ -54,114 +52,6 @@ namespace ProfilerUi
 		{
 			base.OnResize(e);
 			callTreeColumns.WidthUpdatedHandler(ClientSize.Width);
-		}
-
-		Brush GetBrush(IProfilerElement e)
-		{
-			Function f = e as Function;
-			if (f == null || f.Interesting)
-				return SystemBrushes.WindowText;
-
-			return Brushes.Gray;
-		}
-
-		string GetImage(MethodType t)
-		{
-			switch (t)
-			{
-				case MethodType.Method: return "method";
-				case MethodType.PropertyGet: return "prop_get";
-				case MethodType.PropertySet: return "prop_set";
-				case MethodType.EventAdd: return "event_add";
-				case MethodType.EventRemove: return "event_remove";
-				case MethodType.Constructor: return "ctor";
-				default:
-					return "method";
-			}
-		}
-
-		void RenderFunctionColumn(IColumn c, Painter p, Node n)
-		{
-			CallTreeNode nn = (CallTreeNode)n;
-			IProfilerElement e = nn.Value;
-
-			Brush brush = GetBrush(e);
-
-			Function f = e as Function;
-			if (f != null)
-			{
-				Image i = imageProvider.GetImage(GetImage(f.name.Type));
-				p.DrawImage(i);
-				p.Pad(2);
-				p.DrawString(f.name.ClassName, Font, brush, 1, c.Left + c.Width);
-				p.DrawString((f.name.Type == MethodType.Constructor ? "  " : " .") + f.name.MethodName, boldFont, brush, 1, c.Left + c.Width);
-				return;
-			}
-
-			Thread t = e as Thread;
-			if (t != null)
-			{
-				Image i = imageProvider.GetImage("thread");
-				p.DrawImage(i);
-				p.Pad(2);
-				p.DrawString("Thread #" + t.Id + (t.IsGcThread ? " (Garbage Collector)" : ""), Font, brush, 1, c.Left + c.Width);
-			}
-		}
-
-		void RenderPercentColumn(IColumn c, Painter p, Node n)
-		{
-			CallTreeNode nn = (CallTreeNode)n;
-			Function e = nn.Value as Function;
-
-			if (e == null)
-				return;
-
-			p.SetPosition(c.Left + c.Width - 4);
-			p.Alignment = StringAlignment.Far;
-
-			double frac = e.TotalTime / nn.rootTime;
-
-			p.DrawString(frac.ToString("P1"), Font, GetBrush(e), 1, c.Left + c.Width);
-			p.Alignment = StringAlignment.Near;
-		}
-
-		void RenderTotalTimeColumn(IColumn c, Painter p, Node n)
-		{
-			CallTreeNode nn = (CallTreeNode)n;
-			IProfilerElement e = nn.Value;
-
-			p.SetPosition(c.Left + c.Width - 4);
-			p.Alignment = StringAlignment.Far;
-			p.DrawString(e.TotalTime.ToString("F1") + " ms", Font, GetBrush(e), 1, c.Left + c.Width);
-			p.Alignment = StringAlignment.Near;
-		}
-
-		void RenderOwnTimeColumn(IColumn c, Painter p, Node n)
-		{
-			CallTreeNode nn = (CallTreeNode)n;
-			Function e = nn.Value as Function;
-			if (e == null)
-				return;
-
-			p.SetPosition(c.Left + c.Width - 4);
-			p.Alignment = StringAlignment.Far;
-			p.DrawString(e.OwnTime.ToString("F1") + " ms", Font, GetBrush(e), 1, c.Left + c.Width);
-			p.Alignment = StringAlignment.Near;
-		}
-
-		void RenderCallsColumn(IColumn c, Painter p, Node n)
-		{
-			CallTreeNode nn = (CallTreeNode)n;
-			IProfilerElement e = nn.Value;
-
-			Function f = e as Function;
-			if (f != null)
-			{
-				p.SetPosition(c.Left + c.Width - 4);
-				p.Alignment = StringAlignment.Far;
-				p.DrawString(f.Calls.ToString(), Font, GetBrush(e), 1, c.Left + c.Width);
-				p.Alignment = StringAlignment.Near;
-			}
 		}
 
 		Run ProfileProcess(RunParameters p)
@@ -303,56 +193,6 @@ namespace ProfilerUi
 
 			if (DialogResult.OK == sfd.ShowDialog())
 				CurrentView.src.WriteTo(sfd.FileName);
-		}
-	}
-
-	class CallTreeView : TreeControl
-	{
-		public readonly CallTree src;
-
-		public CallTreeView(ImageProvider provider, ColumnCollection collection, CallTree src, string title)
-			: base(provider, collection)
-		{
-			this.src = src;
-			this.title = title;
-		}
-
-		string title;
-
-		public override string ToString()
-		{
-			return title;
-		}
-	}
-
-	class CallTreeNode : Node
-	{
-		public readonly IProfilerElement Value;
-
-		public double rootTime;
-
-		public CallTreeNode(IProfilerElement value, double rootTime)
-			: base()
-		{
-			Value = value;
-			this.rootTime = rootTime;
-		}
-
-		public string TabName { get { return Value.TabTitle; } }
-
-		public CallTreeNode RootFunction
-		{
-			get
-			{
-				CallTreeNode n = this;
-				if (!(n.Value is Function))
-					return null;
-
-				while ((n.parent is CallTreeNode) && (n.parent as CallTreeNode).Value is Function)
-					n = n.parent as CallTreeNode;
-
-				return n;
-			}
 		}
 	}
 }
