@@ -52,8 +52,8 @@ namespace ProfilerUi
 			Function f = e as Function;
 			if (f != null)
 			{
-				Image i = imageProvider.GetImage(GetImage(f.name.Type));
-				p.DrawImage(i);
+//				p.DrawImage(imageProvider.GetImage("call_in"));
+				p.DrawImage(imageProvider.GetImage(GetImage(f.name.Type)));
 				p.Pad(2);
 				p.DrawString(f.name.ClassName, font, brush, 1, c.Left + c.Width);
 				p.DrawString((f.name.Type == MethodType.Constructor ? "  " : " .") + f.name.MethodName, boldFont, brush, 1, c.Left + c.Width);

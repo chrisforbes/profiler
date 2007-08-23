@@ -19,7 +19,6 @@ namespace ProfilerUi
 		ViewBase startPage; 
 		ImageProvider imageProvider = new ImageProvider("res/");
 		ColumnCollection callTreeColumns = new ColumnCollection();
-		TreeColumnHeader header;
 
 		public Form1()
 		{
@@ -43,7 +42,6 @@ namespace ProfilerUi
 				"file://" + Path.GetFullPath("mru.xml"), new StartPageController(version, NewRun));
 
 			viewManager.Add(startPage);
-			header = new TreeColumnHeader(callTreeColumns);
 
 			callTreeColumns.WidthUpdatedHandler(ClientSize.Width);
 		}
@@ -80,7 +78,7 @@ namespace ProfilerUi
 		TreeControl CreateNewView(string name, CallTreeNode node, CallTree src)
 		{
 			CallTreeView view = new CallTreeView( imageProvider, callTreeColumns, src, name );
-			ProfilerView viewWrapper = ProfilerView.Create(viewManager, view, header);
+			ProfilerView viewWrapper = ProfilerView.Create(viewManager, view, new TreeColumnHeader(callTreeColumns));
 			viewManager.Add(viewWrapper);
 			viewManager.Select(viewWrapper);
 
@@ -194,5 +192,8 @@ namespace ProfilerUi
 			if (DialogResult.OK == sfd.ShowDialog())
 				CurrentView.src.WriteTo(sfd.FileName);
 		}
+
+		void GoToNextTab(object sender, EventArgs e) { viewManager.MoveNext(); }
+		void GoToPreviousTab(object sender, EventArgs e) { viewManager.MovePrevious(); }
 	}
 }
