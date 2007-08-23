@@ -15,6 +15,8 @@ namespace ProfilerUi
 {
 	public partial class Form1 : Form
 	{
+		string version = "0.7";
+
 		MultipleViewManager viewManager;
 		ViewBase startPage; 
 		ImageProvider imageProvider = new ImageProvider("res/");
@@ -22,8 +24,6 @@ namespace ProfilerUi
 
 		public Form1()
 		{
-			string version = "0.7";
-
 			Columns cc = new Columns(Font, new Font(Font, FontStyle.Bold), imageProvider);
 
 			callTreeColumns.CreateAutoWidth("Function", cc.RenderFunctionColumn);
@@ -195,5 +195,16 @@ namespace ProfilerUi
 
 		void GoToNextTab(object sender, EventArgs e) { viewManager.MoveNext(); }
 		void GoToPreviousTab(object sender, EventArgs e) { viewManager.MovePrevious(); }
+
+		void CheckForUpdates(object sender, EventArgs e)
+		{
+			// TODO: check for updates
+		}
+
+		void About(object sender, EventArgs e)
+		{
+			new AboutBox("IJW Profiler", version, 
+				"(c)2007 IJW Software (NZ)").ShowDialog();
+		}
 	}
 }
