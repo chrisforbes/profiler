@@ -21,19 +21,13 @@
         }
         "Entry"
         {
-        "MsmKey" = "8:_2185C6614C104DF89600AF615AA52DC7"
+        "MsmKey" = "8:_1ECD7F9C7DBD453FABC4A6AEE73986D2"
         "OwnerKey" = "8:_UNDEFINED"
         "MsmSig" = "8:_UNDEFINED"
         }
         "Entry"
         {
         "MsmKey" = "8:_33E730DDFC3948DDB3D96D95F3A1F276"
-        "OwnerKey" = "8:_UNDEFINED"
-        "MsmSig" = "8:_UNDEFINED"
-        }
-        "Entry"
-        {
-        "MsmKey" = "8:_41CB97E5B6BE4B77ABA899BB3FA50446"
         "OwnerKey" = "8:_UNDEFINED"
         "MsmSig" = "8:_UNDEFINED"
         }
@@ -52,6 +46,18 @@
         "Entry"
         {
         "MsmKey" = "8:_71E8A300306940058F01C3DEA2D32FCE"
+        "OwnerKey" = "8:_UNDEFINED"
+        "MsmSig" = "8:_UNDEFINED"
+        }
+        "Entry"
+        {
+        "MsmKey" = "8:_7534D7A440804EDC8443637D34A5B8C5"
+        "OwnerKey" = "8:_UNDEFINED"
+        "MsmSig" = "8:_UNDEFINED"
+        }
+        "Entry"
+        {
+        "MsmKey" = "8:_7BEC878716314F108A258A45FD4AFC0C"
         "OwnerKey" = "8:_UNDEFINED"
         "MsmSig" = "8:_UNDEFINED"
         }
@@ -87,7 +93,7 @@
         }
         "Entry"
         {
-        "MsmKey" = "8:_9EDB2FFBD2334DBF8C1EAB58AA107A30"
+        "MsmKey" = "8:_A14CFDCC8E2B4BF295297D371478BA8A"
         "OwnerKey" = "8:_UNDEFINED"
         "MsmSig" = "8:_UNDEFINED"
         }
@@ -99,14 +105,14 @@
         }
         "Entry"
         {
-        "MsmKey" = "8:_B82C29847AB42BB7FB8EE0D2523AA288"
-        "OwnerKey" = "8:_E1A38C8C46124E83A2BDD72676D23354"
+        "MsmKey" = "8:_C6E90E0AE64E4F76955E1B03D1083708"
+        "OwnerKey" = "8:_UNDEFINED"
         "MsmSig" = "8:_UNDEFINED"
         }
         "Entry"
         {
-        "MsmKey" = "8:_C6E90E0AE64E4F76955E1B03D1083708"
-        "OwnerKey" = "8:_UNDEFINED"
+        "MsmKey" = "8:_D4BCE2EA87F2744BB645E8B85A0A21B2"
+        "OwnerKey" = "8:_E1A38C8C46124E83A2BDD72676D23354"
         "MsmSig" = "8:_UNDEFINED"
         }
         "Entry"
@@ -130,13 +136,7 @@
         "Entry"
         {
         "MsmKey" = "8:_UNDEFINED"
-        "OwnerKey" = "8:_B82C29847AB42BB7FB8EE0D2523AA288"
-        "MsmSig" = "8:_UNDEFINED"
-        }
-        "Entry"
-        {
-        "MsmKey" = "8:_UNDEFINED"
-        "OwnerKey" = "8:_41CB97E5B6BE4B77ABA899BB3FA50446"
+        "OwnerKey" = "8:_D4BCE2EA87F2744BB645E8B85A0A21B2"
         "MsmSig" = "8:_UNDEFINED"
         }
     }
@@ -244,10 +244,10 @@
             "IsDependency" = "11:FALSE"
             "IsolateTo" = "8:"
             }
-            "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_2185C6614C104DF89600AF615AA52DC7"
+            "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_1ECD7F9C7DBD453FABC4A6AEE73986D2"
             {
-            "SourcePath" = "8:..\\debug\\res\\Collapsed.bmp"
-            "TargetName" = "8:Collapsed.bmp"
+            "SourcePath" = "8:..\\debug\\res\\collapse.bmp"
+            "TargetName" = "8:collapse.bmp"
             "Tag" = "8:"
             "Folder" = "8:_B1B5F13340174AA2B2A3EC9909069877"
             "Condition" = "8:"
@@ -270,37 +270,6 @@
             "TargetName" = "8:method.bmp"
             "Tag" = "8:"
             "Folder" = "8:_B1B5F13340174AA2B2A3EC9909069877"
-            "Condition" = "8:"
-            "Transitive" = "11:FALSE"
-            "Vital" = "11:TRUE"
-            "ReadOnly" = "11:FALSE"
-            "Hidden" = "11:FALSE"
-            "System" = "11:FALSE"
-            "Permanent" = "11:FALSE"
-            "SharedLegacy" = "11:FALSE"
-            "PackageAs" = "3:1"
-            "Register" = "3:1"
-            "Exclude" = "11:FALSE"
-            "IsDependency" = "11:FALSE"
-            "IsolateTo" = "8:"
-            }
-            "{9F6F8455-1EF1-4B85-886A-4223BCC8E7F7}:_41CB97E5B6BE4B77ABA899BB3FA50446"
-            {
-            "AssemblyRegister" = "3:1"
-            "AssemblyIsInGAC" = "11:FALSE"
-            "AssemblyAsmDisplayName" = "8:IjwFramework, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL"
-                "ScatterAssemblies"
-                {
-                    "_41CB97E5B6BE4B77ABA899BB3FA50446"
-                    {
-                    "Name" = "8:IjwFramework.dll"
-                    "Attributes" = "3:512"
-                    }
-                }
-            "SourcePath" = "8:..\\debug\\IjwFramework.dll"
-            "TargetName" = "8:"
-            "Tag" = "8:"
-            "Folder" = "8:_5014C7B3CCD94F38B5B77C9F393D5C78"
             "Condition" = "8:"
             "Transitive" = "11:FALSE"
             "Vital" = "11:TRUE"
@@ -359,6 +328,46 @@
             {
             "SourcePath" = "8:..\\debug\\res\\Thread.bmp"
             "TargetName" = "8:Thread.bmp"
+            "Tag" = "8:"
+            "Folder" = "8:_B1B5F13340174AA2B2A3EC9909069877"
+            "Condition" = "8:"
+            "Transitive" = "11:FALSE"
+            "Vital" = "11:TRUE"
+            "ReadOnly" = "11:FALSE"
+            "Hidden" = "11:FALSE"
+            "System" = "11:FALSE"
+            "Permanent" = "11:FALSE"
+            "SharedLegacy" = "11:FALSE"
+            "PackageAs" = "3:1"
+            "Register" = "3:1"
+            "Exclude" = "11:FALSE"
+            "IsDependency" = "11:FALSE"
+            "IsolateTo" = "8:"
+            }
+            "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_7534D7A440804EDC8443637D34A5B8C5"
+            {
+            "SourcePath" = "8:..\\debug\\res\\call_out.bmp"
+            "TargetName" = "8:call_out.bmp"
+            "Tag" = "8:"
+            "Folder" = "8:_B1B5F13340174AA2B2A3EC9909069877"
+            "Condition" = "8:"
+            "Transitive" = "11:FALSE"
+            "Vital" = "11:TRUE"
+            "ReadOnly" = "11:FALSE"
+            "Hidden" = "11:FALSE"
+            "System" = "11:FALSE"
+            "Permanent" = "11:FALSE"
+            "SharedLegacy" = "11:FALSE"
+            "PackageAs" = "3:1"
+            "Register" = "3:1"
+            "Exclude" = "11:FALSE"
+            "IsDependency" = "11:FALSE"
+            "IsolateTo" = "8:"
+            }
+            "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_7BEC878716314F108A258A45FD4AFC0C"
+            {
+            "SourcePath" = "8:..\\debug\\res\\expand.bmp"
+            "TargetName" = "8:expand.bmp"
             "Tag" = "8:"
             "Folder" = "8:_B1B5F13340174AA2B2A3EC9909069877"
             "Condition" = "8:"
@@ -475,10 +484,10 @@
             "IsDependency" = "11:FALSE"
             "IsolateTo" = "8:"
             }
-            "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_9EDB2FFBD2334DBF8C1EAB58AA107A30"
+            "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_A14CFDCC8E2B4BF295297D371478BA8A"
             {
-            "SourcePath" = "8:..\\debug\\res\\Expanded.bmp"
-            "TargetName" = "8:Expanded.bmp"
+            "SourcePath" = "8:..\\debug\\res\\call_in.bmp"
+            "TargetName" = "8:call_in.bmp"
             "Tag" = "8:"
             "Folder" = "8:_B1B5F13340174AA2B2A3EC9909069877"
             "Condition" = "8:"
@@ -515,14 +524,34 @@
             "IsDependency" = "11:FALSE"
             "IsolateTo" = "8:"
             }
-            "{9F6F8455-1EF1-4B85-886A-4223BCC8E7F7}:_B82C29847AB42BB7FB8EE0D2523AA288"
+            "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_C6E90E0AE64E4F76955E1B03D1083708"
+            {
+            "SourcePath" = "8:..\\debug\\res\\event_remove.bmp"
+            "TargetName" = "8:event_remove.bmp"
+            "Tag" = "8:"
+            "Folder" = "8:_B1B5F13340174AA2B2A3EC9909069877"
+            "Condition" = "8:"
+            "Transitive" = "11:FALSE"
+            "Vital" = "11:TRUE"
+            "ReadOnly" = "11:FALSE"
+            "Hidden" = "11:FALSE"
+            "System" = "11:FALSE"
+            "Permanent" = "11:FALSE"
+            "SharedLegacy" = "11:FALSE"
+            "PackageAs" = "3:1"
+            "Register" = "3:1"
+            "Exclude" = "11:FALSE"
+            "IsDependency" = "11:FALSE"
+            "IsolateTo" = "8:"
+            }
+            "{9F6F8455-1EF1-4B85-886A-4223BCC8E7F7}:_D4BCE2EA87F2744BB645E8B85A0A21B2"
             {
             "AssemblyRegister" = "3:1"
             "AssemblyIsInGAC" = "11:FALSE"
             "AssemblyAsmDisplayName" = "8:IjwFramework, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL"
                 "ScatterAssemblies"
                 {
-                    "_B82C29847AB42BB7FB8EE0D2523AA288"
+                    "_D4BCE2EA87F2744BB645E8B85A0A21B2"
                     {
                     "Name" = "8:IjwFramework.DLL"
                     "Attributes" = "3:512"
@@ -544,26 +573,6 @@
             "Register" = "3:1"
             "Exclude" = "11:FALSE"
             "IsDependency" = "11:TRUE"
-            "IsolateTo" = "8:"
-            }
-            "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_C6E90E0AE64E4F76955E1B03D1083708"
-            {
-            "SourcePath" = "8:..\\debug\\res\\event_remove.bmp"
-            "TargetName" = "8:event_remove.bmp"
-            "Tag" = "8:"
-            "Folder" = "8:_B1B5F13340174AA2B2A3EC9909069877"
-            "Condition" = "8:"
-            "Transitive" = "11:FALSE"
-            "Vital" = "11:TRUE"
-            "ReadOnly" = "11:FALSE"
-            "Hidden" = "11:FALSE"
-            "System" = "11:FALSE"
-            "Permanent" = "11:FALSE"
-            "SharedLegacy" = "11:FALSE"
-            "PackageAs" = "3:1"
-            "Register" = "3:1"
-            "Exclude" = "11:FALSE"
-            "IsDependency" = "11:FALSE"
             "IsolateTo" = "8:"
             }
             "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_E0672EE3FCAD4F9EAB868BC0789FFC82"
@@ -683,14 +692,14 @@
         {
         "Name" = "8:Microsoft Visual Studio"
         "ProductName" = "8:IJW Profiler Pre-release"
-        "ProductCode" = "8:{C9350723-C6C9-42E3-8C35-7200F63B5C36}"
-        "PackageCode" = "8:{6AEBBF1D-E601-43E5-8E93-45EFD3C1A1EE}"
+        "ProductCode" = "8:{F06104E7-E406-4F71-A47D-91B9A4227F4E}"
+        "PackageCode" = "8:{A5C00AFF-2E5B-4A91-80AD-6D48F7236F2A}"
         "UpgradeCode" = "8:{94097A7A-D245-4411-82EE-05531F82F9E4}"
         "RestartWWWService" = "11:FALSE"
         "RemovePreviousVersions" = "11:TRUE"
         "DetectNewerInstalledVersion" = "11:TRUE"
         "InstallAllUsers" = "11:FALSE"
-        "ProductVersion" = "8:0.6"
+        "ProductVersion" = "8:0.7"
         "Manufacturer" = "8:IJW Software"
         "ARPHELPTELEPHONE" = "8:"
         "ARPHELPLINK" = "8:http://www.ijw.co.nz"
