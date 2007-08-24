@@ -10,6 +10,7 @@ using System.IO;
 
 using IjwFramework.Ui;
 using IjwFramework.Delegates;
+using IjwFramework.Updates;
 
 namespace ProfilerUi
 {
@@ -198,7 +199,7 @@ namespace ProfilerUi
 
 		void CheckForUpdates(object sender, EventArgs e)
 		{
-			// TODO: check for updates
+			UpdateManager.CheckForUpdates("IJW Profiler", version);
 		}
 
 		void About(object sender, EventArgs e)
