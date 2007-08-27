@@ -44,7 +44,7 @@
 							</xsl:for-each>
 						</ul>
 					</div>
-					<div style="margin-top:30px">
+					<!--<div style="margin-top:30px">
 						<a href="#" onclick="javascript:window.external.Snapshot('')">
 							Load snapshot from a previous profiling run...
 						</a>
@@ -64,7 +64,7 @@
 								</li>
 							</xsl:for-each>
 						</ul>
-					</div>
+					</div>-->
 				</div>
 			</body>
 		</html>
