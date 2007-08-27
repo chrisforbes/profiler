@@ -20,6 +20,7 @@ namespace ProfilerUi
 		public double TotalTime { get { return time; } }
 
 		public uint Id { get { return id; } }
+		public bool Interesting { get { return true; } }
 
 		public Thread(uint id) { this.id = id; }
 
@@ -73,6 +74,18 @@ namespace ProfilerUi
 					if (f.name.MethodName == "Finalize")
 						return true;
 				return false;
+			}
+		}
+
+		public string Name
+		{
+			get
+			{
+				string s = "Thread #" + id;
+				if (IsGcThread)
+					s += " (Garbage Collector)";
+
+				return s;
 			}
 		}
 	}

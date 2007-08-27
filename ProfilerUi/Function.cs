@@ -11,11 +11,12 @@ namespace ProfilerUi
 {
 	class Function : IActivatible, IProfilerElement
 	{
-		public Function(uint id, Name name, bool interesting)
+		public Function(uint id, Name name, bool interesting, Function parent)
 		{
 			this.id = id; 
 			this.name = name;
 			this.interesting = interesting;
+			this.parent = parent;
 		}
 
 		int calls;
@@ -23,9 +24,13 @@ namespace ProfilerUi
 		public int Calls { get { return calls; } }
 		public bool Interesting { get { return interesting; } }
 
+		public Function Parent { get { return parent; } }
+		public uint Id { get { return id; } }
+
 		bool interesting;
 		double time;
-		public readonly uint id;
+		readonly uint id;
+		readonly Function parent;
 
 		public Dictionary<uint, Function> children = new Dictionary<uint, Function>();
 		public Name name;
@@ -101,7 +106,7 @@ namespace ProfilerUi
 			foreach (Function i in invocations)
 			{
 				if (f == null)
-					f = new Function(i.id, i.name, i.interesting);
+					f = new Function(i.id, i.name, i.interesting, null);
 
 				f.calls += i.calls;
 				f.time += i.time;
@@ -119,6 +124,7 @@ namespace ProfilerUi
 			writer.WriteAttributeString("id", id.ToString());
 			writer.WriteAttributeString("calls", calls.ToString());
 			writer.WriteAttributeString("time", time.ToString());
+			writer.WriteAttributeString("interesting", interesting.ToString());
 
 			foreach (Function f in children.Values)
 				f.WriteTo(writer);

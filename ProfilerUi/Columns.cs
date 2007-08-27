@@ -18,14 +18,13 @@ namespace ProfilerUi
 			this.imageProvider = provider;
 		}
 
-		static Brush GetBrush(IProfilerElement e)
+		static Brush GetBrush(bool interesting)
 		{
-			Function f = e as Function;
-			if (f == null || f.Interesting)
-				return SystemBrushes.WindowText;
-
-			return Brushes.Gray;
+			return interesting ? SystemBrushes.WindowText : Brushes.Gray;
 		}
+
+		static Brush GetBrush(IProfilerElement e) { return GetBrush(e.Interesting); }
+		static Brush GetBrush(CallerFunction f) { return GetBrush(f.Interesting); }
 
 		static string GetImage(MethodType t)
 		{
@@ -42,6 +41,34 @@ namespace ProfilerUi
 			}
 		}
 
+		public void RenderCallerColumn(IColumn c, Painter p, Node n)
+		{
+			CallerTreeNode nn = (CallerTreeNode)n;
+			p.DrawImage(imageProvider.GetImage("call_out"));
+			RenderName(c, nn.Value.Name, p, GetBrush(nn.Value));
+		}
+
+		public void RenderCallerCallsColumn(IColumn c, Painter p, Node n)
+		{
+			CallerTreeNode nn = (CallerTreeNode)n;
+			RenderRightAligned(c, p, nn.Value.Calls.ToString(), GetBrush(nn.Value));
+		}
+
+		public void RenderCallerTimeColumn(IColumn c, Painter p, Node n)
+		{
+			CallerTreeNode nn = (CallerTreeNode)n;
+			RenderRightAligned(c, p, nn.Value.Time.ToString("F1") + " ms", GetBrush(nn.Value));
+		}
+
+		void RenderName(IColumn c, Name name, Painter p, Brush brush)
+		{
+			p.DrawImage(imageProvider.GetImage(GetImage(name.Type)));
+			p.Pad(2);
+			p.DrawString(name.ClassName, font, brush, 1, c.Left + c.Width);
+			p.DrawString((name.Type == MethodType.Constructor ? "  " : " .") + name.MethodName, 
+				boldFont, brush, 1, c.Left + c.Width);
+		}
+
 		public void RenderFunctionColumn(IColumn c, Painter p, Node n)
 		{
 			CallTreeNode nn = (CallTreeNode)n;
@@ -52,11 +79,8 @@ namespace ProfilerUi
 			Function f = e as Function;
 			if (f != null)
 			{
-//				p.DrawImage(imageProvider.GetImage("call_in"));
-				p.DrawImage(imageProvider.GetImage(GetImage(f.name.Type)));
-				p.Pad(2);
-				p.DrawString(f.name.ClassName, font, brush, 1, c.Left + c.Width);
-				p.DrawString((f.name.Type == MethodType.Constructor ? "  " : " .") + f.name.MethodName, boldFont, brush, 1, c.Left + c.Width);
+				p.DrawImage(imageProvider.GetImage("call_in"));
+				RenderName(c, f.name, p, brush);
 				return;
 			}
 
@@ -66,7 +90,7 @@ namespace ProfilerUi
 				Image i = imageProvider.GetImage("thread");
 				p.DrawImage(i);
 				p.Pad(2);
-				p.DrawString("Thread #" + t.Id + (t.IsGcThread ? " (Garbage Collector)" : ""), font, brush, 1, c.Left + c.Width);
+				p.DrawString(t.Name, font, brush, 1, c.Left + c.Width);
 			}
 		}
 
@@ -92,23 +116,15 @@ namespace ProfilerUi
 			CallTreeNode nn = (CallTreeNode)n;
 			IProfilerElement e = nn.Value;
 
-			p.SetPosition(c.Left + c.Width - 4);
-			p.Alignment = StringAlignment.Far;
-			p.DrawString(e.TotalTime.ToString("F1") + " ms", font, GetBrush(e), 1, c.Left + c.Width);
-			p.Alignment = StringAlignment.Near;
+			RenderRightAligned(c, p, e.TotalTime.ToString("F1") + " ms", GetBrush(e));
 		}
 
 		public void RenderOwnTimeColumn(IColumn c, Painter p, Node n)
 		{
 			CallTreeNode nn = (CallTreeNode)n;
 			Function e = nn.Value as Function;
-			if (e == null)
-				return;
-
-			p.SetPosition(c.Left + c.Width - 4);
-			p.Alignment = StringAlignment.Far;
-			p.DrawString(e.OwnTime.ToString("F1") + " ms", font, GetBrush(e), 1, c.Left + c.Width);
-			p.Alignment = StringAlignment.Near;
+			if (e != null)
+				RenderRightAligned(c, p, e.OwnTime.ToString("F1") + " ms", GetBrush(e));
 		}
 
 		public void RenderCallsColumn(IColumn c, Painter p, Node n)
@@ -118,12 +134,15 @@ namespace ProfilerUi
 
 			Function f = e as Function;
 			if (f != null)
-			{
-				p.SetPosition(c.Left + c.Width - 4);
-				p.Alignment = StringAlignment.Far;
-				p.DrawString(f.Calls.ToString(), font, GetBrush(e), 1, c.Left + c.Width);
-				p.Alignment = StringAlignment.Near;
-			}
+				RenderRightAligned(c, p, f.Calls.ToString(), GetBrush(e));
+		}
+
+		void RenderRightAligned(IColumn c, Painter p, string s, Brush b)
+		{
+			p.SetPosition(c.Left + c.Width - 4);
+			p.Alignment = StringAlignment.Far;
+			p.DrawString(s, font, b, 1, c.Left + c.Width);
+			p.Alignment = StringAlignment.Near;
 		}
 	}
 }

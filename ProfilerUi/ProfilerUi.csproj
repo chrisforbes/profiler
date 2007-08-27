@@ -48,6 +48,8 @@
       <DependentUpon>AboutBox.cs</DependentUpon>
     </Compile>
     <Compile Include="Activation.cs" />
+    <Compile Include="CallerFunction.cs" />
+    <Compile Include="CallerTreeNode.cs" />
     <Compile Include="CallTree.cs" />
     <Compile Include="CallTreeNode.cs" />
     <Compile Include="CallTreeView.cs">
@@ -107,7 +109,9 @@
     <Compile Include="Thread.cs" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="icon.ico" />
+    <Content Include="icon.ico">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
     <Content Include="mru.css">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>

@@ -4,6 +4,7 @@ using System.Text;
 using System.IO;
 using System.Windows.Forms;
 using System.Xml;
+using IjwFramework.Ui;
 
 namespace ProfilerUi
 {
@@ -79,15 +80,18 @@ namespace ProfilerUi
 		void OnEnterFunction(ProfileEvent e)
 		{
 			Thread t = currentThread.Target;
-			Dictionary<uint, Function> dict = (t.activations.Count == 0)
-				? t.roots : t.activations.Peek().Target.children;
+
+			Function parent = (t.activations.Count == 0)
+				? null : t.activations.Peek().Target;
+
+			IDictionary<uint, Function> dict = (parent == null)
+				? t.roots : parent.children;
 
 			Function f;
-
 			Name name = names.GetName(e.id);
 
 			if (!dict.TryGetValue(e.id, out f))
-				dict.Add(e.id, f = new Function(e.id, name, !filter(name.ClassName)));
+				dict.Add(e.id, f = new Function(e.id, name, !filter(name.ClassName), parent));
 
 			t.activations.Push(new Activation<Function>(f, e.timestamp));
 		}
@@ -128,6 +132,29 @@ namespace ProfilerUi
 
 			using (XmlWriter writer = XmlWriter.Create(filename, settings))
 				WriteTo(writer);
+		}
+
+		public List<Function> CollectInvocations(uint functionId)
+		{
+			List<Function> invocations = new List<Function>();
+
+			foreach (Thread t in threads.Values)
+				invocations.AddRange(t.CollectInvocations(functionId));
+
+			return invocations;
+		}
+
+		public CallerFunction GetBacktrace(Function f)
+		{
+			List<Function> invocations = CollectInvocations(f.Id);
+			CallerFunction cf = null;
+			foreach (Function inv in invocations)
+				if (cf == null)
+					cf = new CallerFunction(inv);
+				else
+					cf.Merge(inv);
+
+			return cf;
 		}
 	}
 }

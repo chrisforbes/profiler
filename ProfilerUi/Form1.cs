@@ -16,12 +16,13 @@ namespace ProfilerUi
 {
 	public partial class Form1 : Form
 	{
-		string version = "0.7";
+		string version = "0.7.2";
 
 		MultipleViewManager viewManager;
 		ViewBase startPage; 
 		ImageProvider imageProvider = new ImageProvider("res/");
 		ColumnCollection callTreeColumns = new ColumnCollection();
+		ColumnCollection callerColumns = new ColumnCollection();
 
 		public Form1()
 		{
@@ -33,6 +34,11 @@ namespace ProfilerUi
 			callTreeColumns.CreateFixedWidth("Total Time", 70, cc.RenderTotalTimeColumn);
 			callTreeColumns.CreateFixedWidth("Own Time", 70, cc.RenderOwnTimeColumn);
 			callTreeColumns.CreateFixedWidth("", 16, delegate { });
+
+			callerColumns.CreateAutoWidth("Function", cc.RenderCallerColumn);
+			callerColumns.CreateFixedWidth("Calls", 50, cc.RenderCallerCallsColumn);
+			callerColumns.CreateFixedWidth("Time", 70, cc.RenderCallerTimeColumn);
+			callerColumns.CreateFixedWidth("", 16, delegate { });
 
 			InitializeComponent();
 
@@ -71,15 +77,14 @@ namespace ProfilerUi
 				info.EnvironmentVariables["ijwprof_bin"] = run.binFile;
 
 				Process.Start(info).WaitForExit();
-
 				return run;
 			}
 		}
 
-		TreeControl CreateNewView(string name, CallTreeNode node, CallTree src)
+		TreeControl CreateNewView(string name, Node node, CallTree src, ColumnCollection cc)
 		{
-			CallTreeView view = new CallTreeView( imageProvider, callTreeColumns, src, name );
-			ProfilerView viewWrapper = ProfilerView.Create(viewManager, view, new TreeColumnHeader(callTreeColumns));
+			CallTreeView view = new CallTreeView( imageProvider, cc, src, name );
+			ProfilerView viewWrapper = ProfilerView.Create(viewManager, view, new TreeColumnHeader(cc));
 			viewManager.Add(viewWrapper);
 			viewManager.Select(viewWrapper);
 
@@ -105,7 +110,7 @@ namespace ProfilerUi
 				delegate(float frac) { Text = baseText + " - Slurping " + frac.ToString("P0"); Application.DoEvents(); };
 
 			CallTree tree = new CallTree(run.binFile, names, progressCallback, Filter);
-			TreeControl view = CreateNewView(run.name, null, tree);
+			TreeControl view = CreateNewView(run.name, null, tree, callTreeColumns);
 
 			Text = baseText + " - Preparing view...";
 
@@ -133,6 +138,34 @@ namespace ProfilerUi
 			return current.view.SelectedNode as CallTreeNode;
 		}
 
+		void OpenInNewTab(CallTree src, IProfilerElement root)
+		{
+			IProfilerElement t = root;
+			Node n2 = t.CreateView(t.TotalTime);
+			TreeControl v = CreateNewView(t.TabTitle, n2, src, callTreeColumns);
+			v.Root.Add(n2);
+			v.SelectedNode = n2;
+		}
+
+		IProfilerElement OfferToMerge(IProfilerElement root, Function selected)
+		{
+			if (root == null || selected == null)
+				return selected;
+
+			List<Function> invocations = root.CollectInvocations(selected.Id);
+
+			if (invocations.Count == 1)
+				return selected;
+
+			if (DialogResult.Yes == MessageBox.Show(
+				"There are multiple invocations of this function in the call tree. Would you like to merge them?",
+				"Merge multiple invocations?",
+				MessageBoxButtons.YesNo))
+				return Function.Merge(invocations);
+			else
+				return selected;
+		}
+
 		void OnOpenInNewTab(object sender, EventArgs e)
 		{
 			CallTreeNode selectedNode = GetSelectedNode();
@@ -140,36 +173,11 @@ namespace ProfilerUi
 				return;
 
 			CallTreeNode rootNode = selectedNode.RootFunction;
+			IProfilerElement selected = (rootNode != null) 
+				? OfferToMerge(rootNode.Value, selectedNode.Value as Function)
+				: selectedNode.Value;
 
-			if (rootNode != null)
-			{
-				IProfilerElement rootFunction = rootNode.Value;
-				Function selectedFunction = selectedNode.Value as Function;
-
-				if (rootFunction != null && selectedFunction != null)
-				{
-					List<Function> invocations = rootFunction.CollectInvocations(selectedFunction.id);
-
-					if (invocations.Count > 1)
-					{
-						if (DialogResult.Yes == MessageBox.Show(
-							"There are multiple invocations of this function in the call tree. Would you like to merge them?",
-							"Merge multiple instances?",
-							MessageBoxButtons.YesNo))
-						{
-							Function merged = Function.Merge(invocations);
-							selectedNode = (CallTreeNode)merged.CreateView(merged.TotalTime);
-						}
-					}
-				}
-			}
-
-			IProfilerElement t = selectedNode.Value;
-
-			TreeControl v = CreateNewView(t.TabTitle, selectedNode, CurrentView.src);
-			Node n2 = t.CreateView(t.TotalTime);
-			v.Root.Add(n2);
-			v.SelectedNode = n2;
+			OpenInNewTab(CurrentView.src, selectedNode.Value);
 		}
 
 		CallTreeView CurrentView
@@ -196,6 +204,7 @@ namespace ProfilerUi
 
 		void GoToNextTab(object sender, EventArgs e) { viewManager.MoveNext(); }
 		void GoToPreviousTab(object sender, EventArgs e) { viewManager.MovePrevious(); }
+		void CloseTab(object sender, EventArgs e) { viewManager.CloseCurrent(); }
 
 		void CheckForUpdates(object sender, EventArgs e)
 		{
@@ -204,8 +213,31 @@ namespace ProfilerUi
 
 		void About(object sender, EventArgs e)
 		{
-			new AboutBox("IJW Profiler", version, 
-				"(c)2007 IJW Software (NZ)").ShowDialog();
+			new AboutBox("IJW Profiler", version, "(c)2007 IJW Software (NZ)").ShowDialog();
+		}
+
+		void ShowBacktraces(object sender, EventArgs e)
+		{
+			CallTreeNode selected = GetSelectedNode();
+			if (selected == null)
+				return;
+
+			Function f = selected.Value as Function;
+
+			if (f == null)
+			{
+				MessageBox.Show("Cannot show backtrace for a non-function object");
+				return;
+			}
+
+			CallerFunction cf = CurrentView.src.GetBacktrace(f);
+
+			Node root = cf.CreateView();
+			root.Expand();
+			TreeControl tc = CreateNewView("Callers of " + cf.Name.MethodName, root,
+				CurrentView.src, callerColumns);
+			tc.Root.Add(root);
+			tc.SelectedNode = root;
 		}
 	}
 }

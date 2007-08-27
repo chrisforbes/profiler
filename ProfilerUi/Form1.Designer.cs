@@ -38,11 +38,14 @@ namespace ProfilerUi
 			this.exitToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
 			this.viewToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
 			this.openInNewTabToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+			this.showBacktraces = new System.Windows.Forms.ToolStripMenuItem();
 			this.nextTabToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
 			this.previousTabToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
 			this.helpToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-			this.checkForUpdatesToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
 			this.aboutToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+			this.checkForUpdatesToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+			this.toolStripSeparator1 = new System.Windows.Forms.ToolStripSeparator();
+			this.toolStripMenuItem3 = new System.Windows.Forms.ToolStripMenuItem();
 			this.workspace.TopToolStripPanel.SuspendLayout();
 			this.workspace.SuspendLayout();
 			this.menuStrip1.SuspendLayout();
@@ -83,6 +86,7 @@ namespace ProfilerUi
 			this.fileToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.newSessionToolStripMenuItem,
             this.toolStripMenuItem2,
+            this.toolStripMenuItem3,
             this.toolStripMenuItem1,
             this.exitToolStripMenuItem});
 			this.fileToolStripMenuItem.Name = "fileToolStripMenuItem";
@@ -120,6 +124,8 @@ namespace ProfilerUi
 			// 
 			this.viewToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.openInNewTabToolStripMenuItem,
+            this.showBacktraces,
+            this.toolStripSeparator1,
             this.nextTabToolStripMenuItem,
             this.previousTabToolStripMenuItem});
 			this.viewToolStripMenuItem.Name = "viewToolStripMenuItem";
@@ -133,6 +139,14 @@ namespace ProfilerUi
 			this.openInNewTabToolStripMenuItem.Size = new System.Drawing.Size(227, 22);
 			this.openInNewTabToolStripMenuItem.Text = "&Open in new tab";
 			this.openInNewTabToolStripMenuItem.Click += new System.EventHandler(this.OnOpenInNewTab);
+			// 
+			// showBacktraces
+			// 
+			this.showBacktraces.Name = "showBacktraces";
+			this.showBacktraces.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.B)));
+			this.showBacktraces.Size = new System.Drawing.Size(227, 22);
+			this.showBacktraces.Text = "&Show Callers";
+			this.showBacktraces.Click += new System.EventHandler(this.ShowBacktraces);
 			// 
 			// nextTabToolStripMenuItem
 			// 
@@ -160,6 +174,13 @@ namespace ProfilerUi
 			this.helpToolStripMenuItem.Size = new System.Drawing.Size(40, 20);
 			this.helpToolStripMenuItem.Text = "&Help";
 			// 
+			// aboutToolStripMenuItem
+			// 
+			this.aboutToolStripMenuItem.Name = "aboutToolStripMenuItem";
+			this.aboutToolStripMenuItem.Size = new System.Drawing.Size(186, 22);
+			this.aboutToolStripMenuItem.Text = "&About...";
+			this.aboutToolStripMenuItem.Click += new System.EventHandler(this.About);
+			// 
 			// checkForUpdatesToolStripMenuItem
 			// 
 			this.checkForUpdatesToolStripMenuItem.Name = "checkForUpdatesToolStripMenuItem";
@@ -167,12 +188,18 @@ namespace ProfilerUi
 			this.checkForUpdatesToolStripMenuItem.Text = "&Check for Updates...";
 			this.checkForUpdatesToolStripMenuItem.Click += new System.EventHandler(this.CheckForUpdates);
 			// 
-			// aboutToolStripMenuItem
+			// toolStripSeparator1
 			// 
-			this.aboutToolStripMenuItem.Name = "aboutToolStripMenuItem";
-			this.aboutToolStripMenuItem.Size = new System.Drawing.Size(186, 22);
-			this.aboutToolStripMenuItem.Text = "&About...";
-			this.aboutToolStripMenuItem.Click += new System.EventHandler(this.About);
+			this.toolStripSeparator1.Name = "toolStripSeparator1";
+			this.toolStripSeparator1.Size = new System.Drawing.Size(224, 6);
+			// 
+			// toolStripMenuItem3
+			// 
+			this.toolStripMenuItem3.Name = "toolStripMenuItem3";
+			this.toolStripMenuItem3.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.F4)));
+			this.toolStripMenuItem3.Size = new System.Drawing.Size(195, 22);
+			this.toolStripMenuItem3.Text = "Close";
+			this.toolStripMenuItem3.Click += new System.EventHandler(this.CloseTab);
 			// 
 			// Form1
 			// 
@@ -210,6 +237,9 @@ namespace ProfilerUi
 		private System.Windows.Forms.ToolStripMenuItem helpToolStripMenuItem;
 		private System.Windows.Forms.ToolStripMenuItem checkForUpdatesToolStripMenuItem;
 		private System.Windows.Forms.ToolStripMenuItem aboutToolStripMenuItem;
+		private System.Windows.Forms.ToolStripMenuItem showBacktraces;
+		private System.Windows.Forms.ToolStripMenuItem toolStripMenuItem3;
+		private System.Windows.Forms.ToolStripSeparator toolStripSeparator1;
 		
 
 	}

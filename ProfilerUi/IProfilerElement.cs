@@ -12,6 +12,8 @@ namespace ProfilerUi
 		Node CreateView(double totalTime);
 		string TabTitle { get; }
 		double TotalTime { get; }
+		bool Interesting { get; }
+		uint Id { get; }
 
 		List<Function> CollectInvocations(uint functionId);
 		void WriteTo(XmlWriter writer);

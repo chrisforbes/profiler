@@ -8,8 +8,7 @@ namespace ProfilerUi
 	class CallTreeNode : Node
 	{
 		public readonly IProfilerElement Value;
-
-		public double rootTime;
+		public readonly double rootTime;
 
 		public CallTreeNode(IProfilerElement value, double rootTime)
 			: base()
@@ -17,8 +16,6 @@ namespace ProfilerUi
 			Value = value;
 			this.rootTime = rootTime;
 		}
-
-		public string TabName { get { return Value.TabTitle; } }
 
 		public CallTreeNode RootFunction
 		{
