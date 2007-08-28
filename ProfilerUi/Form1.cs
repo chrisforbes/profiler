@@ -84,7 +84,7 @@ namespace ProfilerUi
 		TreeControl CreateNewView(string name, Node node, CallTree src, ColumnCollection cc)
 		{
 			CallTreeView view = new CallTreeView( imageProvider, cc, src, name );
-			ProfilerView viewWrapper = ProfilerView.Create(viewManager, view, new TreeColumnHeader(cc));
+			ProfilerView viewWrapper = ProfilerView.Create(viewManager, view, new TreeColumnHeader(cc), MakeLegendBar());
 			viewManager.Add(viewWrapper);
 			viewManager.Select(viewWrapper);
 
@@ -177,7 +177,7 @@ namespace ProfilerUi
 				? OfferToMerge(rootNode.Value, selectedNode.Value as Function)
 				: selectedNode.Value;
 
-			OpenInNewTab(CurrentView.src, selectedNode.Value);
+			OpenInNewTab(CurrentView.src, selected);
 		}
 
 		CallTreeView CurrentView
@@ -238,6 +238,19 @@ namespace ProfilerUi
 				CurrentView.src, callerColumns);
 			tc.Root.Add(root);
 			tc.SelectedNode = root;
+		}
+
+		LegendBar MakeLegendBar()
+		{
+			LegendBar bar = new LegendBar(imageProvider);
+			bar.Add("method", "Method");
+			bar.Add("prop_get", "Property Accessor");
+			bar.Add("prop_set", "Property Mutator");
+			bar.Add("event_add", "Subscribe to Event");
+			bar.Add("event_remove", "Unsubscribe from Event");
+			bar.Add("ctor", "Constructor");
+
+			return bar;
 		}
 	}
 }

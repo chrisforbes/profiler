@@ -68,6 +68,9 @@
     <Compile Include="FunctionNameProvider.cs" />
     <Compile Include="IActivatible.cs" />
     <Compile Include="IProfilerElement.cs" />
+    <Compile Include="LegendBar.cs">
+      <SubType>Component</SubType>
+    </Compile>
     <Compile Include="MruList.cs" />
     <Compile Include="Name.cs" />
     <Compile Include="NewRunDialog.cs">
