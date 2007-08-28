@@ -79,7 +79,7 @@ namespace ProfilerUi
 			Function f = e as Function;
 			if (f != null)
 			{
-				p.DrawImage(imageProvider.GetImage("call_in"));
+				p.DrawImage(imageProvider.GetImage(GetTimeIcon(f)));
 				RenderName(c, f.name, p, brush);
 				return;
 			}
@@ -143,6 +143,24 @@ namespace ProfilerUi
 			p.Alignment = StringAlignment.Far;
 			p.DrawString(s, font, b, 1, c.Left + c.Width);
 			p.Alignment = StringAlignment.Near;
+		}
+
+		
+		static string GetTimeIcon(Function f)
+		{
+			const double upperLimit = 0.9;
+			const double lowerLimit = 0.1;
+			if (f.TotalTime < 1e-5) return "call_in";
+
+			double ratio = f.OwnTime / f.TotalTime;
+
+			if (ratio < lowerLimit)
+				return "call_in";
+			
+			if (ratio > upperLimit)
+				return "call_in_self";
+
+			return "call_in_mixed";
 		}
 	}
 }
