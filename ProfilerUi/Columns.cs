@@ -26,7 +26,7 @@ namespace ProfilerUi
 		static Brush GetBrush(IProfilerElement e) { return GetBrush(e.Interesting); }
 		static Brush GetBrush(CallerFunction f) { return GetBrush(f.Interesting); }
 
-		static string GetImage(MethodType t)
+		static string GetImage2(MethodType t)
 		{
 			switch (t)
 			{
@@ -41,11 +41,18 @@ namespace ProfilerUi
 			}
 		}
 
+		static string GetImage(MethodType t, bool interesting)
+		{
+			string image = GetImage2(t);
+			if (!interesting) image += "_grey";
+			return image;
+		}
+
 		public void RenderCallerColumn(IColumn c, Painter p, Node n)
 		{
 			CallerTreeNode nn = (CallerTreeNode)n;
 			p.DrawImage(imageProvider.GetImage("call_out"));
-			RenderName(c, nn.Value.Name, p, GetBrush(nn.Value));
+			RenderName(c, nn.Value.Name, p, nn.Value.Interesting);
 		}
 
 		public void RenderCallerCallsColumn(IColumn c, Painter p, Node n)
@@ -60,9 +67,10 @@ namespace ProfilerUi
 			RenderRightAligned(c, p, nn.Value.Time.ToString("F1") + " ms", GetBrush(nn.Value));
 		}
 
-		void RenderName(IColumn c, Name name, Painter p, Brush brush)
+		void RenderName(IColumn c, Name name, Painter p, bool interesting)
 		{
-			p.DrawImage(imageProvider.GetImage(GetImage(name.Type)));
+			Brush brush = GetBrush(interesting);
+			p.DrawImage(imageProvider.GetImage(GetImage(name.Type, interesting)));
 			p.Pad(2);
 			p.DrawString(name.ClassName, font, brush, 1, c.Left + c.Width);
 			p.DrawString((name.Type == MethodType.Constructor ? "  " : " .") + name.MethodName, 
@@ -80,7 +88,7 @@ namespace ProfilerUi
 			if (f != null)
 			{
 				p.DrawImage(imageProvider.GetImage(GetTimeIcon(f)));
-				RenderName(c, f.name, p, brush);
+				RenderName(c, f.name, p, f.Interesting);
 				return;
 			}
 
