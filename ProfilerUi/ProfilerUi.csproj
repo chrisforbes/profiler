@@ -9,7 +9,7 @@
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>ProfilerUi</RootNamespace>
     <AssemblyName>ProfilerUi</AssemblyName>
-    <ApplicationIcon>icon.ico</ApplicationIcon>
+    <ApplicationIcon>res\icon.ico</ApplicationIcon>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
@@ -97,7 +97,7 @@
       <Generator>ResXFileCodeGenerator</Generator>
       <LastGenOutput>Resources.Designer.cs</LastGenOutput>
     </EmbeddedResource>
-    <None Include="ProfilerUi.exe.manifest" />
+    <None Include="res\ProfilerUi.exe.manifest" />
     <Compile Include="Properties\Resources.Designer.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
@@ -109,20 +109,15 @@
     <Compile Include="Thread.cs" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="icon.ico">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    <Content Include="res\icon.ico">
     </Content>
-    <Content Include="mru.css">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    <Content Include="res\mru.css">
     </Content>
-    <Content Include="mru.xml">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    <Content Include="res\mru.xml">
     </Content>
-    <Content Include="mru.xslt">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    <Content Include="res\mru.xslt">
     </Content>
-    <Content Include="profiler_logo.png">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    <Content Include="res\profiler_logo.png">
     </Content>
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
@@ -134,12 +129,12 @@
   </Target>
   -->
   <PropertyGroup>
-    <PostBuildEvent>"$(DevEnvDir)..\..\SDK\v2.0\bin\mt.exe" -manifest "$(ProjectDir)$(TargetName).exe.manifest"  –outputresource:"$(TargetDir)$(TargetFileName)";#1
+    <PostBuildEvent>"$(DevEnvDir)..\..\SDK\v2.0\bin\mt.exe" -manifest "$(ProjectDir)res\$(TargetName).exe.manifest"  –outputresource:"$(TargetPath)";#1
 copy "$(TargetPath)" "$(SolutionDir)debug\"
 copy "$(TargetDir)*.dll" "$(SolutionDir)debug\"
-copy "$(TargetDir)*.xsl" "$(SolutionDir)debug\"
-copy "$(TargetDir)*.xml" "$(SolutionDir)debug\"
-copy "$(TargetDir)*.css" "$(SolutionDir)debug\"
-copy "$(TargetDir)*.png" "$(SolutionDir)debug\"</PostBuildEvent>
+copy "$(ProjectDir)res\*.xsl" "$(SolutionDir)debug\"
+copy "$(ProjectDir)res\*.xml" "$(SolutionDir)debug\"
+copy "$(ProjectDir)res\*.css" "$(SolutionDir)debug\"
+copy "$(ProjectDir)res\*.png" "$(SolutionDir)debug\"</PostBuildEvent>
   </PropertyGroup>
 </Project>
