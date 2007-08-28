@@ -12,7 +12,9 @@ User Interface
 [ ] Option to fold recursion
 [ ] Option to hide system calls completely
 [ ] Hotspot view
-[ ] Left panel for icon legend + mode switching
+[x] Grey out icons for filtered calls
+[x] Show call time behavior as icon
+[x] Left panel for icon legend + mode switching
 
 Snapshots
 
@@ -22,3 +24,6 @@ Snapshots
 Way out there
 
 [ ] Sampling mode for low-impact profiling
+[x] Check for updates on start page
+[x] Subtle advertising on start page
+[x] Referrer field in update checker should work now.
