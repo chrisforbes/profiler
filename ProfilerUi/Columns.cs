@@ -26,7 +26,7 @@ namespace ProfilerUi
 		static Brush GetBrush(IProfilerElement e) { return GetBrush(e.Interesting); }
 		static Brush GetBrush(CallerFunction f) { return GetBrush(f.Interesting); }
 
-		static string GetImage2(MethodType t)
+		static string GetImage(MethodType t)
 		{
 			switch (t)
 			{
@@ -43,7 +43,7 @@ namespace ProfilerUi
 
 		static string GetImage(MethodType t, bool interesting)
 		{
-			string image = GetImage2(t);
+			string image = GetImage(t);
 			if (!interesting) image += "_grey";
 			return image;
 		}
@@ -154,7 +154,7 @@ namespace ProfilerUi
 		}
 
 		
-		static string GetTimeIcon(Function f)
+		static string GetTimeIcon2(Function f)
 		{
 			const double upperLimit = 0.9;
 			const double lowerLimit = 0.1;
@@ -169,6 +169,13 @@ namespace ProfilerUi
 				return "call_in_self";
 
 			return "call_in_mixed";
+		}
+
+		static string GetTimeIcon(Function f)
+		{
+			string s = GetTimeIcon2(f);
+			if (!f.Interesting) s += "_grey";
+			return s;
 		}
 	}
 }
