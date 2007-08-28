@@ -141,6 +141,12 @@
         }
         "Entry"
         {
+        "MsmKey" = "8:_BF1968C611C440548A7E1A4155A9B489"
+        "OwnerKey" = "8:_UNDEFINED"
+        "MsmSig" = "8:_UNDEFINED"
+        }
+        "Entry"
+        {
         "MsmKey" = "8:_C6E90E0AE64E4F76955E1B03D1083708"
         "OwnerKey" = "8:_UNDEFINED"
         "MsmSig" = "8:_UNDEFINED"
@@ -704,6 +710,26 @@
             "IsDependency" = "11:FALSE"
             "IsolateTo" = "8:"
             }
+            "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_BF1968C611C440548A7E1A4155A9B489"
+            {
+            "SourcePath" = "8:..\\debug\\corfu_logo.png"
+            "TargetName" = "8:corfu_logo.png"
+            "Tag" = "8:"
+            "Folder" = "8:_5014C7B3CCD94F38B5B77C9F393D5C78"
+            "Condition" = "8:"
+            "Transitive" = "11:FALSE"
+            "Vital" = "11:TRUE"
+            "ReadOnly" = "11:FALSE"
+            "Hidden" = "11:FALSE"
+            "System" = "11:FALSE"
+            "Permanent" = "11:FALSE"
+            "SharedLegacy" = "11:FALSE"
+            "PackageAs" = "3:1"
+            "Register" = "3:1"
+            "Exclude" = "11:FALSE"
+            "IsDependency" = "11:FALSE"
+            "IsolateTo" = "8:"
+            }
             "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_C6E90E0AE64E4F76955E1B03D1083708"
             {
             "SourcePath" = "8:..\\debug\\res\\event_remove.bmp"
@@ -952,14 +978,14 @@
         {
         "Name" = "8:Microsoft Visual Studio"
         "ProductName" = "8:IJW Profiler Pre-release"
-        "ProductCode" = "8:{C5A167F6-D5D1-449D-80C1-92AB017758DD}"
-        "PackageCode" = "8:{21D43B15-7422-4980-BAEC-73717697AB83}"
+        "ProductCode" = "8:{1938D838-DB60-445D-BC4E-BF517CFA26BE}"
+        "PackageCode" = "8:{2B68CD9F-F314-4B2C-8D66-DB3460B079E9}"
         "UpgradeCode" = "8:{94097A7A-D245-4411-82EE-05531F82F9E4}"
         "RestartWWWService" = "11:FALSE"
         "RemovePreviousVersions" = "11:TRUE"
         "DetectNewerInstalledVersion" = "11:TRUE"
         "InstallAllUsers" = "11:FALSE"
-        "ProductVersion" = "8:0.7.2"
+        "ProductVersion" = "8:0.8"
         "Manufacturer" = "8:IJW Software"
         "ARPHELPTELEPHONE" = "8:"
         "ARPHELPLINK" = "8:http://www.ijw.co.nz"

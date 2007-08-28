@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <xsl:stylesheet version="1.0" xmlns:xsl="http://www.w3.org/1999/XSL/Transform">
-
 	<xsl:template match="/">
-		<html>
+		
+		<html xmlns="http://www.w3.org/1999/xhtml">
 			<head>
 				<title>Start Page</title>
 				<link href="mru.css" type="text/css" rel="stylesheet"/>
@@ -77,9 +77,8 @@
 				<div class="footer">
 					Other products from It Just Works Software that you may like:
 					<br/>
-					<img src="corfu_logo.png" style="border: 0px; vertical-align: middle"/>
-					<a href="#" onclick="javascript:window.external.OpenExternalLink('http://www.ijw.co.nz/corfu.htm')">
-						Corfu Text Editor
+					<img src="corfu_logo.png" style="border: 0px; vertical-align: middle;margin-right:0.5em"/>
+					<a href="#" onclick="javascript:window.external.OpenExternalLink('http://www.ijw.co.nz/corfu.htm')">Corfu Text Editor
 					</a>
 				</div>
 			</body>

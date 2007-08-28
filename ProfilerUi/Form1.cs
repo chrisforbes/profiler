@@ -16,7 +16,7 @@ namespace ProfilerUi
 {
 	public partial class Form1 : Form
 	{
-		string version = "0.7.2";
+		string version = "0.8";
 
 		MultipleViewManager viewManager;
 		ViewBase startPage; 
