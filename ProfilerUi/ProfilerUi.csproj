@@ -109,6 +109,9 @@
     <Compile Include="Thread.cs" />
   </ItemGroup>
   <ItemGroup>
+    <Content Include="res\corfu_logo.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
     <Content Include="res\icon.ico">
     </Content>
     <Content Include="res\mru.css">

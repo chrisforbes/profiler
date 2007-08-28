@@ -46,7 +46,7 @@ namespace ProfilerUi
 			viewManager = new MultipleViewManager(workspace.ContentPanel);
 
 			startPage = new WebView(viewManager,
-				"file://" + Path.GetFullPath("mru.xml"), new StartPageController(version, NewRun));
+				"file://" + Path.GetFullPath("mru.xml"), new StartPageController(version, NewRun, delegate { CheckForUpdates(this, EventArgs.Empty); }));
 
 			viewManager.Add(startPage);
 

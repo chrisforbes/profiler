@@ -44,7 +44,8 @@
 							</xsl:for-each>
 						</ul>
 					</div>
-					<!--<div style="margin-top:30px">
+					<!--Code for previous run loading (todo)
+					<div style="margin-top:30px">
 						<a href="#" onclick="javascript:window.external.Snapshot('')">
 							Load snapshot from a previous profiling run...
 						</a>
@@ -65,6 +66,21 @@
 							</xsl:for-each>
 						</ul>
 					</div>-->
+					<div style="margin-top:30px">
+						<a href="#" onclick="javascript:window.external.Update('')">
+							Check for updates...
+						</a>
+						<br/>
+						Check online for updates to the IJW Profiler
+					</div>
+				</div>
+				<div class="footer">
+					Other products from It Just Works Software that you may like:
+					<br/>
+					<img src="corfu_logo.png" style="border: 0px; vertical-align: middle"/>
+					<a href="#" onclick="javascript:window.external.OpenExternalLink('http://www.ijw.co.nz/corfu.htm')">
+						Corfu Text Editor
+					</a>
 				</div>
 			</body>
 		</html>
