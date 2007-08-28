@@ -22,14 +22,15 @@ namespace ProfilerUi
 			: base( host, p )
 		{
 			cc = p;
+			cc.Size = new Size(300, 300);
+
 			cc.Controls.Add(v);
-			cc.Size = new Size(300,300);
-			v.Anchor = AnchorStyles.Left | AnchorStyles.Top | AnchorStyles.Bottom | AnchorStyles.Right;
+			v.Anchor = AnchorUtil.ClientArea;
 			v.Location = new Point(0, 20);
 			v.Size = new Size(cc.Width, cc.Height - 20);
 
 			cc.Controls.Add(h);
-			h.Anchor = AnchorStyles.Left | AnchorStyles.Right | AnchorStyles.Top;
+			h.Anchor = AnchorUtil.TopEdge;
 			h.Location = new Point();
 			h.Size = new Size(cc.Width, 20);
 
