@@ -15,7 +15,19 @@
     {
         "Entry"
         {
+        "MsmKey" = "8:_0F3D926DD0E24B5DA9ABDF42A8BF6A83"
+        "OwnerKey" = "8:_UNDEFINED"
+        "MsmSig" = "8:_UNDEFINED"
+        }
+        "Entry"
+        {
         "MsmKey" = "8:_0FEBEB140AF64369806F862783A3F530"
+        "OwnerKey" = "8:_UNDEFINED"
+        "MsmSig" = "8:_UNDEFINED"
+        }
+        "Entry"
+        {
+        "MsmKey" = "8:_189F233C7A274FD8AD0D47218703EC6E"
         "OwnerKey" = "8:_UNDEFINED"
         "MsmSig" = "8:_UNDEFINED"
         }
@@ -27,13 +39,31 @@
         }
         "Entry"
         {
+        "MsmKey" = "8:_30EDA1830F3740EA9FB807D04781730B"
+        "OwnerKey" = "8:_UNDEFINED"
+        "MsmSig" = "8:_UNDEFINED"
+        }
+        "Entry"
+        {
         "MsmKey" = "8:_33E730DDFC3948DDB3D96D95F3A1F276"
         "OwnerKey" = "8:_UNDEFINED"
         "MsmSig" = "8:_UNDEFINED"
         }
         "Entry"
         {
-        "MsmKey" = "8:_644F142F7739419DB5B5D7A9D2F9D21A"
+        "MsmKey" = "8:_38EF27E28C004370B213EF3F514D010B"
+        "OwnerKey" = "8:_UNDEFINED"
+        "MsmSig" = "8:_UNDEFINED"
+        }
+        "Entry"
+        {
+        "MsmKey" = "8:_3D0D94F3A7044360B5FB39FA7B39522E"
+        "OwnerKey" = "8:_UNDEFINED"
+        "MsmSig" = "8:_UNDEFINED"
+        }
+        "Entry"
+        {
+        "MsmKey" = "8:_52E43C7E99AD4D46B16BEF924E37CEF5"
         "OwnerKey" = "8:_UNDEFINED"
         "MsmSig" = "8:_UNDEFINED"
         }
@@ -57,6 +87,12 @@
         }
         "Entry"
         {
+        "MsmKey" = "8:_73746831B5A949D88AE1B91FE5AC6EF2"
+        "OwnerKey" = "8:_UNDEFINED"
+        "MsmSig" = "8:_UNDEFINED"
+        }
+        "Entry"
+        {
         "MsmKey" = "8:_7534D7A440804EDC8443637D34A5B8C5"
         "OwnerKey" = "8:_UNDEFINED"
         "MsmSig" = "8:_UNDEFINED"
@@ -69,12 +105,6 @@
         }
         "Entry"
         {
-        "MsmKey" = "8:_8137F322896A44ED9C203E174729E1C8"
-        "OwnerKey" = "8:_UNDEFINED"
-        "MsmSig" = "8:_UNDEFINED"
-        }
-        "Entry"
-        {
         "MsmKey" = "8:_85FD410E6E7A4B8BB32D263B828CE608"
         "OwnerKey" = "8:_UNDEFINED"
         "MsmSig" = "8:_UNDEFINED"
@@ -82,12 +112,6 @@
         "Entry"
         {
         "MsmKey" = "8:_918232FCA6424C61A592B7FCD6EF3DD1"
-        "OwnerKey" = "8:_UNDEFINED"
-        "MsmSig" = "8:_UNDEFINED"
-        }
-        "Entry"
-        {
-        "MsmKey" = "8:_98CE2F83598E4E9AA40A4297080E008F"
         "OwnerKey" = "8:_UNDEFINED"
         "MsmSig" = "8:_UNDEFINED"
         }
@@ -111,7 +135,19 @@
         }
         "Entry"
         {
+        "MsmKey" = "8:_BC33109B673B45298BB1D72F86903C70"
+        "OwnerKey" = "8:_UNDEFINED"
+        "MsmSig" = "8:_UNDEFINED"
+        }
+        "Entry"
+        {
         "MsmKey" = "8:_C6E90E0AE64E4F76955E1B03D1083708"
+        "OwnerKey" = "8:_UNDEFINED"
+        "MsmSig" = "8:_UNDEFINED"
+        }
+        "Entry"
+        {
+        "MsmKey" = "8:_C88EED716F214673960DC7B3BBBB074B"
         "OwnerKey" = "8:_UNDEFINED"
         "MsmSig" = "8:_UNDEFINED"
         }
@@ -130,6 +166,18 @@
         "Entry"
         {
         "MsmKey" = "8:_E1A38C8C46124E83A2BDD72676D23354"
+        "OwnerKey" = "8:_UNDEFINED"
+        "MsmSig" = "8:_UNDEFINED"
+        }
+        "Entry"
+        {
+        "MsmKey" = "8:_E563E6D2255442E1A064F2A1E2D47916"
+        "OwnerKey" = "8:_UNDEFINED"
+        "MsmSig" = "8:_UNDEFINED"
+        }
+        "Entry"
+        {
+        "MsmKey" = "8:_F376A002611A46B2B9505BA0DC3B301F"
         "OwnerKey" = "8:_UNDEFINED"
         "MsmSig" = "8:_UNDEFINED"
         }
@@ -236,10 +284,50 @@
         }
         "File"
         {
+            "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_0F3D926DD0E24B5DA9ABDF42A8BF6A83"
+            {
+            "SourcePath" = "8:..\\debug\\res\\call_in_grey.bmp"
+            "TargetName" = "8:call_in_grey.bmp"
+            "Tag" = "8:"
+            "Folder" = "8:_B1B5F13340174AA2B2A3EC9909069877"
+            "Condition" = "8:"
+            "Transitive" = "11:FALSE"
+            "Vital" = "11:TRUE"
+            "ReadOnly" = "11:FALSE"
+            "Hidden" = "11:FALSE"
+            "System" = "11:FALSE"
+            "Permanent" = "11:FALSE"
+            "SharedLegacy" = "11:FALSE"
+            "PackageAs" = "3:1"
+            "Register" = "3:1"
+            "Exclude" = "11:FALSE"
+            "IsDependency" = "11:FALSE"
+            "IsolateTo" = "8:"
+            }
             "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_0FEBEB140AF64369806F862783A3F530"
             {
             "SourcePath" = "8:..\\debug\\res\\event_add.bmp"
             "TargetName" = "8:event_add.bmp"
+            "Tag" = "8:"
+            "Folder" = "8:_B1B5F13340174AA2B2A3EC9909069877"
+            "Condition" = "8:"
+            "Transitive" = "11:FALSE"
+            "Vital" = "11:TRUE"
+            "ReadOnly" = "11:FALSE"
+            "Hidden" = "11:FALSE"
+            "System" = "11:FALSE"
+            "Permanent" = "11:FALSE"
+            "SharedLegacy" = "11:FALSE"
+            "PackageAs" = "3:1"
+            "Register" = "3:1"
+            "Exclude" = "11:FALSE"
+            "IsDependency" = "11:FALSE"
+            "IsolateTo" = "8:"
+            }
+            "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_189F233C7A274FD8AD0D47218703EC6E"
+            {
+            "SourcePath" = "8:..\\debug\\res\\prop_get_grey.bmp"
+            "TargetName" = "8:prop_get_grey.bmp"
             "Tag" = "8:"
             "Folder" = "8:_B1B5F13340174AA2B2A3EC9909069877"
             "Condition" = "8:"
@@ -276,6 +364,26 @@
             "IsDependency" = "11:FALSE"
             "IsolateTo" = "8:"
             }
+            "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_30EDA1830F3740EA9FB807D04781730B"
+            {
+            "SourcePath" = "8:..\\debug\\res\\call_in_self_grey.bmp"
+            "TargetName" = "8:call_in_self_grey.bmp"
+            "Tag" = "8:"
+            "Folder" = "8:_B1B5F13340174AA2B2A3EC9909069877"
+            "Condition" = "8:"
+            "Transitive" = "11:FALSE"
+            "Vital" = "11:TRUE"
+            "ReadOnly" = "11:FALSE"
+            "Hidden" = "11:FALSE"
+            "System" = "11:FALSE"
+            "Permanent" = "11:FALSE"
+            "SharedLegacy" = "11:FALSE"
+            "PackageAs" = "3:1"
+            "Register" = "3:1"
+            "Exclude" = "11:FALSE"
+            "IsDependency" = "11:FALSE"
+            "IsolateTo" = "8:"
+            }
             "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_33E730DDFC3948DDB3D96D95F3A1F276"
             {
             "SourcePath" = "8:..\\debug\\res\\method.bmp"
@@ -296,9 +404,49 @@
             "IsDependency" = "11:FALSE"
             "IsolateTo" = "8:"
             }
-            "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_644F142F7739419DB5B5D7A9D2F9D21A"
+            "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_38EF27E28C004370B213EF3F514D010B"
             {
-            "SourcePath" = "8:..\\ProfilerUi\\profiler_logo.png"
+            "SourcePath" = "8:..\\debug\\res\\call_out_grey.bmp"
+            "TargetName" = "8:call_out_grey.bmp"
+            "Tag" = "8:"
+            "Folder" = "8:_B1B5F13340174AA2B2A3EC9909069877"
+            "Condition" = "8:"
+            "Transitive" = "11:FALSE"
+            "Vital" = "11:TRUE"
+            "ReadOnly" = "11:FALSE"
+            "Hidden" = "11:FALSE"
+            "System" = "11:FALSE"
+            "Permanent" = "11:FALSE"
+            "SharedLegacy" = "11:FALSE"
+            "PackageAs" = "3:1"
+            "Register" = "3:1"
+            "Exclude" = "11:FALSE"
+            "IsDependency" = "11:FALSE"
+            "IsolateTo" = "8:"
+            }
+            "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_3D0D94F3A7044360B5FB39FA7B39522E"
+            {
+            "SourcePath" = "8:..\\debug\\res\\event_add_grey.bmp"
+            "TargetName" = "8:event_add_grey.bmp"
+            "Tag" = "8:"
+            "Folder" = "8:_B1B5F13340174AA2B2A3EC9909069877"
+            "Condition" = "8:"
+            "Transitive" = "11:FALSE"
+            "Vital" = "11:TRUE"
+            "ReadOnly" = "11:FALSE"
+            "Hidden" = "11:FALSE"
+            "System" = "11:FALSE"
+            "Permanent" = "11:FALSE"
+            "SharedLegacy" = "11:FALSE"
+            "PackageAs" = "3:1"
+            "Register" = "3:1"
+            "Exclude" = "11:FALSE"
+            "IsDependency" = "11:FALSE"
+            "IsolateTo" = "8:"
+            }
+            "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_52E43C7E99AD4D46B16BEF924E37CEF5"
+            {
+            "SourcePath" = "8:..\\debug\\profiler_logo.png"
             "TargetName" = "8:profiler_logo.png"
             "Tag" = "8:"
             "Folder" = "8:_5014C7B3CCD94F38B5B77C9F393D5C78"
@@ -376,6 +524,26 @@
             "IsDependency" = "11:FALSE"
             "IsolateTo" = "8:"
             }
+            "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_73746831B5A949D88AE1B91FE5AC6EF2"
+            {
+            "SourcePath" = "8:..\\debug\\res\\event_remove_grey.bmp"
+            "TargetName" = "8:event_remove_grey.bmp"
+            "Tag" = "8:"
+            "Folder" = "8:_B1B5F13340174AA2B2A3EC9909069877"
+            "Condition" = "8:"
+            "Transitive" = "11:FALSE"
+            "Vital" = "11:TRUE"
+            "ReadOnly" = "11:FALSE"
+            "Hidden" = "11:FALSE"
+            "System" = "11:FALSE"
+            "Permanent" = "11:FALSE"
+            "SharedLegacy" = "11:FALSE"
+            "PackageAs" = "3:1"
+            "Register" = "3:1"
+            "Exclude" = "11:FALSE"
+            "IsDependency" = "11:FALSE"
+            "IsolateTo" = "8:"
+            }
             "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_7534D7A440804EDC8443637D34A5B8C5"
             {
             "SourcePath" = "8:..\\debug\\res\\call_out.bmp"
@@ -416,26 +584,6 @@
             "IsDependency" = "11:FALSE"
             "IsolateTo" = "8:"
             }
-            "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_8137F322896A44ED9C203E174729E1C8"
-            {
-            "SourcePath" = "8:..\\ProfilerUi\\icon.ico"
-            "TargetName" = "8:icon.ico"
-            "Tag" = "8:"
-            "Folder" = "8:_5014C7B3CCD94F38B5B77C9F393D5C78"
-            "Condition" = "8:"
-            "Transitive" = "11:FALSE"
-            "Vital" = "11:TRUE"
-            "ReadOnly" = "11:FALSE"
-            "Hidden" = "11:FALSE"
-            "System" = "11:FALSE"
-            "Permanent" = "11:FALSE"
-            "SharedLegacy" = "11:FALSE"
-            "PackageAs" = "3:1"
-            "Register" = "3:1"
-            "Exclude" = "11:FALSE"
-            "IsDependency" = "11:FALSE"
-            "IsolateTo" = "8:"
-            }
             "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_85FD410E6E7A4B8BB32D263B828CE608"
             {
             "SourcePath" = "8:..\\debug\\mru.xml"
@@ -462,26 +610,6 @@
             "TargetName" = "8:mru.css"
             "Tag" = "8:"
             "Folder" = "8:_5014C7B3CCD94F38B5B77C9F393D5C78"
-            "Condition" = "8:"
-            "Transitive" = "11:FALSE"
-            "Vital" = "11:TRUE"
-            "ReadOnly" = "11:FALSE"
-            "Hidden" = "11:FALSE"
-            "System" = "11:FALSE"
-            "Permanent" = "11:FALSE"
-            "SharedLegacy" = "11:FALSE"
-            "PackageAs" = "3:1"
-            "Register" = "3:1"
-            "Exclude" = "11:FALSE"
-            "IsDependency" = "11:FALSE"
-            "IsolateTo" = "8:"
-            }
-            "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_98CE2F83598E4E9AA40A4297080E008F"
-            {
-            "SourcePath" = "8:..\\debug\\res\\App.bmp"
-            "TargetName" = "8:App.bmp"
-            "Tag" = "8:"
-            "Folder" = "8:_B1B5F13340174AA2B2A3EC9909069877"
             "Condition" = "8:"
             "Transitive" = "11:FALSE"
             "Vital" = "11:TRUE"
@@ -556,10 +684,50 @@
             "IsDependency" = "11:FALSE"
             "IsolateTo" = "8:"
             }
+            "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_BC33109B673B45298BB1D72F86903C70"
+            {
+            "SourcePath" = "8:..\\debug\\res\\ctor_grey.bmp"
+            "TargetName" = "8:ctor_grey.bmp"
+            "Tag" = "8:"
+            "Folder" = "8:_B1B5F13340174AA2B2A3EC9909069877"
+            "Condition" = "8:"
+            "Transitive" = "11:FALSE"
+            "Vital" = "11:TRUE"
+            "ReadOnly" = "11:FALSE"
+            "Hidden" = "11:FALSE"
+            "System" = "11:FALSE"
+            "Permanent" = "11:FALSE"
+            "SharedLegacy" = "11:FALSE"
+            "PackageAs" = "3:1"
+            "Register" = "3:1"
+            "Exclude" = "11:FALSE"
+            "IsDependency" = "11:FALSE"
+            "IsolateTo" = "8:"
+            }
             "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_C6E90E0AE64E4F76955E1B03D1083708"
             {
             "SourcePath" = "8:..\\debug\\res\\event_remove.bmp"
             "TargetName" = "8:event_remove.bmp"
+            "Tag" = "8:"
+            "Folder" = "8:_B1B5F13340174AA2B2A3EC9909069877"
+            "Condition" = "8:"
+            "Transitive" = "11:FALSE"
+            "Vital" = "11:TRUE"
+            "ReadOnly" = "11:FALSE"
+            "Hidden" = "11:FALSE"
+            "System" = "11:FALSE"
+            "Permanent" = "11:FALSE"
+            "SharedLegacy" = "11:FALSE"
+            "PackageAs" = "3:1"
+            "Register" = "3:1"
+            "Exclude" = "11:FALSE"
+            "IsDependency" = "11:FALSE"
+            "IsolateTo" = "8:"
+            }
+            "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_C88EED716F214673960DC7B3BBBB074B"
+            {
+            "SourcePath" = "8:..\\debug\\res\\call_in_mixed_grey.bmp"
+            "TargetName" = "8:call_in_mixed_grey.bmp"
             "Tag" = "8:"
             "Folder" = "8:_B1B5F13340174AA2B2A3EC9909069877"
             "Condition" = "8:"
@@ -644,6 +812,46 @@
             "TargetName" = "8:"
             "Tag" = "8:"
             "Folder" = "8:_5014C7B3CCD94F38B5B77C9F393D5C78"
+            "Condition" = "8:"
+            "Transitive" = "11:FALSE"
+            "Vital" = "11:TRUE"
+            "ReadOnly" = "11:FALSE"
+            "Hidden" = "11:FALSE"
+            "System" = "11:FALSE"
+            "Permanent" = "11:FALSE"
+            "SharedLegacy" = "11:FALSE"
+            "PackageAs" = "3:1"
+            "Register" = "3:1"
+            "Exclude" = "11:FALSE"
+            "IsDependency" = "11:FALSE"
+            "IsolateTo" = "8:"
+            }
+            "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_E563E6D2255442E1A064F2A1E2D47916"
+            {
+            "SourcePath" = "8:..\\debug\\res\\prop_set_grey.bmp"
+            "TargetName" = "8:prop_set_grey.bmp"
+            "Tag" = "8:"
+            "Folder" = "8:_B1B5F13340174AA2B2A3EC9909069877"
+            "Condition" = "8:"
+            "Transitive" = "11:FALSE"
+            "Vital" = "11:TRUE"
+            "ReadOnly" = "11:FALSE"
+            "Hidden" = "11:FALSE"
+            "System" = "11:FALSE"
+            "Permanent" = "11:FALSE"
+            "SharedLegacy" = "11:FALSE"
+            "PackageAs" = "3:1"
+            "Register" = "3:1"
+            "Exclude" = "11:FALSE"
+            "IsDependency" = "11:FALSE"
+            "IsolateTo" = "8:"
+            }
+            "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_F376A002611A46B2B9505BA0DC3B301F"
+            {
+            "SourcePath" = "8:..\\debug\\res\\method_grey.bmp"
+            "TargetName" = "8:method_grey.bmp"
+            "Tag" = "8:"
+            "Folder" = "8:_B1B5F13340174AA2B2A3EC9909069877"
             "Condition" = "8:"
             "Transitive" = "11:FALSE"
             "Vital" = "11:TRUE"
@@ -870,12 +1078,12 @@
             "Arguments" = "8:"
             "Description" = "8:"
             "ShowCmd" = "3:1"
-            "IconIndex" = "3:0"
+            "IconIndex" = "3:32512"
             "Transitive" = "11:FALSE"
             "Target" = "8:_E1A38C8C46124E83A2BDD72676D23354"
             "Folder" = "8:_B72E56EAE5324F3F8BE39695984B72CB"
             "WorkingFolder" = "8:_5014C7B3CCD94F38B5B77C9F393D5C78"
-            "Icon" = "8:_8137F322896A44ED9C203E174729E1C8"
+            "Icon" = "8:_E1A38C8C46124E83A2BDD72676D23354"
             "Feature" = "8:"
             }
         }
