@@ -25,7 +25,7 @@
 					<div style="width:100%; ">
 						<a href="#" onclick="javascript:window.external.Run('','','')">Profile an application...</a>
 						<br/>
-						If you have profiled some application recently, select it from the list below:
+						If you have profiled an application recently, you can select it from the list below:
 					</div>
 					<div style="margin-left:40px">
 						<ul>
