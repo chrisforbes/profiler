@@ -242,15 +242,11 @@ namespace ProfilerUi
 		void ShowHotspots(object sender, EventArgs e)
 		{
 			List<CallerFunction> callerFunctions = CurrentView.src.GetHotspots(10);
-			List<Node> nodes = new List<Node>();
-
-			foreach (CallerFunction cf in callerFunctions)
-				nodes.Add(cf.CreateView());
-
+			
 			TreeControl tc = CreateNewView("Hotspots of " + CurrentView.ToString(), CurrentView.src, callerColumns);
 
-			foreach (Node n in nodes)
-				tc.Root.Add(n);
+			foreach (CallerFunction cf in callerFunctions)
+				tc.Root.Add(cf.CreateView());
 		}
 
 		LegendBar MakeLegendBar()
