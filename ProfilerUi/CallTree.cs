@@ -5,12 +5,15 @@ using System.IO;
 using System.Windows.Forms;
 using System.Xml;
 using IjwFramework.Ui;
+using IjwFramework.Collections;
+using IjwFramework.Types;
 
 namespace ProfilerUi
 {
 	class CallTree
 	{
 		public Dictionary<uint, Thread> threads = new Dictionary<uint, Thread>();
+		public Set<uint> allCalledFunctions = new Set<uint>();
 		Activation<Thread> currentThread = null;
 		FunctionNameProvider names;
 		Predicate<string> filter;
@@ -94,6 +97,7 @@ namespace ProfilerUi
 				dict.Add(e.id, f = new Function(e.id, name, !filter(name.ClassName), parent));
 
 			t.activations.Push(new Activation<Function>(f, e.timestamp));
+			allCalledFunctions.Add(e.id);
 		}
 
 		void OnLeaveFunction(ProfileEvent e)
@@ -112,11 +116,12 @@ namespace ProfilerUi
 			writer.WriteEndElement();
 			writer.WriteStartElement("names");
 
-			foreach (KeyValuePair<uint, Name> name in names.Everything)
+			foreach (uint f in allCalledFunctions)
 			{
+				Name name = names.GetName(f);
 				writer.WriteStartElement("func");
-				writer.WriteAttributeString("id", name.Key.ToString());
-				writer.WriteAttributeString("name", name.Value.MethodName);
+				writer.WriteAttributeString("id", f.ToString());
+				writer.WriteAttributeString("name", name.MethodName);
 				writer.WriteEndElement();
 			}
 
@@ -155,6 +160,38 @@ namespace ProfilerUi
 					cf.Merge(inv);
 
 			return cf;
+		}
+
+		public List<CallerFunction> GetHotspots( int count )
+		{
+			List<Pair<Function, double>> withOwnTime = new List<Pair<Function, double>>();
+
+			foreach (uint f in allCalledFunctions)
+			{
+				double ownTime = 0.0;
+				Function g = null;
+				foreach (Function ff in CollectInvocations(f))
+				{
+					ownTime += ff.OwnTime;
+					g = ff;
+				}
+
+				withOwnTime.Add(new Pair<Function, double>(g, ownTime));
+			}
+
+			withOwnTime.Sort(delegate(Pair<Function, double> a, Pair<Function, double> b)
+			{
+				return -a.Second.CompareTo(b.Second);
+			});
+
+			if (withOwnTime.Count > count)
+				withOwnTime.RemoveRange(count, withOwnTime.Count - count);
+
+			List<CallerFunction> result = new List<CallerFunction>();
+			foreach (Pair<Function, double> p in withOwnTime)
+				result.Add(GetBacktrace(p.First));
+
+			return result;
 		}
 	}
 }
