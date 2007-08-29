@@ -22,6 +22,9 @@ namespace ProfilerUi
 			imageProvider = provider;
 			SetStyle(ControlStyles.OptimizedDoubleBuffer, true);
 			UpdateStyles();
+			Cursor = Cursors.Hand;
+			ToolTip tt = new ToolTip();
+			tt.SetToolTip(this, "Click for more");
 		}
 
 		protected override void OnResize(EventArgs e)
@@ -67,6 +70,12 @@ namespace ProfilerUi
 		public void Add(IEnumerable<Pair<string,string>> page)
 		{
 			items.Add(page);
+			Invalidate();
+		}
+
+		protected override void OnClick(EventArgs e)
+		{
+			++currentPage;
 			Invalidate();
 		}
 	}
