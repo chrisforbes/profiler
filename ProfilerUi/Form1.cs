@@ -241,6 +241,7 @@ namespace ProfilerUi
 
 		void ShowHotspots(object sender, EventArgs e)
 		{
+			if (CurrentView == null) return;
 			List<CallerFunction> callerFunctions = CurrentView.src.GetHotspots(10);
 			
 			TreeControl tc = CreateNewView("Hotspots of " + CurrentView.ToString(), CurrentView.src, callerColumns);
