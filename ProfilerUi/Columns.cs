@@ -51,7 +51,9 @@ namespace ProfilerUi
 		public void RenderCallerColumn(IColumn c, Painter p, Node n)
 		{
 			CallerTreeNode nn = (CallerTreeNode)n;
-			p.DrawImage(imageProvider.GetImage("call_out"));
+			string s = "call_out";
+			if (!nn.Value.Interesting) s += "_grey";
+			p.DrawImage(imageProvider.GetImage(s));
 			RenderName(c, nn.Value.Name, p, nn.Value.Interesting);
 		}
 
