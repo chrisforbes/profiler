@@ -97,7 +97,9 @@ namespace ProfilerUi
 				dict.Add(e.id, f = new Function(e.id, name, !filter(name.ClassName), parent));
 
 			t.activations.Push(new Activation<Function>(f, e.timestamp));
-			allCalledFunctions.Add(e.id);
+
+			if (!allCalledFunctions.Contains(e.id))
+				allCalledFunctions.Add(e.id);
 		}
 
 		void OnLeaveFunction(ProfileEvent e)
