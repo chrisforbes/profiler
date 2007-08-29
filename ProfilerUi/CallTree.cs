@@ -91,7 +91,7 @@ namespace ProfilerUi
 				? t.roots : parent.children;
 
 			Function f;
-			Name name = names.GetName(e.id);
+			Name name = names[e.id];
 
 			if (!dict.TryGetValue(e.id, out f))
 				dict.Add(e.id, f = new Function(e.id, name, !filter(name.ClassName), parent));
@@ -120,7 +120,7 @@ namespace ProfilerUi
 
 			foreach (uint f in allCalledFunctions)
 			{
-				Name name = names.GetName(f);
+				Name name = names[f];
 				writer.WriteStartElement("func");
 				writer.WriteAttributeString("id", f.ToString());
 				writer.WriteAttributeString("name", name.MethodName);

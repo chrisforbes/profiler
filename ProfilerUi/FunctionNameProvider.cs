@@ -12,32 +12,30 @@ namespace ProfilerUi
 	{
 		Dictionary<uint, Name> names = new Dictionary<uint,Name>();
 
-		public FunctionNameProvider( string filename )
+		public FunctionNameProvider(string filename)
 		{
-			Regex r = new Regex( "^0x([0-9a-fA-F]*)=(.*)$" );
-			foreach( string s in File.ReadAllLines(filename))
+			Regex r = new Regex("^0x([0-9a-fA-F]*)=(.*)$");
+			foreach (string s in File.ReadAllLines(filename))
 			{
-				Match m = r.Match( s );
+				Match m = r.Match(s);
 				if (m == null || !m.Success)
 					continue;
 
-				uint functionId = uint.Parse( m.Groups[ 1 ].Value, NumberStyles.HexNumber );
+				uint functionId = uint.Parse(m.Groups[1].Value, NumberStyles.HexNumber);
 				names.Add(functionId, new Name(m.Groups[2].Value));
 			}
 		}
 
-		public Name GetName(uint functionId)
+		public Name this[uint functionId]
 		{
-			Name value;
-			if (!names.TryGetValue(functionId, out value))
-				return new Name("<unbound " + functionId + " >");
+			get
+			{
+				Name name;
+				if (!names.TryGetValue(functionId, out name))
+					return new Name("<unbound " + functionId + " >");
 
-			return value;
-		}
-
-		public IEnumerable<KeyValuePair<uint, Name>> Everything
-		{
-			get { return names; }
+				return name;
+			}
 		}
 	}
 }

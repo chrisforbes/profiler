@@ -11,12 +11,13 @@ namespace ProfilerUi
 		readonly uint id;
 
 		int calls;
-		double time;
+		double ownTime, totalTime;
 		bool interesting;
 
 		public Name Name { get { return name; } }
 		public int Calls { get { return calls; } }
-		public double Time { get { return time; } }
+		public double OwnTime { get { return ownTime; } }
+		public double TotalTime { get { return totalTime; } }
 		public bool Interesting { get { return interesting; } }
 
 		readonly Dictionary<uint, CallerFunction> callers = new Dictionary<uint, CallerFunction>();
@@ -35,7 +36,8 @@ namespace ProfilerUi
 		public void Merge(Function f)
 		{
 			calls += f.Calls;
-			time += f.TotalTime;
+			totalTime += f.TotalTime;
+			ownTime += f.OwnTime;
 
 			AddCaller(f.Parent);
 		}
@@ -46,7 +48,8 @@ namespace ProfilerUi
 			this.id = f.Id;
 
 			this.calls = f.Calls;
-			this.time = f.TotalTime;
+			this.ownTime = f.OwnTime;
+			this.totalTime = f.TotalTime;
 			this.interesting = f.Interesting;
 
 			AddCaller(f.Parent);

@@ -63,10 +63,16 @@ namespace ProfilerUi
 			RenderRightAligned(c, p, nn.Value.Calls.ToString(), GetBrush(nn.Value));
 		}
 
-		public void RenderCallerTimeColumn(IColumn c, Painter p, Node n)
+		public void RenderCallerTotalTimeColumn(IColumn c, Painter p, Node n)
 		{
 			CallerTreeNode nn = (CallerTreeNode)n;
-			RenderRightAligned(c, p, nn.Value.Time.ToString("F1") + " ms", GetBrush(nn.Value));
+			RenderRightAligned(c, p, nn.Value.TotalTime.ToString("F1") + " ms", GetBrush(nn.Value));
+		}
+
+		public void RenderCallerOwnTimeColumn(IColumn c, Painter p, Node n)
+		{
+			CallerTreeNode nn = (CallerTreeNode)n;
+			RenderRightAligned(c, p, nn.Value.OwnTime.ToString("F1") + " ms", GetBrush(nn.Value));
 		}
 
 		void RenderName(IColumn c, Name name, Painter p, bool interesting)

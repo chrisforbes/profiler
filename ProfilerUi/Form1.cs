@@ -37,7 +37,8 @@ namespace ProfilerUi
 
 			callerColumns.CreateAutoWidth("Function", cc.RenderCallerColumn);
 			callerColumns.CreateFixedWidth("Calls", 50, cc.RenderCallerCallsColumn);
-			callerColumns.CreateFixedWidth("Time", 70, cc.RenderCallerTimeColumn);
+			callerColumns.CreateFixedWidth("Own Time", 70, cc.RenderCallerOwnTimeColumn);
+			callerColumns.CreateFixedWidth("Total Time", 70, cc.RenderCallerTotalTimeColumn);
 			callerColumns.CreateFixedWidth("", 16, delegate { });
 
 			InitializeComponent();
@@ -46,7 +47,7 @@ namespace ProfilerUi
 			viewManager = new MultipleViewManager(workspace.ContentPanel);
 
 			startPage = new WebView(viewManager,
-				"file://" + Path.GetFullPath("mru.xml"), new StartPageController(version, NewRun, delegate { CheckForUpdates(this, EventArgs.Empty); }));
+				"file://" + Path.GetFullPath("mru.xml"), new StartPageController(version, NewRun, CheckForUpdates));
 
 			viewManager.Add(startPage);
 
@@ -206,7 +207,9 @@ namespace ProfilerUi
 		void GoToPreviousTab(object sender, EventArgs e) { viewManager.MovePrevious(); }
 		void CloseTab(object sender, EventArgs e) { viewManager.CloseCurrent(); }
 
-		void CheckForUpdates(object sender, EventArgs e)
+		void CheckForUpdates(object sender, EventArgs e) { CheckForUpdates(); }
+
+		void CheckForUpdates()
 		{
 			UpdateManager.CheckForUpdates("IJW Profiler", version);
 		}
