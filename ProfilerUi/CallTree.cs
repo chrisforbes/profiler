@@ -179,10 +179,7 @@ namespace ProfilerUi
 				withOwnTime.Add(new Pair<Function, double>(g, ownTime));
 			}
 
-			withOwnTime.Sort(delegate(Pair<Function, double> a, Pair<Function, double> b)
-			{
-				return -a.Second.CompareTo(b.Second);
-			});
+			withOwnTime.Sort(PairComparison.DescendingSecond);
 
 			if (withOwnTime.Count > count)
 				withOwnTime.RemoveRange(count, withOwnTime.Count - count);

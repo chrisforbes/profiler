@@ -81,7 +81,7 @@ namespace ProfilerUi
 			}
 		}
 
-		TreeControl CreateNewView(string name, Node node, CallTree src, ColumnCollection cc)
+		TreeControl CreateNewView(string name, CallTree src, ColumnCollection cc)
 		{
 			CallTreeView view = new CallTreeView( imageProvider, cc, src, name );
 			ProfilerView viewWrapper = ProfilerView.Create(viewManager, view, new TreeColumnHeader(cc), MakeLegendBar());
@@ -110,7 +110,7 @@ namespace ProfilerUi
 				delegate(float frac) { Text = baseText + " - Slurping " + frac.ToString("P0"); Application.DoEvents(); };
 
 			CallTree tree = new CallTree(run.binFile, names, progressCallback, Filter);
-			TreeControl view = CreateNewView(run.name, null, tree, callTreeColumns);
+			TreeControl view = CreateNewView(run.name, tree, callTreeColumns);
 
 			Text = baseText + " - Preparing view...";
 
@@ -142,7 +142,7 @@ namespace ProfilerUi
 		{
 			IProfilerElement t = root;
 			Node n2 = t.CreateView(t.TotalTime);
-			TreeControl v = CreateNewView(t.TabTitle, n2, src, callTreeColumns);
+			TreeControl v = CreateNewView(t.TabTitle, src, callTreeColumns);
 			v.Root.Add(n2);
 			v.SelectedNode = n2;
 		}
@@ -234,8 +234,7 @@ namespace ProfilerUi
 
 			Node root = cf.CreateView();
 			root.Expand();
-			TreeControl tc = CreateNewView("Callers of " + cf.Name.MethodName, root,
-				CurrentView.src, callerColumns);
+			TreeControl tc = CreateNewView("Callers of " + cf.Name.MethodName, CurrentView.src, callerColumns);
 			tc.Root.Add(root);
 			tc.SelectedNode = root;
 		}
