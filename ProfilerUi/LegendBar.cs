@@ -15,6 +15,7 @@ namespace ProfilerUi
 		readonly List<IEnumerable<Pair<string, string>>> items =
 			new List<IEnumerable<Pair<string, string>>>();
 		int currentPage = 0;
+		ToolTip tt = new ToolTip();
 
 		public LegendBar(ImageProvider provider)
 			: base()
@@ -23,7 +24,6 @@ namespace ProfilerUi
 			SetStyle(ControlStyles.OptimizedDoubleBuffer, true);
 			UpdateStyles();
 			Cursor = Cursors.Hand;
-			ToolTip tt = new ToolTip();
 			tt.SetToolTip(this, "Click for more");
 		}
 
