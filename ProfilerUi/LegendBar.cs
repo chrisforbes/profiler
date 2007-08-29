@@ -12,7 +12,9 @@ namespace ProfilerUi
 	class LegendBar : Control
 	{
 		readonly ImageProvider imageProvider;
-		readonly List<Pair<string, string>> items = new List<Pair<string, string>>();
+		readonly List<IEnumerable<Pair<string, string>>> items =
+			new List<IEnumerable<Pair<string, string>>>();
+		int currentPage = 0;
 
 		public LegendBar(ImageProvider provider)
 			: base()
@@ -33,7 +35,11 @@ namespace ProfilerUi
 			base.OnPaint(e);
 			Painter p = new Painter( e.Graphics, new Rectangle(0,3,ClientSize.Width, ClientSize.Height - 4) );
 
-			foreach (Pair<string, string> i in items)
+			p.Pad(4);
+			p.DrawString(string.Format("({0}/{1})", currentPage % items.Count + 1, items.Count),
+				Font, Brushes.Blue, 1, ClientSize.Width);
+
+			foreach (Pair<string, string> i in items[ currentPage % items.Count ] )
 				PaintItem(i, p);
 		}
 
@@ -58,9 +64,9 @@ namespace ProfilerUi
 			p.Pad(4);
 		}
 
-		public void Add(string image, string text)
+		public void Add(IEnumerable<Pair<string,string>> page)
 		{
-			items.Add(new Pair<string,string>(image, text));
+			items.Add(page);
 			Invalidate();
 		}
 	}

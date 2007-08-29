@@ -11,12 +11,13 @@ using System.IO;
 using IjwFramework.Ui;
 using IjwFramework.Delegates;
 using IjwFramework.Updates;
+using IjwFramework.Types;
 
 namespace ProfilerUi
 {
 	public partial class Form1 : Form
 	{
-		string version = "0.8";
+		string version = "0.9";
 
 		MultipleViewManager viewManager;
 		ViewBase startPage; 
@@ -256,12 +257,23 @@ namespace ProfilerUi
 		LegendBar MakeLegendBar()
 		{
 			LegendBar bar = new LegendBar(imageProvider);
-			bar.Add("method", "Method");
-			bar.Add("prop_get", "Property Accessor");
-			bar.Add("prop_set", "Property Mutator");
-			bar.Add("event_add", "Subscribe to Event");
-			bar.Add("event_remove", "Unsubscribe from Event");
-			bar.Add("ctor", "Constructor");
+
+			List<Pair<string, string>> pageOne = new List<Pair<string, string>>();
+			pageOne.Add(new Pair<string, string>("call_in", "Time is spent in child functions"));
+			pageOne.Add(new Pair<string, string>("call_in_self", "Time is spent in this function"));
+			pageOne.Add(new Pair<string, string>("call_in_mixed", "Time is spent in this function and children"));
+
+			bar.Add(pageOne);
+
+			List<Pair<string, string>> pageTwo = new List<Pair<string, string>>();
+			pageTwo.Add(new Pair<string, string>("method", "Method"));
+			pageTwo.Add(new Pair<string, string>("ctor", "Constructor"));
+			pageTwo.Add(new Pair<string, string>("prop_get", "Property Get"));
+			pageTwo.Add(new Pair<string, string>("prop_set", "Property Set"));
+			pageTwo.Add(new Pair<string, string>("event_add", "Event Subscribe"));
+			pageTwo.Add(new Pair<string, string>("event_remove", "Event Unsubscribe"));
+
+			bar.Add(pageTwo);
 
 			return bar;
 		}
