@@ -20,7 +20,7 @@ namespace ProfilerUi
 		string version = "0.9";
 
 		MultipleViewManager viewManager;
-		ViewBase startPage; 
+		WebView startPage; 
 		ImageProvider imageProvider = new ImageProvider("res/");
 		ColumnCollection callTreeColumns = new ColumnCollection();
 		ColumnCollection callerColumns = new ColumnCollection();
@@ -64,6 +64,7 @@ namespace ProfilerUi
 		Run ProfileProcess(RunParameters p)
 		{
 			MruList.AddRun(p);
+			startPage.Refresh();
 
 			using (new ComServerRegistration("pcomimpl.dll"))
 			{
