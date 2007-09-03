@@ -7,6 +7,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ProfilerUi", "ProfilerUi\Pr
 EndProject
 Project("{54435603-DBB4-11D2-8724-00A0C9A8B90C}") = "ProfilerSetup", "ProfilerSetup\ProfilerSetup.vdproj", "{E2D89611-2257-4770-B2F3-70595EACB6A2}"
 EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "PJvmImpl", "PJvmImpl\PJvmImpl.vcproj", "{C98B5484-2188-4224-9856-6D7B87FA139C}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -43,6 +45,16 @@ Global
 		{E2D89611-2257-4770-B2F3-70595EACB6A2}.Release|Any CPU.ActiveCfg = Release
 		{E2D89611-2257-4770-B2F3-70595EACB6A2}.Release|Mixed Platforms.ActiveCfg = Release
 		{E2D89611-2257-4770-B2F3-70595EACB6A2}.Release|Win32.ActiveCfg = Release
+		{C98B5484-2188-4224-9856-6D7B87FA139C}.Debug|Any CPU.ActiveCfg = Debug|Win32
+		{C98B5484-2188-4224-9856-6D7B87FA139C}.Debug|Mixed Platforms.ActiveCfg = Debug|Win32
+		{C98B5484-2188-4224-9856-6D7B87FA139C}.Debug|Mixed Platforms.Build.0 = Debug|Win32
+		{C98B5484-2188-4224-9856-6D7B87FA139C}.Debug|Win32.ActiveCfg = Debug|Win32
+		{C98B5484-2188-4224-9856-6D7B87FA139C}.Debug|Win32.Build.0 = Debug|Win32
+		{C98B5484-2188-4224-9856-6D7B87FA139C}.Release|Any CPU.ActiveCfg = Release|Win32
+		{C98B5484-2188-4224-9856-6D7B87FA139C}.Release|Mixed Platforms.ActiveCfg = Release|Win32
+		{C98B5484-2188-4224-9856-6D7B87FA139C}.Release|Mixed Platforms.Build.0 = Release|Win32
+		{C98B5484-2188-4224-9856-6D7B87FA139C}.Release|Win32.ActiveCfg = Release|Win32
+		{C98B5484-2188-4224-9856-6D7B87FA139C}.Release|Win32.Build.0 = Release|Win32
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
