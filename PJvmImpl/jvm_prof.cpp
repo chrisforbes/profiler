@@ -49,6 +49,16 @@ bool IsSystemMethod( std::string const & s )
 	return false;
 }
 
+void HackJavaClassName( char * s )
+{
+	while (*s)
+	{
+		if (*s == '/')
+			*s = '.';
+		s++;
+	}
+}
+
 void ExportMethodName( jvmtiEnv * ti_env, jmethodID method )
 {
 	char *method_name, *clazz_name;
@@ -56,9 +66,11 @@ void ExportMethodName( jvmtiEnv * ti_env, jmethodID method )
 
 	ti_env->GetMethodName( method, &method_name, NULL, NULL );
 	ti_env->GetMethodDeclaringClass( method, &clazz );
+
+	HackJavaClassName( clazz_name );
 	ti_env->GetClassSignature( clazz, &clazz_name, NULL );
 
-	fprintf( logfile, "0x%08x=%s::%s\n", (size_t)method, clazz_name, method_name );
+	fprintf( logfile, "0x%08x=%s::%s\n", (size_t)method, clazz_name + 1, method_name );
 
 	interesting[ method ] = IsSystemMethod( clazz_name );
 
