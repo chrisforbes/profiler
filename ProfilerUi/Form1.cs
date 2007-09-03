@@ -21,11 +21,11 @@ namespace ProfilerUi
 
 		MultipleViewManager viewManager;
 		WebView startPage; 
-		ImageProvider imageProvider = new ImageProvider("res/");
+		ImageProvider imageProvider = new ImageProvider(Application.StartupPath + "/res/");
 		ColumnCollection callTreeColumns = new ColumnCollection();
 		ColumnCollection callerColumns = new ColumnCollection();
 
-		public Form1()
+		public Form1( string[] args )
 		{
 			Columns cc = new Columns(Font, new Font(Font, FontStyle.Bold), imageProvider);
 
@@ -48,11 +48,14 @@ namespace ProfilerUi
 			viewManager = new MultipleViewManager(workspace.ContentPanel);
 
 			startPage = new WebView(viewManager,
-				"file://" + Path.GetFullPath("mru.xml"), new StartPageController(version, NewRun, CheckForUpdates));
+				"file://" + Application.StartupPath + "/mru.xml", new StartPageController(version, NewRun, CheckForUpdates));
 
 			viewManager.Add(startPage);
 
 			callTreeColumns.WidthUpdatedHandler(ClientSize.Width);
+
+			if (args.Length > 0)
+				NewRun(new RunParameters(args));
 		}
 
 		protected override void OnResize(EventArgs e)
@@ -66,7 +69,7 @@ namespace ProfilerUi
 			MruList.AddRun(p);
 			startPage.Refresh();
 
-			using (new ComServerRegistration("pcomimpl.dll"))
+			using (new ComServerRegistration(Application.StartupPath + "/pcomimpl.dll"))
 			{
 				Run run = new Run();
 

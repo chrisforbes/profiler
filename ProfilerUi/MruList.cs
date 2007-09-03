@@ -14,7 +14,7 @@ namespace ProfilerUi
 		{
 			List<RunParameters> l = new List<RunParameters>();
 			XmlDocument doc = new XmlDocument();
-			doc.Load("mru.xml");
+			doc.Load(Application.StartupPath + "/mru.xml");
 
 			foreach (XmlElement e in doc.SelectNodes("/mru/run"))
 				l.Add(new RunParameters(e));
@@ -25,7 +25,7 @@ namespace ProfilerUi
 			settings.Indent = true;
 			settings.IndentChars = "  ";
 
-			using (XmlWriter writer = XmlWriter.Create("mru.xml", settings))
+			using (XmlWriter writer = XmlWriter.Create(Application.StartupPath + "/mru.xml", settings))
 			{
 				writer.WriteProcessingInstruction("xml-stylesheet", "href=\"mru.xslt\" type=\"text/xsl\"");
 				writer.WriteStartElement("mru");

@@ -110,6 +110,7 @@
     <Compile Include="RunParameters.cs" />
     <Compile Include="StartPageController.cs" />
     <Compile Include="Thread.cs" />
+    <Compile Include="Util.cs" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="res\corfu_logo.png">

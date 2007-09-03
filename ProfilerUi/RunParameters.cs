@@ -2,6 +2,8 @@ using System;
 using System.Collections.Generic;
 using System.Text;
 using System.Xml;
+using System.IO;
+using System.Windows.Forms;
 
 namespace ProfilerUi
 {
@@ -45,6 +47,23 @@ namespace ProfilerUi
 			writer.WriteElementString("dir", workingDirectory.Replace('\\', '/'));
 			writer.WriteElementString("args", parameters);
 			writer.WriteEndElement();
+		}
+
+		public RunParameters(string[] args)
+		{
+			exePath = Path.GetFullPath(args[0]);
+			workingDirectory = Path.GetDirectoryName(exePath);
+
+			if (args.Length < 2)
+				parameters = "";
+			else
+				parameters = Util.Join(Util.Convert<string,string>(
+					Util.Skip(args, 1), EscapeParameter), " ");
+		}
+
+		static string EscapeParameter(string s)
+		{
+			return s.Contains(" ") ? "\"" + s + "\"" : s;
 		}
 	}
 }

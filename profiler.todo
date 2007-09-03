@@ -11,10 +11,13 @@ User Interface
 
 [ ] Option to fold recursion
 [ ] Option to hide system calls completely
-[ ] Hotspot view
+[x] Hotspot view
 [x] Grey out icons for filtered calls
 [x] Show call time behavior as icon
 [x] Left panel for icon legend + mode switching
+
+[x] Command-line handling
+[ ] JVM backend
 
 Snapshots
 
