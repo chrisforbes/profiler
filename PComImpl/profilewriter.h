@@ -64,12 +64,9 @@ public:
 		WriteData( (unsigned char*) &o, sizeof(o) );
 	}
 
-	void WriteEnterFunction( UINT functionId, ICorProfilerInfo2 * prof ) 
+	void WriteEnterFunction( UINT functionId, UINT threadId ) 
 	{
 		EnterCriticalSection( &cs );
-
-		UINT threadId;
-		prof->GetCurrentThreadID( &threadId );
 
 		if (threadId != lastThreadId)
 			WriteThreadTransition( lastThreadId = threadId );
@@ -80,12 +77,9 @@ public:
 		LeaveCriticalSection( &cs );
 	}
 
-	void WriteLeaveFunction( UINT functionId, ICorProfilerInfo2 * prof )
+	void WriteLeaveFunction( UINT functionId, UINT threadId )
 	{
 		EnterCriticalSection( &cs );
-
-		UINT threadId;
-		prof->GetCurrentThreadID( &threadId );
 
 		if (threadId != lastThreadId)
 			WriteThreadTransition( lastThreadId = threadId );
@@ -96,12 +90,9 @@ public:
 		LeaveCriticalSection( &cs );
 	}
 
-	void WriteTailFunction( UINT functionId, ICorProfilerInfo2 * prof )
+	void WriteTailFunction( UINT functionId, UINT threadId )
 	{
 		EnterCriticalSection( &cs );
-
-		UINT threadId;
-		prof->GetCurrentThreadID( &threadId );
 
 		if (threadId != lastThreadId)
 			WriteThreadTransition( lastThreadId = threadId );

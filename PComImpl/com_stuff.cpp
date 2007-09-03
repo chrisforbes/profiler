@@ -1,4 +1,5 @@
 #define WIN32_LEAN_AND_MEAN
+#define _CRT_SECURE_NO_WARNINGS
 #include <windows.h>
 #include <cor.h>
 #include <corprof.h>
@@ -102,6 +103,13 @@ public:
 		return S_OK;
 	}
 
+	unsigned int GetCurrentThreadID()
+	{
+		unsigned int result;
+		profiler->GetCurrentThreadID( &result );
+		return result;
+	}
+
 	void OnFunctionEnter( UINT functionId )
 	{
 		bool parentInteresting = fns.Empty() || fns.Peek();
@@ -110,10 +118,7 @@ public:
 		fns.Push(functionInteresting);
 
 		if (parentInteresting || functionInteresting)
-		{
-			LogEx( "-- %d %d\n", parentInteresting, functionInteresting );
-			writer.WriteEnterFunction( functionId, profiler );
-		}
+			writer.WriteEnterFunction( functionId, GetCurrentThreadID() );
 	}
 
 	void OnFunctionLeave( UINT functionId )
@@ -122,10 +127,7 @@ public:
 		bool parentInteresting = fns.Empty() || fns.Peek();
 
 		if (parentInteresting || functionInteresting)
-		{
-			LogEx( "-- %d %d\n", parentInteresting, functionInteresting );
-			writer.WriteLeaveFunction( functionId, profiler );
-		}
+			writer.WriteLeaveFunction( functionId, GetCurrentThreadID() );
 	}
 
 	void OnFunctionTail( UINT functionId )
@@ -134,10 +136,7 @@ public:
 		bool parentInteresting = fns.Empty() || fns.Peek();
 
 		if (parentInteresting || functionInteresting)
-		{
-			LogEx( "-- %d %d\n", parentInteresting, functionInteresting );
-			writer.WriteTailFunction( functionId, profiler );
-		}
+			writer.WriteTailFunction( functionId, GetCurrentThreadID() );
 	}
 
 	bool IsPrivate( DWORD flags )
