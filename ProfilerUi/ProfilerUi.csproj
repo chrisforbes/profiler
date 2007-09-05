@@ -55,6 +55,7 @@
     <Compile Include="CallTreeView.cs">
       <SubType>Component</SubType>
     </Compile>
+    <Compile Include="ClrNameFactory.cs" />
     <Compile Include="Columns.cs" />
     <Compile Include="ComServerRegistration.cs" />
     <Compile Include="Form1.cs">
@@ -67,6 +68,7 @@
     <Compile Include="FunctionFilter.cs" />
     <Compile Include="FunctionNameProvider.cs" />
     <Compile Include="IActivatible.cs" />
+    <Compile Include="INameFactory.cs" />
     <Compile Include="IProfilerElement.cs" />
     <Compile Include="LegendBar.cs">
       <SubType>Component</SubType>

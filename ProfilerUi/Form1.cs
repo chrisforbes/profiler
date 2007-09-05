@@ -110,7 +110,7 @@ namespace ProfilerUi
 
 		void LoadTraceData(Run run)
 		{
-			FunctionNameProvider names = new FunctionNameProvider(run.txtFile);
+			FunctionNameProvider names = new FunctionNameProvider(run.txtFile, new ClrNameFactory());
 			string baseText = Text;
 			Action<float> progressCallback =
 				delegate(float frac) { Text = baseText + " - Slurping " + frac.ToString("P0"); Application.DoEvents(); };

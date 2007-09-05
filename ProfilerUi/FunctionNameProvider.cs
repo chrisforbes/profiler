@@ -12,7 +12,7 @@ namespace ProfilerUi
 	{
 		Dictionary<uint, Name> names = new Dictionary<uint,Name>();
 
-		public FunctionNameProvider(string filename)
+		public FunctionNameProvider(string filename, INameFactory nameFactory)
 		{
 			Regex r = new Regex("^0x([0-9a-fA-F]*)=(.*)$");
 			foreach (string s in File.ReadAllLines(filename))
@@ -22,7 +22,7 @@ namespace ProfilerUi
 					continue;
 
 				uint functionId = uint.Parse(m.Groups[1].Value, NumberStyles.HexNumber);
-				names.Add(functionId, new Name(m.Groups[2].Value));
+				names.Add(functionId, nameFactory.Create(m.Groups[2].Value));
 			}
 		}
 
@@ -31,10 +31,8 @@ namespace ProfilerUi
 			get
 			{
 				Name name;
-				if (!names.TryGetValue(functionId, out name))
-					return new Name("<unbound " + functionId + " >");
-
-				return name;
+				return names.TryGetValue(functionId, out name) ? name : 
+					new Name("<unbound " + functionId + ">", "", MethodType.Method);
 			}
 		}
 	}
