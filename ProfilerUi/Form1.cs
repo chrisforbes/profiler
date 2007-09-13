@@ -17,7 +17,7 @@ namespace ProfilerUi
 {
 	public partial class Form1 : Form
 	{
-		string version = "0.9";
+		string version = "0.9.1";
 
 		MultipleViewManager viewManager;
 		WebView startPage; 
@@ -81,6 +81,8 @@ namespace ProfilerUi
 
 				info.EnvironmentVariables["ijwprof_txt"] = run.txtFile;
 				info.EnvironmentVariables["ijwprof_bin"] = run.binFile;
+
+				info.Arguments = p.parameters;
 
 				Process.Start(info).WaitForExit();
 				return run;
