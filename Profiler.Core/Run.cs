@@ -3,9 +3,9 @@ using System.Collections.Generic;
 using System.Text;
 using System.IO;
 
-namespace ProfilerUi
+namespace Ijw.Profiler.Core
 {
-	class Run : IDisposable
+	public class Run : IDisposable
 	{
 		public readonly string binFile = Path.GetTempFileName();
 		public readonly string txtFile = Path.GetTempFileName();

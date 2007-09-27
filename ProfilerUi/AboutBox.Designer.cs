@@ -1,4 +1,4 @@
-namespace ProfilerUi
+namespace Ijw.Profiler.UI
 {
 	partial class AboutBox
 	{

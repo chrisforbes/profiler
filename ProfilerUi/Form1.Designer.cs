@@ -1,5 +1,5 @@
 using System.IO;
-namespace ProfilerUi
+namespace Ijw.Profiler.UI
 {
 	partial class Form1
 	{

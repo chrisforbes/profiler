@@ -2,7 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Windows.Forms;
 
-namespace ProfilerUi
+namespace Ijw.Profiler.UI
 {
 	static class Program
 	{

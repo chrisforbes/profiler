@@ -5,8 +5,9 @@ using System.IO;
 using System.Text.RegularExpressions;
 using System.Globalization;
 using System.Windows.Forms;
+using Ijw.Profiler.Core;
 
-namespace ProfilerUi
+namespace Ijw.Profiler.UI
 {
 	class FunctionNameProvider
 	{
@@ -26,13 +27,18 @@ namespace ProfilerUi
 			}
 		}
 
+		public Name GetName(uint functionId)
+		{
+			return this[functionId];
+		}
+
 		public Name this[uint functionId]
 		{
 			get
 			{
 				Name name;
 				return names.TryGetValue(functionId, out name) ? name : 
-					new Name("<unbound " + functionId + ">", "", MethodType.Method);
+					new Name("<unbound " + functionId + ">", "", MethodType.Method, false);
 			}
 		}
 	}

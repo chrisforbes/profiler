@@ -2,9 +2,9 @@ using System;
 using System.Collections.Generic;
 using System.Text;
 
-namespace ProfilerUi
+namespace Ijw.Profiler.Core
 {
-	static class Util
+	public static class Util
 	{
 		public static IEnumerable<U> Convert<T, U>(IEnumerable<T> src, Converter<T, U> conv)
 		{

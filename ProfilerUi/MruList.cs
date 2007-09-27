@@ -3,8 +3,9 @@ using System.Collections.Generic;
 using System.Text;
 using System.Xml;
 using System.Windows.Forms;
+using Ijw.Profiler.Core;
 
-namespace ProfilerUi
+namespace Ijw.Profiler.UI
 {
 	static class MruList
 	{

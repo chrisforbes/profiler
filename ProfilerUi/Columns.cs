@@ -3,8 +3,10 @@ using System.Collections.Generic;
 using System.Text;
 using System.Drawing;
 using IjwFramework.Ui;
+using Ijw.Profiler.Core;
+using Ijw.Profiler.Model;
 
-namespace ProfilerUi
+namespace Ijw.Profiler.UI
 {
 	class Columns
 	{

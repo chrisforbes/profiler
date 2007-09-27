@@ -2,9 +2,9 @@ using System;
 using System.Collections.Generic;
 using System.Text;
 
-namespace ProfilerUi
+namespace Ijw.Profiler.Core
 {
-	interface INameFactory
+	public interface INameFactory
 	{
 		Name Create(string rawName);
 	}

@@ -3,13 +3,13 @@ using System.Collections.Generic;
 using System.Text;
 using System.Text.RegularExpressions;
 
-namespace ProfilerUi
+namespace Ijw.Profiler.Core
 {
-	class FunctionFilter
+	public class NameFilter
 	{
 		Regex regex;
 
-		public FunctionFilter(params string[] patterns)
+		public NameFilter(params string[] patterns)
 		{
 			string p = "";
 			foreach (string s in patterns)
@@ -21,6 +21,6 @@ namespace ProfilerUi
 			regex = new Regex("^" + p);
 		}
 
-		public bool EvalString(string f) { return regex.IsMatch(f); }
+		public bool IsFunctionInteresting(string f) { return !regex.IsMatch(f); }
 	}
 }

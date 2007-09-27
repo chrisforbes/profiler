@@ -3,13 +3,16 @@ using System.Collections.Generic;
 using System.Text;
 using System.Text.RegularExpressions;
 using IjwFramework.Types;
+using Ijw.Profiler.Core;
 
-namespace ProfilerUi
+namespace Ijw.Profiler.Agents.CLR
 {
 	class ClrNameFactory : INameFactory
 	{
 		static Regex genericReplacer = new Regex(@"`\d+");
 		static List<Pair<string, MethodType>> specialTypes = new List<Pair<string, MethodType>>();
+
+		Predicate<string> isFunctionInteresting;
 
 		static void AddRule(string prefix, MethodType result)
 		{
@@ -24,6 +27,11 @@ namespace ProfilerUi
 			AddRule("remove_", MethodType.EventRemove);
 		}
 
+		public ClrNameFactory(Predicate<string> isFunctionInteresting)
+		{
+			this.isFunctionInteresting = isFunctionInteresting;
+		}
+
 		public Name Create(string rawName)
 		{
 			try
@@ -36,18 +44,20 @@ namespace ProfilerUi
 				string ClassName = parts[0].Replace('$', '.');
 				string MethodName = parts[1];
 
+				bool interesting = isFunctionInteresting( ClassName );
+
 				foreach (Pair<string, MethodType> p in specialTypes)
 					if (MethodName.Contains(p.First))
-						return new Name(MethodName.Replace(p.First, ""), ClassName, p.Second);
+						return new Name(MethodName.Replace(p.First, ""), ClassName, p.Second, interesting);
 
 				if (MethodName.Contains(".ctor"))
-					return new Name("new", ClassName, MethodType.Constructor);
+					return new Name("new", ClassName, MethodType.Constructor, interesting);
 
-				return new Name(MethodName, ClassName, MethodType.Method);
+				return new Name(MethodName, ClassName, MethodType.Method, interesting);
 			}
 			catch (Exception)
 			{
-				return new Name("(error)", "(error)", MethodType.Method);
+				return new Name("(error)", "(error)", MethodType.Method, false);
 			}
 		}
 	}

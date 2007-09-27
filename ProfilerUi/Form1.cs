@@ -12,18 +12,22 @@ using IjwFramework.Ui;
 using IjwFramework.Delegates;
 using IjwFramework.Updates;
 using IjwFramework.Types;
+using Ijw.Profiler.Agents.CLR;
+using Ijw.Profiler.Core;
+using Ijw.Profiler.Model;
 
-namespace ProfilerUi
+namespace Ijw.Profiler.UI
 {
 	public partial class Form1 : Form
 	{
-		string version = "0.9.1";
+		string version = "0.9.3";
 
 		MultipleViewManager viewManager;
 		WebView startPage; 
 		ImageProvider imageProvider = new ImageProvider(Application.StartupPath + "/res/");
 		ColumnCollection callTreeColumns = new ColumnCollection();
 		ColumnCollection callerColumns = new ColumnCollection();
+		IAgent agent = new ClrAgent();
 
 		public Form1( string[] args )
 		{
@@ -64,29 +68,12 @@ namespace ProfilerUi
 			callTreeColumns.WidthUpdatedHandler(ClientSize.Width);
 		}
 
-		Run ProfileProcess(RunParameters p)
+		Run ProfileProcess(RunParameters p, IAgent agent)
 		{
 			MruList.AddRun(p);
 			startPage.Refresh();
 
-			using (new ComServerRegistration(Application.StartupPath + "/pcomimpl.dll"))
-			{
-				Run run = new Run();
-
-				ProcessStartInfo info = new ProcessStartInfo(p.exePath);
-				info.WorkingDirectory = p.workingDirectory;
-				info.UseShellExecute = false;
-				info.EnvironmentVariables["Cor_Enable_Profiling"] = "1";
-				info.EnvironmentVariables["COR_PROFILER"] = "{C1E9FE1F-F517-45c0-BB0E-EFAECC9401FC}";
-
-				info.EnvironmentVariables["ijwprof_txt"] = run.txtFile;
-				info.EnvironmentVariables["ijwprof_bin"] = run.binFile;
-
-				info.Arguments = p.parameters;
-
-				Process.Start(info).WaitForExit();
-				return run;
-			}
+			return agent.Execute(p);
 		}
 
 		TreeControl CreateNewView(string name, CallTree src, ColumnCollection cc)
@@ -104,20 +91,21 @@ namespace ProfilerUi
 			NewRunDialog dialog = new NewRunDialog(r);
 
 			if (DialogResult.OK == dialog.ShowDialog())
-				using (Run run = ProfileProcess(dialog.Parameters))
-					LoadTraceData(run);
+				using (Run run = ProfileProcess(dialog.Parameters, agent))
+					LoadTraceData(run, agent);
 		}
 
 		void NewRun(object sender, EventArgs e) { NewRun(null); }
 
-		void LoadTraceData(Run run)
+		void LoadTraceData(Run run, IAgent agent)
 		{
-			FunctionNameProvider names = new FunctionNameProvider(run.txtFile, new ClrNameFactory());
+			FunctionNameProvider names = new FunctionNameProvider(run.txtFile, agent.NameFactory);
+
 			string baseText = Text;
 			Action<float> progressCallback =
 				delegate(float frac) { Text = baseText + " - Slurping " + frac.ToString("P0"); Application.DoEvents(); };
 
-			CallTree tree = new CallTree(run.binFile, names, progressCallback, Filter);
+			CallTree tree = new CallTree(run.binFile, names.GetName, progressCallback);
 			TreeControl view = CreateNewView(run.name, tree, callTreeColumns);
 
 			Text = baseText + " - Preparing view...";
@@ -132,8 +120,6 @@ namespace ProfilerUi
 
 			Text = baseText;
 		}
-
-		Predicate<string> Filter = new FunctionFilter("System.", "Microsoft.", "MS.Internal.").EvalString;
 
 		void OnCloseClicked(object sender, EventArgs e) { Close(); }
 

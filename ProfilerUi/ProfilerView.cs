@@ -5,7 +5,7 @@ using IjwFramework.Ui;
 using System.Windows.Forms;
 using System.Drawing;
 
-namespace ProfilerUi
+namespace Ijw.Profiler.UI
 {
 	class ProfilerView : ViewBase
 	{

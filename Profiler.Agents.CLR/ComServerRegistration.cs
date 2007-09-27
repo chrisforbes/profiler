@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Text;
 using System.Diagnostics;
 
-namespace ProfilerUi
+namespace Ijw.Profiler.Agents.CLR
 {
 	class ComServerRegistration : IDisposable
 	{

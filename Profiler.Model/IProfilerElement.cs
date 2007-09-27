@@ -5,9 +5,9 @@ using System.Windows.Forms;
 using System.Xml;
 using IjwFramework.Ui;
 
-namespace ProfilerUi
+namespace Ijw.Profiler.Model
 {
-	interface IProfilerElement
+	public interface IProfilerElement
 	{
 		Node CreateView(double totalTime);
 		string TabTitle { get; }

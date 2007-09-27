@@ -6,28 +6,27 @@ using System.Text.RegularExpressions;
 using System.Xml;
 using IjwFramework.Delegates;
 using IjwFramework.Ui;
+using Ijw.Profiler.Core;
 
-namespace ProfilerUi
+namespace Ijw.Profiler.Model
 {
-	class Function : IActivatible, IProfilerElement
+	public class Function : IActivatible, IProfilerElement
 	{
-		public Function(uint id, Name name, bool interesting, Function parent)
+		internal Function(uint id, Name name, Function parent)
 		{
 			this.id = id; 
 			this.name = name;
-			this.interesting = interesting;
 			this.parent = parent;
 		}
 
 		int calls;
 
 		public int Calls { get { return calls; } }
-		public bool Interesting { get { return interesting; } }
+		public bool Interesting { get { return name.Interesting; } }
 
 		public Function Parent { get { return parent; } }
 		public uint Id { get { return id; } }
 
-		bool interesting;
 		double time;
 		readonly uint id;
 		readonly Function parent;
@@ -106,7 +105,7 @@ namespace ProfilerUi
 			foreach (Function i in invocations)
 			{
 				if (f == null)
-					f = new Function(i.id, i.name, i.interesting, null);
+					f = new Function(i.id, i.name, null);
 
 				f.calls += i.calls;
 				f.time += i.time;
@@ -124,7 +123,7 @@ namespace ProfilerUi
 			writer.WriteAttributeString("id", id.ToString());
 			writer.WriteAttributeString("calls", calls.ToString());
 			writer.WriteAttributeString("time", time.ToString());
-			writer.WriteAttributeString("interesting", interesting.ToString());
+			writer.WriteAttributeString("interesting", name.Interesting.ToString());
 
 			foreach (Function f in children.Values)
 				f.WriteTo(writer);

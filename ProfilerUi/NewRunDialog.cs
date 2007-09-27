@@ -6,8 +6,9 @@ using System.Drawing;
 using System.Text;
 using System.Windows.Forms;
 using System.IO;
+using Ijw.Profiler.Core;
 
-namespace ProfilerUi
+namespace Ijw.Profiler.UI
 {
 	partial class NewRunDialog : Form
 	{

@@ -7,7 +7,7 @@ using IjwFramework.Ui;
 using System.Drawing;
 using System.Drawing.Drawing2D;
 
-namespace ProfilerUi
+namespace Ijw.Profiler.UI
 {
 	class LegendBar : Control
 	{

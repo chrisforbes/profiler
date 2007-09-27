@@ -7,7 +7,7 @@
     <ProjectGuid>{37C66713-1DE2-4160-9157-D97F761EFDC2}</ProjectGuid>
     <OutputType>WinExe</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>ProfilerUi</RootNamespace>
+    <RootNamespace>Ijw.Profiler.UI</RootNamespace>
     <AssemblyName>ProfilerUi</AssemblyName>
     <ApplicationIcon>res\icon.ico</ApplicationIcon>
   </PropertyGroup>
@@ -47,41 +47,27 @@
     <Compile Include="AboutBox.Designer.cs">
       <DependentUpon>AboutBox.cs</DependentUpon>
     </Compile>
-    <Compile Include="Activation.cs" />
-    <Compile Include="CallerFunction.cs" />
-    <Compile Include="CallerTreeNode.cs" />
-    <Compile Include="CallTree.cs" />
-    <Compile Include="CallTreeNode.cs" />
     <Compile Include="CallTreeView.cs">
       <SubType>Component</SubType>
     </Compile>
-    <Compile Include="ClrNameFactory.cs" />
     <Compile Include="Columns.cs" />
-    <Compile Include="ComServerRegistration.cs" />
     <Compile Include="Form1.cs">
       <SubType>Form</SubType>
     </Compile>
     <Compile Include="Form1.Designer.cs">
       <DependentUpon>Form1.cs</DependentUpon>
     </Compile>
-    <Compile Include="Function.cs" />
-    <Compile Include="FunctionFilter.cs" />
     <Compile Include="FunctionNameProvider.cs" />
-    <Compile Include="IActivatible.cs" />
-    <Compile Include="INameFactory.cs" />
-    <Compile Include="IProfilerElement.cs" />
     <Compile Include="LegendBar.cs">
       <SubType>Component</SubType>
     </Compile>
     <Compile Include="MruList.cs" />
-    <Compile Include="Name.cs" />
     <Compile Include="NewRunDialog.cs">
       <SubType>Form</SubType>
     </Compile>
     <Compile Include="NewRunDialog.Designer.cs">
       <DependentUpon>NewRunDialog.cs</DependentUpon>
     </Compile>
-    <Compile Include="ProfileEvent.cs" />
     <Compile Include="ProfilerView.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
@@ -108,11 +94,7 @@
       <DesignTime>True</DesignTime>
       <DependentUpon>Resources.resx</DependentUpon>
     </Compile>
-    <Compile Include="Run.cs" />
-    <Compile Include="RunParameters.cs" />
     <Compile Include="StartPageController.cs" />
-    <Compile Include="Thread.cs" />
-    <Compile Include="Util.cs" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="res\corfu_logo.png">
@@ -128,6 +110,20 @@
     </Content>
     <Content Include="res\profiler_logo.png">
     </Content>
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\Profiler.Agents.CLR\Profiler.Agents.CLR.csproj">
+      <Project>{768A2A45-4540-47C1-851F-6955553CAB80}</Project>
+      <Name>Profiler.Agents.CLR</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Profiler.Core\Profiler.Core.csproj">
+      <Project>{759D1196-C45A-46F5-9241-9EDBB4F54CC7}</Project>
+      <Name>Profiler.Core</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Profiler.Model\Profiler.Model.csproj">
+      <Project>{5A427A12-5DFE-4817-AB88-AC9D45928E86}</Project>
+      <Name>Profiler.Model</Name>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

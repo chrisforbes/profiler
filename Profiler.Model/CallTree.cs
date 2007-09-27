@@ -7,25 +7,24 @@ using System.Xml;
 using IjwFramework.Ui;
 using IjwFramework.Collections;
 using IjwFramework.Types;
+using Ijw.Profiler.Core;
 
-namespace ProfilerUi
+namespace Ijw.Profiler.Model
 {
-	class CallTree
+	public class CallTree
 	{
 		public Dictionary<uint, Thread> threads = new Dictionary<uint, Thread>();
 		public Set<uint> allCalledFunctions = new Set<uint>();
 		Activation<Thread> currentThread = null;
-		FunctionNameProvider names;
-		Predicate<string> filter;
+		Converter<uint,Name> names;
 		ulong frequency;
 
-		public CallTree(string filename, FunctionNameProvider names, Action<float> progressCallback, Predicate<string> filter)
+		public CallTree(string filename, Converter<uint, Name> names, Action<float> progressCallback)
 		{
 			ulong finalTime = 0;
 			float lastFrac = -1;
 
 			this.names = names;
-			this.filter = filter;
 
 			using (Stream s = File.OpenRead(filename))
 			using (BinaryReader reader = new BinaryReader(s))
@@ -91,10 +90,10 @@ namespace ProfilerUi
 				? t.roots : parent.children;
 
 			Function f;
-			Name name = names[e.id];
+			Name name = names(e.id);
 
 			if (!dict.TryGetValue(e.id, out f))
-				dict.Add(e.id, f = new Function(e.id, name, !filter(name.ClassName), parent));
+				dict.Add(e.id, f = new Function(e.id, name, parent));
 
 			t.activations.Push(new Activation<Function>(f, e.timestamp));
 
@@ -120,7 +119,7 @@ namespace ProfilerUi
 
 			foreach (uint f in allCalledFunctions)
 			{
-				Name name = names[f];
+				Name name = names(f);
 				writer.WriteStartElement("func");
 				writer.WriteAttributeString("id", f.ToString());
 				writer.WriteAttributeString("name", name.MethodName);

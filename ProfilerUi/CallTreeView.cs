@@ -2,8 +2,9 @@ using System;
 using System.Collections.Generic;
 using System.Text;
 using IjwFramework.Ui;
+using Ijw.Profiler.Model;
 
-namespace ProfilerUi
+namespace Ijw.Profiler.UI
 {
 	class CallTreeView : TreeControl
 	{

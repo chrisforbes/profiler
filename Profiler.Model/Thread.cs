@@ -5,13 +5,12 @@ using System.Windows.Forms;
 using System.Xml;
 using IjwFramework.Ui;
 
-namespace ProfilerUi
+namespace Ijw.Profiler.Model
 {
-	class Thread : IActivatible, IProfilerElement
+	public class Thread : IActivatible, IProfilerElement
 	{
-		public Dictionary<uint, Function> roots = new Dictionary<uint, Function>();
-
-		public Stack<Activation<Function>> activations = new Stack<Activation<Function>>();
+		internal Dictionary<uint, Function> roots = new Dictionary<uint, Function>();
+		internal Stack<Activation<Function>> activations = new Stack<Activation<Function>>();
 
 		readonly uint id;
 		double time = 0.0;

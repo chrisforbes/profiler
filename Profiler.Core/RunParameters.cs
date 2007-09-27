@@ -3,11 +3,10 @@ using System.Collections.Generic;
 using System.Text;
 using System.Xml;
 using System.IO;
-using System.Windows.Forms;
 
-namespace ProfilerUi
+namespace Ijw.Profiler.Core
 {
-	class RunParameters
+	public class RunParameters
 	{
 		public readonly string exePath;
 		public readonly string workingDirectory;

@@ -2,23 +2,23 @@ using System;
 using System.Collections.Generic;
 using System.Text;
 using IjwFramework.Ui;
+using Ijw.Profiler.Core;
 
-namespace ProfilerUi
+namespace Ijw.Profiler.Model
 {
-	class CallerFunction
+	public class CallerFunction
 	{
 		readonly Name name;
 		readonly uint id;
 
 		int calls;
 		double ownTime, totalTime;
-		bool interesting;
 
 		public Name Name { get { return name; } }
 		public int Calls { get { return calls; } }
 		public double OwnTime { get { return ownTime; } }
 		public double TotalTime { get { return totalTime; } }
-		public bool Interesting { get { return interesting; } }
+		public bool Interesting { get { return name.Interesting; } }
 
 		readonly Dictionary<uint, CallerFunction> callers = new Dictionary<uint, CallerFunction>();
 
@@ -50,7 +50,6 @@ namespace ProfilerUi
 			this.calls = f.Calls;
 			this.ownTime = f.OwnTime;
 			this.totalTime = f.TotalTime;
-			this.interesting = f.Interesting;
 
 			AddCaller(f.Parent);
 		}

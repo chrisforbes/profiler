@@ -3,9 +3,9 @@ using System.Collections.Generic;
 using System.Text;
 using IjwFramework.Ui;
 
-namespace ProfilerUi
+namespace Ijw.Profiler.Model
 {
-	class CallerTreeNode : Node
+	public class CallerTreeNode : Node
 	{
 		readonly CallerFunction value;
 

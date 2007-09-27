@@ -5,8 +5,9 @@ using System.Runtime.InteropServices;
 using System.Windows.Forms;
 using IjwFramework.Delegates;
 using System.Diagnostics;
+using Ijw.Profiler.Core;
 
-namespace ProfilerUi
+namespace Ijw.Profiler.UI
 {
 	[ComVisible(true)]
 	public class StartPageController
