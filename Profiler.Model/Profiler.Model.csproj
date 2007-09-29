@@ -46,7 +46,6 @@
   <ItemGroup>
     <Compile Include="Activation.cs" />
     <Compile Include="CallerFunction.cs" />
-    <Compile Include="CallerTreeNode.cs" />
     <Compile Include="CallTree.cs" />
     <Compile Include="CallTreeNode.cs" />
     <Compile Include="Function.cs" />

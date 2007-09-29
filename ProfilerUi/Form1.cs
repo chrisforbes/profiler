@@ -33,17 +33,26 @@ namespace Ijw.Profiler.UI
 		{
 			Columns cc = new Columns(Font, new Font(Font, FontStyle.Bold), imageProvider);
 
-			callTreeColumns.CreateAutoWidth("Function", cc.RenderFunctionColumn);
-			callTreeColumns.CreateFixedWidth("Calls", 50, cc.RenderCallsColumn);
-			callTreeColumns.CreateFixedWidth("Time %", 50, cc.RenderPercentColumn);
-			callTreeColumns.CreateFixedWidth("Total Time", 70, cc.RenderTotalTimeColumn);
-			callTreeColumns.CreateFixedWidth("Own Time", 70, cc.RenderOwnTimeColumn);
+			callTreeColumns.CreateAutoWidth("Function", 
+				Columns.BindSubtype<IProfilerElement>(cc.RenderFunctionColumn));
+			callTreeColumns.CreateFixedWidth("Calls", 50, 
+				Columns.BindSubtype<IProfilerElement>(cc.RenderCallsColumn));
+			callTreeColumns.CreateFixedWidth("Time %", 50, 
+				Columns.BindSubtype<IProfilerElement>(cc.RenderPercentColumn));
+			callTreeColumns.CreateFixedWidth("Total Time", 70, 
+				Columns.BindSubtype<IProfilerElement>(cc.RenderTotalTimeColumn));
+			callTreeColumns.CreateFixedWidth("Own Time", 70, 
+				Columns.BindSubtype<IProfilerElement>(cc.RenderOwnTimeColumn));
 			callTreeColumns.CreateFixedWidth("", 16, delegate { });
 
-			callerColumns.CreateAutoWidth("Function", cc.RenderCallerColumn);
-			callerColumns.CreateFixedWidth("Calls", 50, cc.RenderCallerCallsColumn);
-			callerColumns.CreateFixedWidth("Own Time", 70, cc.RenderCallerOwnTimeColumn);
-			callerColumns.CreateFixedWidth("Total Time", 70, cc.RenderCallerTotalTimeColumn);
+			callerColumns.CreateAutoWidth("Function", 
+				Columns.BindSubtype<CallerFunction>(cc.RenderCallerColumn));
+			callerColumns.CreateFixedWidth("Calls", 50, 
+				Columns.BindSubtype<CallerFunction>(cc.RenderCallerCallsColumn));
+			callerColumns.CreateFixedWidth("Own Time", 70, 
+				Columns.BindSubtype<CallerFunction>(cc.RenderCallerOwnTimeColumn));
+			callerColumns.CreateFixedWidth("Total Time", 70, 
+				Columns.BindSubtype<CallerFunction>(cc.RenderCallerTotalTimeColumn));
 			callerColumns.CreateFixedWidth("", 16, delegate { });
 
 			InitializeComponent();
@@ -162,16 +171,28 @@ namespace Ijw.Profiler.UI
 
 		void OnOpenInNewTab(object sender, EventArgs e)
 		{
-			CallTreeNode selectedNode = GetSelectedNode();
+			Node<IProfilerElement> selectedNode = GetSelectedNode();
 			if (selectedNode == null)
 				return;
 
-			CallTreeNode rootNode = selectedNode.RootFunction;
+			Node<IProfilerElement> rootNode = RootFunction(selectedNode);
 			IProfilerElement selected = (rootNode != null) 
 				? OfferToMerge(rootNode.Value, selectedNode.Value as Function)
 				: selectedNode.Value;
 
 			OpenInNewTab(CurrentView.src, selected);
+		}
+
+		static Node<IProfilerElement> RootFunction(Node<IProfilerElement> p)
+		{
+			Node<IProfilerElement> n = p;
+			if (!(n.Value is Function))
+				return null;
+
+			while ((n.parent is Node<IProfilerElement>) && (n.parent as Node<IProfilerElement>).Value is Function)
+				n = n.parent as Node<IProfilerElement>;
+
+			return n;
 		}
 
 		CallTreeView CurrentView

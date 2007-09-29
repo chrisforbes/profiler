@@ -61,7 +61,7 @@ void HackJavaClassName( char * s )
 
 void ExportMethodName( jvmtiEnv * ti_env, jmethodID method )
 {
-	char *method_name, *clazz_name;
+	char *method_name = 0, *clazz_name = 0;
 	jclass clazz;
 
 	ti_env->GetMethodName( method, &method_name, NULL, NULL );

@@ -5,6 +5,7 @@ using System.Drawing;
 using IjwFramework.Ui;
 using Ijw.Profiler.Core;
 using Ijw.Profiler.Model;
+using IjwFramework.Delegates;
 
 namespace Ijw.Profiler.UI
 {
@@ -28,9 +29,9 @@ namespace Ijw.Profiler.UI
 		static Brush GetBrush(IProfilerElement e) { return GetBrush(e.Interesting); }
 		static Brush GetBrush(CallerFunction f) { return GetBrush(f.Interesting); }
 
-		static string GetImage(MethodType t)
+		static string GetImage2(Name name)
 		{
-			switch (t)
+			switch (name.Type)
 			{
 				case MethodType.Method: return "method";
 				case MethodType.PropertyGet: return "prop_get";
@@ -43,54 +44,52 @@ namespace Ijw.Profiler.UI
 			}
 		}
 
-		static string GetImage(MethodType t, bool interesting)
+		static string GetImage(Name name)
 		{
-			string image = GetImage(t);
-			if (!interesting) image += "_grey";
-			return image;
+			return GetImage2(name) + (name.Interesting ? "" : "_grey");
 		}
 
-		public void RenderCallerColumn(IColumn c, Painter p, Node n)
+		public static Action<IColumn, Painter, Node> BindSubtype<T>(Action<IColumn, Painter, Node<T>> f)
 		{
-			CallerTreeNode nn = (CallerTreeNode)n;
+			return delegate(IColumn c, Painter p, Node n) { f(c, p, (Node<T>)n); };
+		}
+
+		public void RenderCallerColumn(IColumn c, Painter p, Node<CallerFunction> n)
+		{
 			string s = "call_out";
-			if (!nn.Value.Interesting) s += "_grey";
+			if (!n.Value.Interesting) s += "_grey";
 			p.DrawImage(imageProvider.GetImage(s));
-			RenderName(c, nn.Value.Name, p, nn.Value.Interesting);
+			RenderName(c, n.Value.Name, p);
 		}
 
-		public void RenderCallerCallsColumn(IColumn c, Painter p, Node n)
+		public void RenderCallerCallsColumn(IColumn c, Painter p, Node<CallerFunction> n)
 		{
-			CallerTreeNode nn = (CallerTreeNode)n;
-			RenderRightAligned(c, p, nn.Value.Calls.ToString(), GetBrush(nn.Value));
+			RenderRightAligned(c, p, n.Value.Calls.ToString(), GetBrush(n.Value));
 		}
 
-		public void RenderCallerTotalTimeColumn(IColumn c, Painter p, Node n)
+		public void RenderCallerTotalTimeColumn(IColumn c, Painter p, Node<CallerFunction> n)
 		{
-			CallerTreeNode nn = (CallerTreeNode)n;
-			RenderRightAligned(c, p, nn.Value.TotalTime.ToString("F1") + " ms", GetBrush(nn.Value));
+			RenderRightAligned(c, p, n.Value.TotalTime.ToString("F1") + " ms", GetBrush(n.Value));
 		}
 
-		public void RenderCallerOwnTimeColumn(IColumn c, Painter p, Node n)
+		public void RenderCallerOwnTimeColumn(IColumn c, Painter p, Node<CallerFunction> n)
 		{
-			CallerTreeNode nn = (CallerTreeNode)n;
-			RenderRightAligned(c, p, nn.Value.OwnTime.ToString("F1") + " ms", GetBrush(nn.Value));
+			RenderRightAligned(c, p, n.Value.OwnTime.ToString("F1") + " ms", GetBrush(n.Value));
 		}
 
-		void RenderName(IColumn c, Name name, Painter p, bool interesting)
+		void RenderName(IColumn c, Name name, Painter p)
 		{
-			Brush brush = GetBrush(interesting);
-			p.DrawImage(imageProvider.GetImage(GetImage(name.Type, interesting)));
+			Brush brush = GetBrush(name.Interesting);
+			p.DrawImage(imageProvider.GetImage(GetImage(name)));
 			p.Pad(2);
 			p.DrawString(name.ClassName, font, brush, 1, c.Left + c.Width);
 			p.DrawString((name.Type == MethodType.Constructor ? "  " : " .") + name.MethodName, 
 				boldFont, brush, 1, c.Left + c.Width);
 		}
 
-		public void RenderFunctionColumn(IColumn c, Painter p, Node n)
+		public void RenderFunctionColumn(IColumn c, Painter p, Node<IProfilerElement> n)
 		{
-			CallTreeNode nn = (CallTreeNode)n;
-			IProfilerElement e = nn.Value;
+			IProfilerElement e = n.Value;
 
 			Brush brush = GetBrush(e);
 
@@ -98,15 +97,14 @@ namespace Ijw.Profiler.UI
 			if (f != null)
 			{
 				p.DrawImage(imageProvider.GetImage(GetTimeIcon(f)));
-				RenderName(c, f.name, p, f.Interesting);
+				RenderName(c, f.name, p);
 				return;
 			}
 
 			Thread t = e as Thread;
 			if (t != null)
 			{
-				Image i = imageProvider.GetImage("thread");
-				p.DrawImage(i);
+				p.DrawImage(imageProvider.GetImage("thread"));
 				p.Pad(2);
 				p.DrawString(t.Name, font, brush, 1, c.Left + c.Width);
 			}
@@ -117,37 +115,25 @@ namespace Ijw.Profiler.UI
 			CallTreeNode nn = (CallTreeNode)n;
 			Function e = nn.Value as Function;
 
-			if (e == null)
-				return;
-
-			p.SetPosition(c.Left + c.Width - 4);
-			p.Alignment = StringAlignment.Far;
-
-			double frac = e.TotalTime / nn.rootTime;
-
-			p.DrawString(frac.ToString("P1"), font, GetBrush(e), 1, c.Left + c.Width);
-			p.Alignment = StringAlignment.Near;
+			if (e != null)
+				RenderRightAligned(c, p, (e.TotalTime / nn.rootTime).ToString("P1"), GetBrush(e));
 		}
 
-		public void RenderTotalTimeColumn(IColumn c, Painter p, Node n)
+		public void RenderTotalTimeColumn(IColumn c, Painter p, Node<IProfilerElement> nn)
 		{
-			CallTreeNode nn = (CallTreeNode)n;
 			IProfilerElement e = nn.Value;
-
 			RenderRightAligned(c, p, e.TotalTime.ToString("F1") + " ms", GetBrush(e));
 		}
 
-		public void RenderOwnTimeColumn(IColumn c, Painter p, Node n)
+		public void RenderOwnTimeColumn(IColumn c, Painter p, Node<IProfilerElement> nn)
 		{
-			CallTreeNode nn = (CallTreeNode)n;
 			Function e = nn.Value as Function;
 			if (e != null)
 				RenderRightAligned(c, p, e.OwnTime.ToString("F1") + " ms", GetBrush(e));
 		}
 
-		public void RenderCallsColumn(IColumn c, Painter p, Node n)
+		public void RenderCallsColumn(IColumn c, Painter p, Node<IProfilerElement> nn)
 		{
-			CallTreeNode nn = (CallTreeNode)n;
 			IProfilerElement e = nn.Value;
 
 			Function f = e as Function;

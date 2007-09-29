@@ -56,7 +56,7 @@ namespace Ijw.Profiler.Model
 
 		public Node CreateView()
 		{
-			CallerTreeNode n = new CallerTreeNode(this);
+			Node<CallerFunction> n = new Node<CallerFunction>(this);
 			n.Collapse();
 
 			foreach (CallerFunction f in callers.Values)

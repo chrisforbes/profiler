@@ -5,31 +5,14 @@ using IjwFramework.Ui;
 
 namespace Ijw.Profiler.Model
 {
-	public class CallTreeNode : Node
+	public class CallTreeNode : Node<IProfilerElement>
 	{
-		public readonly IProfilerElement Value;
 		public readonly double rootTime;
 
 		public CallTreeNode(IProfilerElement value, double rootTime)
-			: base()
+			: base(value)
 		{
-			Value = value;
 			this.rootTime = rootTime;
-		}
-
-		public CallTreeNode RootFunction
-		{
-			get
-			{
-				CallTreeNode n = this;
-				if (!(n.Value is Function))
-					return null;
-
-				while ((n.parent is CallTreeNode) && (n.parent as CallTreeNode).Value is Function)
-					n = n.parent as CallTreeNode;
-
-				return n;
-			}
 		}
 	}
 }
