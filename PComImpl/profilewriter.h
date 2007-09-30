@@ -8,6 +8,7 @@
 #define op_leave_func			3
 #define op_setfreq				4
 #define op_tail_func			5
+#define op_timebase				6
 
 class ProfileWriter
 {
@@ -55,6 +56,7 @@ public:
 
 	void WriteClockFrequency()
 	{
+		EnterCriticalSection( &cs );
 		OpRec o( op_setfreq, 0 );
 
 		__int64 t;
@@ -62,6 +64,7 @@ public:
 		o.timestamp = t;
 
 		WriteData( (unsigned char*) &o, sizeof(o) );
+		LeaveCriticalSection( &cs );
 	}
 
 	void WriteEnterFunction( UINT functionId, UINT threadId ) 
@@ -100,6 +103,14 @@ public:
 		OpRec o( op_tail_func, functionId );
 		WriteData( (unsigned char*)&o, sizeof(o) );
 
+		LeaveCriticalSection( &cs );
+	}
+
+	void WriteTimeBase()
+	{
+		EnterCriticalSection( &cs );
+		OpRec o( op_timebase, 0 );
+		WriteData( (unsigned char*)&o, sizeof(o) );
 		LeaveCriticalSection( &cs );
 	}
 

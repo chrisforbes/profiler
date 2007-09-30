@@ -94,6 +94,7 @@ public:
 		profiler->SetEnterLeaveFunctionHooks2( __funcEnter, __funcLeave, __funcTail );
 		profiler->SetFunctionIDMapper( __shouldHookFunction );
 		writer.WriteClockFrequency();
+		writer.WriteTimeBase();
 		return S_OK;
 	}
 

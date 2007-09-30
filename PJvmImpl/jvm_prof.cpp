@@ -108,12 +108,6 @@ void JNICALL MethodExit( jvmtiEnv * ti_env, JNIEnv * env, jthread thread, jmetho
 		writer->WriteLeaveFunction( (size_t)method, (size_t)thread );
 }
 
-void JNICALL JitMethod( jvmtiEnv * ti_env, jmethodID method, jint, void const *,
-					   jint, jvmtiAddrLocationMap const *, void const * )
-{
-	//ExportMethodName( ti_env, method );
-}
-
 JNIEXPORT jint JNICALL Agent_OnLoad( JavaVM * jvm, char * options, void * reserved )
 {
 	logfile = fopen( GetEnv( txtProfileEnv ).c_str(), "w" );
@@ -128,7 +122,6 @@ JNIEXPORT jint JNICALL Agent_OnLoad( JavaVM * jvm, char * options, void * reserv
 
 	caps.can_generate_method_entry_events = 1;
 	caps.can_generate_method_exit_events = 1;
-	caps.can_generate_compiled_method_load_events = 1;
 
 	jvmti->AddCapabilities( &caps );
 
@@ -139,15 +132,14 @@ JNIEXPORT jint JNICALL Agent_OnLoad( JavaVM * jvm, char * options, void * reserv
 
 	callbacks.MethodEntry = MethodEntry;
 	callbacks.MethodExit = MethodExit;
-	callbacks.CompiledMethodLoad = JitMethod;
 
 	jvmti->SetEventCallbacks( &callbacks, sizeof(jvmtiEventCallbacks) );
 	
 	jvmti->SetEventNotificationMode( JVMTI_ENABLE, JVMTI_EVENT_METHOD_ENTRY, NULL );
 	jvmti->SetEventNotificationMode( JVMTI_ENABLE, JVMTI_EVENT_METHOD_EXIT, NULL );
-	jvmti->SetEventNotificationMode( JVMTI_ENABLE, JVMTI_EVENT_COMPILED_METHOD_LOAD, NULL );
 
 	writer->WriteClockFrequency();
+	writer->WriteTimeBase();
 
 	return JNI_OK;
 }

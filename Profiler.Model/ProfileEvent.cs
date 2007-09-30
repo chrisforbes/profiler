@@ -12,6 +12,7 @@ namespace Ijw.Profiler.Model
 		LeaveFunction = 3,
 		SetClockFrequency = 4,
 		LeaveViaTailCall = 5,
+		TimeBase = 6,
 	}
 
 	class ProfileEvent

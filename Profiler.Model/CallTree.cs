@@ -45,6 +45,9 @@ namespace Ijw.Profiler.Model
 						case Opcode.LeaveViaTailCall:
 						case Opcode.LeaveFunction: 
 							OnLeaveFunction(e); break;
+
+						case Opcode.TimeBase:
+							finalTime = e.timestamp; break;
 					}
 
 					finalTime = e.timestamp;
