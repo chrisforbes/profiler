@@ -112,6 +112,19 @@ JNIEXPORT jint JNICALL Agent_OnLoad( JavaVM * jvm, char * options, void * reserv
 
 	jvm->GetEnv( (void **) &jvmti, JVMTI_VERSION_1_0 );
 
+	// set caps
+
+	jvmtiCapabilities caps;
+	jvmti->GetCapabilities( &caps );
+
+	caps.can_generate_method_entry_events = 1;
+	caps.can_generate_method_exit_events = 1;
+	caps.can_generate_compiled_method_load_events = 1;
+
+	jvmti->AddCapabilities( &caps );
+
+	// bind callbacks
+
 	jvmtiEventCallbacks callbacks;
 	memset( &callbacks, 0, sizeof( callbacks ) );
 
