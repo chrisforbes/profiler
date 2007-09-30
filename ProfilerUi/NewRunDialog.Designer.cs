@@ -31,15 +31,18 @@ namespace Ijw.Profiler.UI
 			System.Windows.Forms.Label label1;
 			System.Windows.Forms.Label label2;
 			System.Windows.Forms.Label label3;
+			System.Windows.Forms.Label label4;
 			this.applicationBox = new System.Windows.Forms.TextBox();
 			this.workingDirectoryBox = new System.Windows.Forms.TextBox();
 			this.argumentsBox = new System.Windows.Forms.TextBox();
 			this.browseButton = new System.Windows.Forms.Button();
 			this.startProfilingButton = new System.Windows.Forms.Button();
 			this.cancelButton = new System.Windows.Forms.Button();
+			this.agentBox = new System.Windows.Forms.ComboBox();
 			label1 = new System.Windows.Forms.Label();
 			label2 = new System.Windows.Forms.Label();
 			label3 = new System.Windows.Forms.Label();
+			label4 = new System.Windows.Forms.Label();
 			this.SuspendLayout();
 			// 
 			// label1
@@ -103,7 +106,7 @@ namespace Ijw.Profiler.UI
 			// startProfilingButton
 			// 
 			this.startProfilingButton.DialogResult = System.Windows.Forms.DialogResult.OK;
-			this.startProfilingButton.Location = new System.Drawing.Point(280, 109);
+			this.startProfilingButton.Location = new System.Drawing.Point(280, 146);
 			this.startProfilingButton.Name = "startProfilingButton";
 			this.startProfilingButton.Size = new System.Drawing.Size(108, 23);
 			this.startProfilingButton.TabIndex = 4;
@@ -113,12 +116,30 @@ namespace Ijw.Profiler.UI
 			// cancelButton
 			// 
 			this.cancelButton.DialogResult = System.Windows.Forms.DialogResult.Cancel;
-			this.cancelButton.Location = new System.Drawing.Point(394, 109);
+			this.cancelButton.Location = new System.Drawing.Point(394, 146);
 			this.cancelButton.Name = "cancelButton";
 			this.cancelButton.Size = new System.Drawing.Size(75, 23);
 			this.cancelButton.TabIndex = 5;
 			this.cancelButton.Text = "Cancel";
 			this.cancelButton.UseVisualStyleBackColor = true;
+			// 
+			// label4
+			// 
+			label4.AutoSize = true;
+			label4.Location = new System.Drawing.Point(12, 107);
+			label4.Name = "label4";
+			label4.Size = new System.Drawing.Size(38, 13);
+			label4.TabIndex = 5;
+			label4.Text = "Agent:";
+			// 
+			// agentBox
+			// 
+			this.agentBox.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+			this.agentBox.FormattingEnabled = true;
+			this.agentBox.Location = new System.Drawing.Point(115, 105);
+			this.agentBox.Name = "agentBox";
+			this.agentBox.Size = new System.Drawing.Size(212, 21);
+			this.agentBox.TabIndex = 6;
 			// 
 			// NewRunDialog
 			// 
@@ -126,10 +147,12 @@ namespace Ijw.Profiler.UI
 			this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
 			this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
 			this.CancelButton = this.cancelButton;
-			this.ClientSize = new System.Drawing.Size(483, 144);
+			this.ClientSize = new System.Drawing.Size(483, 181);
+			this.Controls.Add(this.agentBox);
 			this.Controls.Add(this.cancelButton);
 			this.Controls.Add(this.startProfilingButton);
 			this.Controls.Add(this.browseButton);
+			this.Controls.Add(label4);
 			this.Controls.Add(label3);
 			this.Controls.Add(label2);
 			this.Controls.Add(label1);
@@ -154,5 +177,6 @@ namespace Ijw.Profiler.UI
 		private System.Windows.Forms.Button browseButton;
 		private System.Windows.Forms.Button startProfilingButton;
 		private System.Windows.Forms.Button cancelButton;
+		private System.Windows.Forms.ComboBox agentBox;
 	}
 }

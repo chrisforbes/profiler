@@ -19,10 +19,19 @@ namespace Ijw.Profiler.Agents.JVM
 			string[] frags = rawName.Split(new char[] { ':' }, StringSplitOptions.RemoveEmptyEntries);
 			string className = frags[0];
 			string methodName = frags[1];
+			MethodType type = MethodType.Method;
 
 			bool interesting = isFunctionInteresting(className);
 
-			return new Name(methodName, className, MethodType.Method, interesting);
+			if (methodName == "<init>")
+			{
+				type = MethodType.Constructor;
+				methodName = ".ctor()";
+			}
+			else
+				methodName += "()";
+
+			return new Name(methodName, className, type, interesting);
 		}
 	}
 }

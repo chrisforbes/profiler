@@ -11,14 +11,14 @@ namespace Ijw.Profiler.UI
 	{
 		const int maxItems = 5;
 
-		public static void AddRun(RunParameters p)
+		public static void AddRun(RunParameters p, AgentLoader loader)
 		{
 			List<RunParameters> l = new List<RunParameters>();
 			XmlDocument doc = new XmlDocument();
 			doc.Load(Application.StartupPath + "/mru.xml");
 
 			foreach (XmlElement e in doc.SelectNodes("/mru/run"))
-				l.Add(new RunParameters(e));
+				l.Add(new RunParameters(e, loader.GetAgent));
 
 			UpdateList(l, p);
 

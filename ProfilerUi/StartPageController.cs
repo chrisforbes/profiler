@@ -25,9 +25,9 @@ namespace Ijw.Profiler.UI
 			this.loader = loader;
 		}
 
-		public void Run(string cmd, string dir, string args)
+		public void Run(string cmd, string dir, string args, string agent)
 		{
-			a(new RunParameters(cmd, dir, args));
+			a(new RunParameters(cmd, dir, args, loader.GetAgent(agent)));
 		}
 
 		public void Update(string cmd)

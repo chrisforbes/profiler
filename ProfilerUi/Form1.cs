@@ -19,7 +19,7 @@ namespace Ijw.Profiler.UI
 {
 	public partial class Form1 : Form
 	{
-		string version = "0.9.3";
+		string version = "0.9.4";
 
 		MultipleViewManager viewManager;
 		WebView startPage; 
@@ -27,7 +27,6 @@ namespace Ijw.Profiler.UI
 		ColumnCollection callTreeColumns = new ColumnCollection();
 		ColumnCollection callerColumns = new ColumnCollection();
 		AgentLoader loader;
-		IAgent agent;
 
 		static string[] StripOptionFromArgs(string[] args, out string defaultAgent)
 		{
@@ -49,7 +48,6 @@ namespace Ijw.Profiler.UI
 			string defaultAgent;
 			args = StripOptionFromArgs(args, out defaultAgent);
 			loader = new AgentLoader(defaultAgent);
-			agent = loader.Default;
 
 			Columns cc = new Columns(Font, new Font(Font, FontStyle.Bold), imageProvider);
 
@@ -74,7 +72,7 @@ namespace Ijw.Profiler.UI
 			callerColumns.CreateFixedWidth("Total Time", 70, 
 				Columns.BindSubtype<CallerFunction>(cc.RenderCallerTotalTimeColumn));
 			callerColumns.CreateFixedWidth("", 16, delegate { });
-
+			
 			InitializeComponent();
 
 			Text = "IJW Profiler " + version;
@@ -98,12 +96,12 @@ namespace Ijw.Profiler.UI
 			callTreeColumns.WidthUpdatedHandler(ClientSize.Width);
 		}
 
-		Run ProfileProcess(RunParameters p, IAgent agent)
+		Run ProfileProcess(RunParameters p, AgentLoader loader)
 		{
-			MruList.AddRun(p);
+			MruList.AddRun(p, loader);
 			startPage.Refresh();
 
-			return agent.Execute(p);
+			return p.agent.Execute(p);
 		}
 
 		TreeControl CreateNewView(string name, CallTree src, ColumnCollection cc)
@@ -118,11 +116,11 @@ namespace Ijw.Profiler.UI
 
 		void NewRun(RunParameters r)
 		{
-			NewRunDialog dialog = new NewRunDialog(r);
+			NewRunDialog dialog = new NewRunDialog(r, loader);
 
 			if (DialogResult.OK == dialog.ShowDialog())
-				using (Run run = ProfileProcess(dialog.Parameters, agent))
-					LoadTraceData(run, agent);
+				using (Run run = ProfileProcess(dialog.Parameters, loader))
+					LoadTraceData(run, r.agent);
 		}
 
 		void NewRun(object sender, EventArgs e) { NewRun(null); }

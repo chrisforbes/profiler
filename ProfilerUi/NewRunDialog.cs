@@ -12,15 +12,21 @@ namespace Ijw.Profiler.UI
 {
 	partial class NewRunDialog : Form
 	{
-		public NewRunDialog( RunParameters initialParameters )
+		public NewRunDialog( RunParameters initialParameters, AgentLoader loader )
 		{
 			InitializeComponent();
+
+			agentBox.DisplayMember = "Name";
+			foreach (IAgent agent in loader.Agents)
+				agentBox.Items.Add(agent);
+			agentBox.SelectedItem = loader.Default;
 
 			if (initialParameters != null)
 			{
 				applicationBox.Text = initialParameters.exePath;
 				workingDirectoryBox.Text = initialParameters.workingDirectory;
 				argumentsBox.Text = initialParameters.parameters;
+				agentBox.SelectedItem = initialParameters.agent;
 			}
 		}
 
@@ -45,7 +51,8 @@ namespace Ijw.Profiler.UI
 				return new RunParameters(
 					applicationBox.Text,
 					workingDirectoryBox.Text,
-					argumentsBox.Text);
+					argumentsBox.Text,
+					agentBox.SelectedItem as IAgent);
 			}
 		}
 	}

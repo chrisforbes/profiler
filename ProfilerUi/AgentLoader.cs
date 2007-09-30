@@ -46,5 +46,14 @@ namespace Ijw.Profiler.UI
 				return Util.First(agents);
 			}
 		}
+
+		public IAgent GetAgent(string agent)
+		{
+			foreach (IAgent a in agents)
+				if (agent == a.Id)
+					return a;
+
+			return Default;
+		}
 	}
 }

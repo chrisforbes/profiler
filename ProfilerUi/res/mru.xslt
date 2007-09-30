@@ -23,7 +23,7 @@
 				</h2>
 				<div>
 					<div style="width:100%; ">
-						<a href="#" onclick="javascript:window.external.Run('','','')">Profile an application...</a>
+						<a href="#" onclick="javascript:window.external.Run('','','','')">Profile an application...</a>
 						<br/>
 						If you have profiled an application recently, you can select it from the list below:
 					</div>
@@ -36,7 +36,8 @@
 											javascript:window.external.Run(
 											'<xsl:value-of select="./cmd"/>',
 											'<xsl:value-of select="./dir"/>',
-											'<xsl:value-of select="./args"/>');
+											'<xsl:value-of select="./args"/>',
+											'<xsl:value-of select="./agent"/>');
 										</xsl:attribute>
 										<xsl:value-of select="./cmd"/>
 									</a>
