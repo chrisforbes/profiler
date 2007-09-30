@@ -34,6 +34,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="JvmAgent.cs" />
+    <Compile Include="JvmNameFactory.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Profiler.Core\Profiler.Core.csproj">
