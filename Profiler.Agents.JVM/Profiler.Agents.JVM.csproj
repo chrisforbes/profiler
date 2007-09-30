@@ -7,7 +7,7 @@
     <ProjectGuid>{B5CD6244-793C-4885-BD9D-E608EB4810A4}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>Profiler.Agents.JVM</RootNamespace>
+    <RootNamespace>Ijw.Profiler.Agents.JVM</RootNamespace>
     <AssemblyName>Profiler.Agents.JVM</AssemblyName>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
@@ -34,7 +34,15 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="JvmAgent.cs" />
-    <Compile Include="Properties\AssemblyInfo.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\Profiler.Core\Profiler.Core.csproj">
+      <Project>{759D1196-C45A-46F5-9241-9EDBB4F54CC7}</Project>
+      <Name>Profiler.Core</Name>
+    </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="Properties\" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
