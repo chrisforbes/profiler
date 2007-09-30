@@ -47,6 +47,7 @@
     <Compile Include="AboutBox.Designer.cs">
       <DependentUpon>AboutBox.cs</DependentUpon>
     </Compile>
+    <Compile Include="AgentLoader.cs" />
     <Compile Include="CallTreeView.cs">
       <SubType>Component</SubType>
     </Compile>
@@ -112,10 +113,6 @@
     </Content>
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\Profiler.Agents.CLR\Profiler.Agents.CLR.csproj">
-      <Project>{768A2A45-4540-47C1-851F-6955553CAB80}</Project>
-      <Name>Profiler.Agents.CLR</Name>
-    </ProjectReference>
     <ProjectReference Include="..\Profiler.Core\Profiler.Core.csproj">
       <Project>{759D1196-C45A-46F5-9241-9EDBB4F54CC7}</Project>
       <Name>Profiler.Core</Name>

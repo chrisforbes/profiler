@@ -67,6 +67,14 @@
 						</ul>
 					</div>-->
 					<div style="margin-top:30px">
+						Installed Agents:<br/>
+						<ul>
+							<script>
+								<![CDATA[document.write(window.external.GetInstalledAgents());]]>
+							</script>
+						</ul>
+					</div>
+					<div style="margin-top:30px">
 						<a href="#" onclick="javascript:window.external.Update('')">
 							Check for updates...
 						</a>

@@ -28,7 +28,7 @@ namespace Ijw.Profiler.Agents.JVM
 		}
 
 		public INameFactory NameFactory { get { return nameFactory; } }
-
-		public string Name { get { return "Java"; } }
+		public string Id { get { return "jvm"; } }
+		public string Name { get { return "IJW Profiler for Java"; } }
 	}
 }

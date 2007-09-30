@@ -12,7 +12,6 @@ using IjwFramework.Ui;
 using IjwFramework.Delegates;
 using IjwFramework.Updates;
 using IjwFramework.Types;
-using Ijw.Profiler.Agents.CLR;
 using Ijw.Profiler.Core;
 using Ijw.Profiler.Model;
 
@@ -27,10 +26,31 @@ namespace Ijw.Profiler.UI
 		ImageProvider imageProvider = new ImageProvider(Application.StartupPath + "/res/");
 		ColumnCollection callTreeColumns = new ColumnCollection();
 		ColumnCollection callerColumns = new ColumnCollection();
-		IAgent agent = new ClrAgent();
+		AgentLoader loader;
+		IAgent agent;
+
+		static string[] StripOptionFromArgs(string[] args, out string defaultAgent)
+		{
+			defaultAgent = "clr";
+			if (args.Length == 0)
+				return args;
+
+			if (args[0].StartsWith("-agent:"))
+			{
+				defaultAgent = args[0].Substring(7);
+				return Util.Rest(args);
+			}
+			else
+				return args;
+		}
 
 		public Form1( string[] args )
 		{
+			string defaultAgent;
+			args = StripOptionFromArgs(args, out defaultAgent);
+			loader = new AgentLoader(defaultAgent);
+			agent = loader.Default;
+
 			Columns cc = new Columns(Font, new Font(Font, FontStyle.Bold), imageProvider);
 
 			callTreeColumns.CreateAutoWidth("Function", 
@@ -61,7 +81,8 @@ namespace Ijw.Profiler.UI
 			viewManager = new MultipleViewManager(workspace.ContentPanel);
 
 			startPage = new WebView(viewManager,
-				"file://" + Application.StartupPath + "/mru.xml", new StartPageController(version, NewRun, CheckForUpdates));
+				"file://" + Application.StartupPath + "/mru.xml", 
+				new StartPageController(version, NewRun, CheckForUpdates, loader));
 
 			viewManager.Add(startPage);
 

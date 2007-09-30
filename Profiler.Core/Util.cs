@@ -28,6 +28,15 @@ namespace Ijw.Profiler.Core
 					yield return t;
 		}
 
+		public static T First<T>(IEnumerable<T> src)
+		{
+			using (IEnumerator<T> e = src.GetEnumerator())
+				if (!e.MoveNext())
+					throw new IndexOutOfRangeException("Empty sequence");
+				else
+					return e.Current;
+		}
+
 		public static string Join(IEnumerable<string> src, string joinWith)
 		{
 			StringBuilder result = new StringBuilder();
@@ -38,6 +47,13 @@ namespace Ijw.Profiler.Core
 				result.Append(joinWith + s);
 
 			return result.ToString();
+		}
+
+		public static T[] Rest<T>(T[] a)
+		{
+			T[] result = new T[a.Length - 1];
+			Array.Copy(a, 1, result, 0, result.Length);
+			return result;
 		}
 	}
 }

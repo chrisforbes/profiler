@@ -36,7 +36,8 @@ namespace Ijw.Profiler.Agents.CLR
 			}
 		}
 
-		public string Name { get { return ".NET Framework"; } }
+		public string Name { get { return "IJW Profiler for the .NET Framework"; } }
+		public string Id { get { return "clr"; } }
 		public INameFactory NameFactory { get { return nameFactory; } }
 	}
 }

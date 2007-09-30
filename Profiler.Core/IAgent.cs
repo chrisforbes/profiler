@@ -8,6 +8,7 @@ namespace Ijw.Profiler.Core
 	{
 		Run Execute(RunParameters p);
 		string Name { get; }
+		string Id { get; }
 		INameFactory NameFactory { get; }
 	}
 }
