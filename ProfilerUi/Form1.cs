@@ -120,7 +120,7 @@ namespace Ijw.Profiler.UI
 
 			if (DialogResult.OK == dialog.ShowDialog())
 				using (Run run = ProfileProcess(dialog.Parameters, loader))
-					LoadTraceData(run, r.agent);
+					LoadTraceData(run, dialog.Parameters.agent);
 		}
 
 		void NewRun(object sender, EventArgs e) { NewRun(null); }
