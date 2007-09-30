@@ -17,7 +17,7 @@ namespace Ijw.Profiler.Agents.JVM
 			ProcessStartInfo info = new ProcessStartInfo(p.exePath);
 			info.WorkingDirectory = p.workingDirectory;
 			info.UseShellExecute = false;
-			info.EnvironmentVariables["JAVA_TOOL_OPTIONS"] = "-agentpath:" + Application.StartupPath + "\\PJvmImpl.dll";
+			info.EnvironmentVariables["JAVA_TOOL_OPTIONS"] = "\"-agentpath:" + Application.StartupPath + "\\PJvmImpl.dll\"";
 			info.EnvironmentVariables["ijwprof_txt"] = run.txtFile;
 			info.EnvironmentVariables["ijwprof_bin"] = run.binFile;
 			
