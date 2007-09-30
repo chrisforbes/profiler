@@ -19,6 +19,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Profiler.Agents.CLR", "Prof
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Profiler.Model", "Profiler.Model\Profiler.Model.csproj", "{5A427A12-5DFE-4817-AB88-AC9D45928E86}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Profiler.Agents.JVM", "Profiler.Agents.JVM\Profiler.Agents.JVM.csproj", "{B5CD6244-793C-4885-BD9D-E608EB4810A4}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -95,6 +97,16 @@ Global
 		{5A427A12-5DFE-4817-AB88-AC9D45928E86}.Release|Mixed Platforms.ActiveCfg = Release|Any CPU
 		{5A427A12-5DFE-4817-AB88-AC9D45928E86}.Release|Mixed Platforms.Build.0 = Release|Any CPU
 		{5A427A12-5DFE-4817-AB88-AC9D45928E86}.Release|Win32.ActiveCfg = Release|Any CPU
+		{B5CD6244-793C-4885-BD9D-E608EB4810A4}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{B5CD6244-793C-4885-BD9D-E608EB4810A4}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{B5CD6244-793C-4885-BD9D-E608EB4810A4}.Debug|Mixed Platforms.ActiveCfg = Debug|Any CPU
+		{B5CD6244-793C-4885-BD9D-E608EB4810A4}.Debug|Mixed Platforms.Build.0 = Debug|Any CPU
+		{B5CD6244-793C-4885-BD9D-E608EB4810A4}.Debug|Win32.ActiveCfg = Debug|Any CPU
+		{B5CD6244-793C-4885-BD9D-E608EB4810A4}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{B5CD6244-793C-4885-BD9D-E608EB4810A4}.Release|Any CPU.Build.0 = Release|Any CPU
+		{B5CD6244-793C-4885-BD9D-E608EB4810A4}.Release|Mixed Platforms.ActiveCfg = Release|Any CPU
+		{B5CD6244-793C-4885-BD9D-E608EB4810A4}.Release|Mixed Platforms.Build.0 = Release|Any CPU
+		{B5CD6244-793C-4885-BD9D-E608EB4810A4}.Release|Win32.ActiveCfg = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -103,5 +115,6 @@ Global
 		{C7DEEA77-4033-4DFD-9F81-ED71724A1AAB} = {85A8E60E-A8D5-4A01-9BD9-B1616E3CAF0E}
 		{768A2A45-4540-47C1-851F-6955553CAB80} = {85A8E60E-A8D5-4A01-9BD9-B1616E3CAF0E}
 		{C98B5484-2188-4224-9856-6D7B87FA139C} = {4AF90850-43CE-42C5-A755-0D11C93BC511}
+		{B5CD6244-793C-4885-BD9D-E608EB4810A4} = {4AF90850-43CE-42C5-A755-0D11C93BC511}
 	EndGlobalSection
 EndGlobal
