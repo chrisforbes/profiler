@@ -45,6 +45,8 @@ bool IsSystemMethod( std::string const & s )
 		return true;
 	if (s.find("javax.") == 0)
 		return true;
+	if (s.find("sun.") == 0)
+		return true;
 
 	return false;
 }
@@ -55,24 +57,29 @@ void HackJavaClassName( char * s )
 	{
 		if (*s == '/')
 			*s = '.';
+		if (*s == ';')
+			*s = 0;
 		s++;
 	}
 }
 
 void ExportMethodName( jvmtiEnv * ti_env, jmethodID method )
 {
+	if (interesting.find(method) != interesting.end())
+		return;
+
 	char *method_name = 0, *clazz_name = 0;
 	jclass clazz;
 
 	ti_env->GetMethodName( method, &method_name, NULL, NULL );
 	ti_env->GetMethodDeclaringClass( method, &clazz );
 
-	HackJavaClassName( clazz_name );
 	ti_env->GetClassSignature( clazz, &clazz_name, NULL );
+	HackJavaClassName( clazz_name );
 
 	fprintf( logfile, "0x%08x=%s::%s\n", (size_t)method, clazz_name + 1, method_name );
 
-	interesting[ method ] = IsSystemMethod( clazz_name );
+	interesting[ method ] = !IsSystemMethod( clazz_name + 1);
 
 	ti_env->Deallocate( (unsigned char *) clazz_name );
 	ti_env->Deallocate( (unsigned char *) method_name );
@@ -80,6 +87,8 @@ void ExportMethodName( jvmtiEnv * ti_env, jmethodID method )
 
 void JNICALL MethodEntry( jvmtiEnv * ti_env, JNIEnv * env, jthread thread, jmethodID method )
 {
+	ExportMethodName( ti_env, method );
+
 	bool parentInteresting = fns.Empty() || fns.Peek();
 	bool functionInteresting = interesting[ method ];
 
@@ -102,7 +111,7 @@ void JNICALL MethodExit( jvmtiEnv * ti_env, JNIEnv * env, jthread thread, jmetho
 void JNICALL JitMethod( jvmtiEnv * ti_env, jmethodID method, jint, void const *,
 					   jint, jvmtiAddrLocationMap const *, void const * )
 {
-	ExportMethodName( ti_env, method );
+	//ExportMethodName( ti_env, method );
 }
 
 JNIEXPORT jint JNICALL Agent_OnLoad( JavaVM * jvm, char * options, void * reserved )
@@ -137,6 +146,8 @@ JNIEXPORT jint JNICALL Agent_OnLoad( JavaVM * jvm, char * options, void * reserv
 	jvmti->SetEventNotificationMode( JVMTI_ENABLE, JVMTI_EVENT_METHOD_ENTRY, NULL );
 	jvmti->SetEventNotificationMode( JVMTI_ENABLE, JVMTI_EVENT_METHOD_EXIT, NULL );
 	jvmti->SetEventNotificationMode( JVMTI_ENABLE, JVMTI_EVENT_COMPILED_METHOD_LOAD, NULL );
+
+	writer->WriteClockFrequency();
 
 	return JNI_OK;
 }

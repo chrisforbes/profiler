@@ -9,7 +9,9 @@ namespace Ijw.Profiler.Agents.JVM
 {
 	public class JvmAgent : IAgent
 	{
-		INameFactory nameFactory = new JvmNameFactory();
+		static Predicate<string> isFunctionInteresting = new NameFilter("java.", "javax.", "sun.").IsFunctionInteresting;
+
+		INameFactory nameFactory = new JvmNameFactory(isFunctionInteresting);
 		public Run Execute(RunParameters p)
 		{
 			Run run = new Run();
