@@ -143,6 +143,7 @@ public:
 		{
 			DWORD b;
 			WriteFile( fh, buffer, (DWORD)(cur - buffer), &b, NULL );
+			cur = buffer;
 		}
 
 		LeaveCriticalSection( &cs );
