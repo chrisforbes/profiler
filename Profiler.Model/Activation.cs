@@ -27,7 +27,7 @@ namespace Ijw.Profiler.Model
 		public static double GetTime(ulong start, ulong end, ulong freq)
 		{
 			if (end < start)
-				throw new InvalidOperationException("you suck");
+				throw new InvalidOperationException("Bug in trace stream; interval end before start");
 			return 1000 * (end - start) / (double)freq;
 		}
 	}
