@@ -14,13 +14,12 @@ using IjwFramework.Types;
 using Ijw.Profiler.Core;
 using Ijw.Profiler.Model;
 using Ijw.Updates;
+using IjwFramework;
 
 namespace Ijw.Profiler.UI
 {
 	public partial class Form1 : Form
 	{
-		string version = "0.9.4";
-
 		MultipleViewManager viewManager;
 		WebView startPage; 
 		ImageProvider imageProvider = new ImageProvider(Application.StartupPath + "/res/");
@@ -75,12 +74,12 @@ namespace Ijw.Profiler.UI
 			
 			InitializeComponent();
 
-			Text = "IJW Profiler " + version;
+			Text = Product.Name + " " + Product.ShortVersion;
 			viewManager = new MultipleViewManager(workspace.ContentPanel);
 
 			startPage = new WebView(viewManager,
 				"file://" + Application.StartupPath + "/mru.xml", 
-				new StartPageController(version, NewRun, CheckForUpdates, loader));
+				new StartPageController(NewRun, CheckForUpdates, loader));
 
 			viewManager.Add(startPage);
 
@@ -244,12 +243,12 @@ namespace Ijw.Profiler.UI
 
 		void CheckForUpdates()
 		{
-			UpdateManager.CheckForUpdates("IJW Profiler", version);
+			UpdateManager.CheckForUpdates(Product.Name, Product.ShortVersion);
 		}
 
 		void About(object sender, EventArgs e)
 		{
-			new AboutBox("IJW Profiler", version, "(c)2007 IJW Software (NZ)").ShowDialog();
+			new AboutBox().ShowDialog();
 		}
 
 		void ShowBacktraces(object sender, EventArgs e)

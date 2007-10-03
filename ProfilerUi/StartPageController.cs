@@ -6,6 +6,7 @@ using System.Windows.Forms;
 using IjwFramework.Delegates;
 using System.Diagnostics;
 using Ijw.Profiler.Core;
+using IjwFramework;
 
 namespace Ijw.Profiler.UI
 {
@@ -17,11 +18,10 @@ namespace Ijw.Profiler.UI
 		readonly string version;
 		readonly AgentLoader loader;
 
-		internal StartPageController(string version, Action<RunParameters> a, Action updateFunction, AgentLoader loader)
+		internal StartPageController(Action<RunParameters> a, Action updateFunction, AgentLoader loader)
 		{
 			this.updateFunction = updateFunction;
 			this.a = a;
-			this.version = version;
 			this.loader = loader;
 		}
 
@@ -45,10 +45,7 @@ namespace Ijw.Profiler.UI
 			Process.Start(url);
 		}
 
-		public string GetVersion()
-		{
-			return version;
-		}
+		public string GetVersion() { return Product.ShortVersion; }
 
 		public string GetInstalledAgents()
 		{
