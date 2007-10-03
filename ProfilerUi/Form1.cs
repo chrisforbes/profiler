@@ -10,10 +10,10 @@ using System.IO;
 
 using IjwFramework.Ui;
 using IjwFramework.Delegates;
-using IjwFramework.Updates;
 using IjwFramework.Types;
 using Ijw.Profiler.Core;
 using Ijw.Profiler.Model;
+using Ijw.Updates;
 
 namespace Ijw.Profiler.UI
 {
