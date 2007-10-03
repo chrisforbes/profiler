@@ -138,7 +138,7 @@ namespace Ijw.Profiler.UI
 
 			Text = baseText + " - Preparing view...";
 
-			foreach (Thread thread in tree.threads.Values)
+			foreach (Thread thread in tree.AllThreads)
 			{
 				Node n = thread.CreateView(thread.TotalTime);
 				

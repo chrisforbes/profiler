@@ -13,8 +13,10 @@ namespace Ijw.Profiler.Model
 {
 	public class CallTree
 	{
-		public Dictionary<uint, Thread> threads = new Dictionary<uint, Thread>();
-		public Set<uint> allCalledFunctions = new Set<uint>();
+		readonly Cache<uint, Thread> threads = new Cache<uint, Thread>(delegate(uint x) { return new Thread(x); });
+		public IEnumerable<Thread> AllThreads { get { return threads.Values; } }
+
+		Set<uint> allCalledFunctions = new Set<uint>();
 		Activation<Thread> currentThread = null;
 		Converter<uint,Name> names;
 		ulong frequency;
@@ -61,7 +63,7 @@ namespace Ijw.Profiler.Model
 				}
 			}
 
-			foreach (Thread t in threads.Values)
+			foreach (Thread t in AllThreads)
 				while (t.activations.Count > 0)
 					t.activations.Pop().Complete(finalTime, frequency);
 
@@ -74,12 +76,7 @@ namespace Ijw.Profiler.Model
 			if (currentThread != null)
 				currentThread.Complete(e.timestamp, frequency);
 
-			Thread t;
-
-			if (!threads.TryGetValue(e.id, out t))
-				threads.Add(e.id, t = new Thread(e.id));
-
-			currentThread = new Activation<Thread>(t, e.timestamp);
+			currentThread = new Activation<Thread>(threads[e.id], e.timestamp);
 		}
 
 		void OnEnterFunction(ProfileEvent e)
@@ -114,7 +111,7 @@ namespace Ijw.Profiler.Model
 			writer.WriteStartElement("run");
 			writer.WriteStartElement("trace");
 
-			foreach (Thread t in threads.Values)
+			foreach (Thread t in AllThreads)
 				t.WriteTo(writer);
 
 			writer.WriteEndElement();
@@ -147,7 +144,7 @@ namespace Ijw.Profiler.Model
 		{
 			List<Function> invocations = new List<Function>();
 
-			foreach (Thread t in threads.Values)
+			foreach (Thread t in AllThreads)
 				invocations.AddRange(t.CollectInvocations(functionId));
 
 			return invocations;
