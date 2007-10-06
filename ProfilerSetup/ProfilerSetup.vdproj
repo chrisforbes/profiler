@@ -111,6 +111,12 @@
         }
         "Entry"
         {
+        "MsmKey" = "8:_657811F5FC4F4F60AEE65D0A535DD526"
+        "OwnerKey" = "8:_UNDEFINED"
+        "MsmSig" = "8:_UNDEFINED"
+        }
+        "Entry"
+        {
         "MsmKey" = "8:_6BE59844A14D4A48835A7C8F1F0581C8"
         "OwnerKey" = "8:_UNDEFINED"
         "MsmSig" = "8:_UNDEFINED"
@@ -208,7 +214,7 @@
         "Entry"
         {
         "MsmKey" = "8:_CE9AE5B154EB4ED6E7EC4878669CCD2E"
-        "OwnerKey" = "8:_B8E99DBD383449B0BD986DF830818466"
+        "OwnerKey" = "8:_59736929A6CC4B74988F39932FFF097F"
         "MsmSig" = "8:_UNDEFINED"
         }
         "Entry"
@@ -226,7 +232,7 @@
         "Entry"
         {
         "MsmKey" = "8:_CE9AE5B154EB4ED6E7EC4878669CCD2E"
-        "OwnerKey" = "8:_59736929A6CC4B74988F39932FFF097F"
+        "OwnerKey" = "8:_B8E99DBD383449B0BD986DF830818466"
         "MsmSig" = "8:_UNDEFINED"
         }
         "Entry"
@@ -280,13 +286,13 @@
         "Entry"
         {
         "MsmKey" = "8:_UNDEFINED"
-        "OwnerKey" = "8:_59736929A6CC4B74988F39932FFF097F"
+        "OwnerKey" = "8:_D0EC1D1BAC64C387A73950F743BD4768"
         "MsmSig" = "8:_UNDEFINED"
         }
         "Entry"
         {
         "MsmKey" = "8:_UNDEFINED"
-        "OwnerKey" = "8:_0B7F5FCF3A49C5BEC7D2584B28B16ED8"
+        "OwnerKey" = "8:_1A69C3D630A180DAD586B1BC0BE20439"
         "MsmSig" = "8:_UNDEFINED"
         }
         "Entry"
@@ -298,25 +304,25 @@
         "Entry"
         {
         "MsmKey" = "8:_UNDEFINED"
-        "OwnerKey" = "8:_CE9AE5B154EB4ED6E7EC4878669CCD2E"
-        "MsmSig" = "8:_UNDEFINED"
-        }
-        "Entry"
-        {
-        "MsmKey" = "8:_UNDEFINED"
         "OwnerKey" = "8:_E0638F5393D80021028D5F1266EB0999"
         "MsmSig" = "8:_UNDEFINED"
         }
         "Entry"
         {
         "MsmKey" = "8:_UNDEFINED"
-        "OwnerKey" = "8:_D0EC1D1BAC64C387A73950F743BD4768"
+        "OwnerKey" = "8:_59736929A6CC4B74988F39932FFF097F"
         "MsmSig" = "8:_UNDEFINED"
         }
         "Entry"
         {
         "MsmKey" = "8:_UNDEFINED"
-        "OwnerKey" = "8:_1A69C3D630A180DAD586B1BC0BE20439"
+        "OwnerKey" = "8:_CE9AE5B154EB4ED6E7EC4878669CCD2E"
+        "MsmSig" = "8:_UNDEFINED"
+        }
+        "Entry"
+        {
+        "MsmKey" = "8:_UNDEFINED"
+        "OwnerKey" = "8:_0B7F5FCF3A49C5BEC7D2584B28B16ED8"
         "MsmSig" = "8:_UNDEFINED"
         }
     }
@@ -650,6 +656,26 @@
             {
             "SourcePath" = "8:..\\debug\\profiler_logo.png"
             "TargetName" = "8:profiler_logo.png"
+            "Tag" = "8:"
+            "Folder" = "8:_5014C7B3CCD94F38B5B77C9F393D5C78"
+            "Condition" = "8:"
+            "Transitive" = "11:FALSE"
+            "Vital" = "11:TRUE"
+            "ReadOnly" = "11:FALSE"
+            "Hidden" = "11:FALSE"
+            "System" = "11:FALSE"
+            "Permanent" = "11:FALSE"
+            "SharedLegacy" = "11:FALSE"
+            "PackageAs" = "3:1"
+            "Register" = "3:1"
+            "Exclude" = "11:FALSE"
+            "IsDependency" = "11:FALSE"
+            "IsolateTo" = "8:"
+            }
+            "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_657811F5FC4F4F60AEE65D0A535DD526"
+            {
+            "SourcePath" = "8:..\\debug\\PJvmImpl.dll"
+            "TargetName" = "8:PJvmImpl.dll"
             "Tag" = "8:"
             "Folder" = "8:_5014C7B3CCD94F38B5B77C9F393D5C78"
             "Condition" = "8:"
