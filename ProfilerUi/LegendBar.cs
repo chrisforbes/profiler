@@ -9,11 +9,13 @@ using System.Drawing.Drawing2D;
 
 namespace Ijw.Profiler.UI
 {
+	using Item = Pair<string, string>;
+
 	class LegendBar : Control
 	{
 		readonly ImageProvider imageProvider;
-		readonly List<IEnumerable<Pair<string, string>>> items =
-			new List<IEnumerable<Pair<string, string>>>();
+		readonly List<IEnumerable<Item>> items =
+			new List<IEnumerable<Item>>();
 		int currentPage = 0;
 		ToolTip tt = new ToolTip();
 
@@ -42,7 +44,7 @@ namespace Ijw.Profiler.UI
 			p.DrawString(string.Format("({0}/{1})", currentPage % items.Count + 1, items.Count),
 				Font, Brushes.Blue, 1, ClientSize.Width);
 
-			foreach (Pair<string, string> i in items[ currentPage % items.Count ] )
+			foreach (Item i in items[ currentPage % items.Count ] )
 				PaintItem(i, p);
 		}
 
