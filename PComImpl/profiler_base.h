@@ -118,6 +118,7 @@ public:
 	STDMETHOD(ObjectsAllocatedByClass)(ULONG classes, UINT classIds[], ULONG objectCounts[]) { return E_NOTIMPL; }
 	STDMETHOD(ObjectReferences)(UINT objectId, UINT classId, ULONG numRefs, UINT refIds[] ) { return E_NOTIMPL; }
 	STDMETHOD(RootReferences)(ULONG numRootRefs, UINT refs[] ) { return E_NOTIMPL; }
+
 	STDMETHOD(ExceptionThrown)(UINT objectId) { return E_NOTIMPL; }
 	STDMETHOD(ExceptionSearchFunctionEnter)(UINT functionId) { return E_NOTIMPL; }
 	STDMETHOD(ExceptionSearchFunctionLeave)() { return E_NOTIMPL; }

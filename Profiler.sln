@@ -1,6 +1,10 @@
 ﻿
-Microsoft Visual Studio Solution File, Format Version 9.00
-# Visual Studio 2005
+Microsoft Visual Studio Solution File, Format Version 10.00
+# Visual Studio 2008
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "CLR Agent", "CLR Agent", "{85A8E60E-A8D5-4A01-9BD9-B1616E3CAF0E}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "JVM Agent", "JVM Agent", "{4AF90850-43CE-42C5-A755-0D11C93BC511}"
+EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "PComImpl", "PComImpl\PComImpl.vcproj", "{C7DEEA77-4033-4DFD-9F81-ED71724A1AAB}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ProfilerUi", "ProfilerUi\ProfilerUi.csproj", "{37C66713-1DE2-4160-9157-D97F761EFDC2}"
@@ -10,10 +14,6 @@ EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "PJvmImpl", "PJvmImpl\PJvmImpl.vcproj", "{C98B5484-2188-4224-9856-6D7B87FA139C}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Profiler.Core", "Profiler.Core\Profiler.Core.csproj", "{759D1196-C45A-46F5-9241-9EDBB4F54CC7}"
-EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "CLR Agent", "CLR Agent", "{85A8E60E-A8D5-4A01-9BD9-B1616E3CAF0E}"
-EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "JVM Agent", "JVM Agent", "{4AF90850-43CE-42C5-A755-0D11C93BC511}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Profiler.Agents.CLR", "Profiler.Agents.CLR\Profiler.Agents.CLR.csproj", "{768A2A45-4540-47C1-851F-6955553CAB80}"
 EndProject

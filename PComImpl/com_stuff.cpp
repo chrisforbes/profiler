@@ -74,10 +74,11 @@ class Profiler : public ProfilerBase
 	ProfileWriter writer;
 	std::map< UINT, bool > interesting;
 	FunctionStack fns;
+	ThreadPtr< UINT > unwindFunc;
 
 public:
 	Profiler()
-		: ProfilerBase( COR_PRF_MONITOR_ENTERLEAVE, GetEnv( txtProfileEnv ) ), 
+		: ProfilerBase( COR_PRF_MONITOR_ENTERLEAVE | COR_PRF_MONITOR_EXCEPTIONS, GetEnv( txtProfileEnv ) ), 
 		writer( GetEnv( binProfileEnv ) )
 	{
 		__inst = this;
@@ -101,6 +102,26 @@ public:
 	STDMETHOD(Shutdown)()
 	{
 		writer.Flush();
+		return S_OK;
+	}
+
+	STDMETHOD(ExceptionUnwindFunctionEnter)(UINT functionId)
+	{
+		unwindFunc.set( (UINT*) functionId );
+		return S_OK;
+	}
+
+	STDMETHOD(ExceptionUnwindFunctionLeave)()
+	{
+		UINT functionId = (UINT)unwindFunc.get();
+		if (!functionId)
+		{
+			Log("Bogus ExceptionUnwindFunctionLeave");
+			return S_OK;	//pretend it works, dont break the CLR :)
+		}
+
+		OnFunctionLeave( functionId );
+		unwindFunc.set(0);
 		return S_OK;
 	}
 

@@ -50,6 +50,9 @@ namespace Ijw.Profiler.Model
 
 						case Opcode.TimeBase:
 							finalTime = e.timestamp; break;
+
+						default:
+							throw new InvalidOperationException("bad opcode");
 					}
 
 					finalTime = e.timestamp;
