@@ -7,4 +7,4 @@ using System.Runtime.InteropServices;
 [assembly: AssemblyCompany("IJW Software")]
 [assembly: AssemblyCopyright("Copyright © IJW Software 2007")]
 [assembly: ComVisible(false)]
-[assembly: AssemblyVersion("0.9.5")]
+[assembly: AssemblyVersion("0.9.6")]
