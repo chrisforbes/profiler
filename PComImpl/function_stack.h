@@ -39,5 +39,19 @@ public:
 		Stack()->pop();
 		return value;
 	}
+
+	bool EmptyOrPeek()
+	{
+		const std::stack< bool >* t = Stack();
+		return t->empty() || t->top();
+	}
+
+	bool PopOrEmptyOrPeek()
+	{
+		std::stack< bool >* t = Stack();
+		bool a = t->top();
+		t->pop();
+		return a || t->empty() || t->top();
+	}
 };
 

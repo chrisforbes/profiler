@@ -72,7 +72,7 @@ namespace
 class Profiler : public ProfilerBase
 {
 	ProfileWriter writer;
-	std::map< UINT, bool > interesting;
+	//std::map< UINT, bool > interesting;
 	FunctionStack fns;
 	ThreadPtr< UINT > unwindFunc;
 
@@ -132,10 +132,10 @@ public:
 		return result;
 	}
 
-	void OnFunctionEnter( UINT functionId )
+	void OnFunctionEnter( UINT functionId, UINT interesting )
 	{
-		bool parentInteresting = fns.Empty() || fns.Peek();
-		bool functionInteresting = interesting[ functionId ];
+		bool parentInteresting = fns.EmptyOrPeek();// fns.Empty() || fns.Peek();
+		bool functionInteresting = interesting != 0; //interesting[ functionId ];
 
 		fns.Push(functionInteresting);
 
@@ -145,19 +145,21 @@ public:
 
 	void OnFunctionLeave( UINT functionId )
 	{
-		bool functionInteresting = fns.Pop();
-		bool parentInteresting = fns.Empty() || fns.Peek();
+		//bool functionInteresting = fns.Pop();
+		//bool parentInteresting = fns.EmptyOrPeek();// fns.Empty() || fns.Peek();
 
-		if (parentInteresting || functionInteresting)
+		//if (parentInteresting || functionInteresting)
+		if( fns.PopOrEmptyOrPeek() )
 			writer.WriteLeaveFunction( functionId, GetCurrentThreadID() );
 	}
 
 	void OnFunctionTail( UINT functionId )
 	{
-		bool functionInteresting = fns.Pop();
-		bool parentInteresting = fns.Empty() || fns.Peek();
+		//bool functionInteresting = fns.Pop();
+		//bool parentInteresting = fns.EmptyOrPeek();// fns.Empty() || fns.Peek();
 
-		if (parentInteresting || functionInteresting)
+		//if (parentInteresting || functionInteresting)
+		if( fns.PopOrEmptyOrPeek() )
 			writer.WriteTailFunction( functionId, GetCurrentThreadID() );
 	}
 
@@ -167,7 +169,7 @@ public:
 		return (flags == mdPrivateScope || flags == mdPrivate || flags == mdFamANDAssem || flags == mdAssem);
 	}
 
-	std::wstring GetFunctionName( UINT functionId, bool& isPrivate )
+	std::wstring GetFunctionName(UINT functionId, bool& isPrivate )
 	{
 		mdToken methodToken, classToken, newClassToken;
 		IMetaDataImport * pm = NULL;
@@ -213,7 +215,7 @@ public:
 		return class_buf_string + L"::" + std::wstring( buf );
 	}
 
-	bool ShouldHookFunction( UINT functionId )
+	UINT_PTR ShouldHookFunction( UINT functionId )
 	{
 		bool isPrivate;
 		char sz[1024];
@@ -222,15 +224,17 @@ public:
 		Log(sz);
 
 		static std::wstring str[] = { L"System.", L"Microsoft.", L"MS." };
-		interesting[ functionId ] = !StringStartsWithAny( ws, str, str + 3 );
-		return true;
+		//interesting[ functionId ] = !StringStartsWithAny( ws, str, str + 3 );
+		//return true;
+		return !StringStartsWithAny( ws, str, str + 3 ) ? (UINT_PTR)1 : (UINT_PTR)0;
 	}
 };
 
 UINT_PTR __stdcall __shouldHookFunction( UINT functionId, BOOL * shouldHook )
 {
-	*shouldHook = __inst->ShouldHookFunction( functionId );
-	return functionId;
+	*shouldHook = true;
+	return __inst->ShouldHookFunction( functionId );
+	//return functionId;
 }
 
 void __declspec(naked) __funcEnter ( UINT functionId, UINT_PTR, COR_PRF_FRAME_INFO, COR_PRF_FUNCTION_ARGUMENT_INFO* )
@@ -240,7 +244,8 @@ void __declspec(naked) __funcEnter ( UINT functionId, UINT_PTR, COR_PRF_FRAME_IN
 		push eax
 		push ecx
 		push edx
-		push [esp+16]
+		push [esp+20]
+		push [esp+20]
 		mov ecx, __inst
 		call Profiler::OnFunctionEnter
 		pop edx

@@ -3,7 +3,9 @@
 #include <process.h>
 
 // 2MB buffer!
-#define BUFFER_SIZE		2048 * 1024
+//#define BUFFER_SIZE		2048 * 1024
+
+#define BUFFER_SIZE		(16 * 1024)
 
 #define IOCK_IO		0
 #define IOCK_TERM	1
