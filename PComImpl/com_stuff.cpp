@@ -135,7 +135,7 @@ public:
 	void OnFunctionEnter( UINT functionId, UINT interesting )
 	{
 		bool parentInteresting = fns.EmptyOrPeek();// fns.Empty() || fns.Peek();
-		bool functionInteresting = interesting != 0; //interesting[ functionId ];
+		bool functionInteresting = interesting == 1; //interesting[ functionId ];
 
 		fns.Push(functionInteresting);
 
@@ -215,9 +215,9 @@ public:
 		return class_buf_string + L"::" + std::wstring( buf );
 	}
 
-	UINT_PTR ShouldHookFunction( UINT functionId )
+	UINT_PTR ShouldHookFunction( UINT functionId, BOOL * shouldHook )
 	{
-		bool isPrivate;
+		bool isPrivate = false;
 		char sz[1024];
 		std::wstring ws = GetFunctionName( functionId, isPrivate );
 		sprintf(sz, "0x%08x=%ws", functionId, ws.c_str());
@@ -226,14 +226,21 @@ public:
 		static std::wstring str[] = { L"System.", L"Microsoft.", L"MS." };
 		//interesting[ functionId ] = !StringStartsWithAny( ws, str, str + 3 );
 		//return true;
-		return !StringStartsWithAny( ws, str, str + 3 ) ? (UINT_PTR)1 : (UINT_PTR)0;
+		bool isInteresting = !StringStartsWithAny( ws, str, str + 3 );
+
+		if( isInteresting || !isPrivate )
+		{
+			*shouldHook = true;
+			return isInteresting ? (UINT_PTR)1 : (UINT_PTR)2;
+		}
+		return NULL;
 	}
 };
 
 UINT_PTR __stdcall __shouldHookFunction( UINT functionId, BOOL * shouldHook )
 {
 	*shouldHook = true;
-	return __inst->ShouldHookFunction( functionId );
+	return __inst->ShouldHookFunction( functionId, shouldHook );
 	//return functionId;
 }
 
