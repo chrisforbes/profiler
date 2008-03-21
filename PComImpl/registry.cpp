@@ -1,12 +1,7 @@
 #define WIN32_LEAN_AND_MEAN
+#define WIN32_ULTRA_LEAN
 #define _CRT_SECURE_NO_WARNINGS
 #include <windows.h>
-#include <stdio.h>
-
-#include <cor.h>
-#include <corprof.h>
-
-#include <string>
 #include <shlwapi.h>
 
 HINSTANCE hinst;
@@ -25,13 +20,13 @@ BOOL WINAPI DllMain( HINSTANCE hInstance, DWORD dwReason, void * )
 	return TRUE;
 }
 
-HKEY OpenKey( HKEY parent, std::string const & name )
+HKEY OpenKey( HKEY parent, char const* name )
 {
 	HKEY result;
-	if (ERROR_SUCCESS != RegCreateKeyExA( parent, name.c_str(), 0, 0, 
+	if (ERROR_SUCCESS != RegCreateKeyExA( parent, name, 0, 0, 
 		REG_OPTION_NON_VOLATILE, KEY_ALL_ACCESS, 0, &result, 0 ))
 	{
-		::MessageBoxA( 0, name.c_str(), "Failed to create key", MB_OK );
+		::MessageBoxA( 0, name, "Failed to create key", MB_OK );
 	}
 	return result;
 }
@@ -41,9 +36,9 @@ void CloseKey( HKEY key )
 	RegCloseKey( key );
 }
 
-void SetValue( HKEY key, std::string const & name, std::string const & value )
+void SetValue( HKEY key, char const* name, char const* value )
 {
-	RegSetValueExA( key, name.c_str(), 0, REG_SZ, (BYTE const *) value.c_str(), value.size() );
+	RegSetValueExA( key, name, 0, REG_SZ, (BYTE const *)value, strlen( value ) );
 }
 
 STDAPI DllUnregisterServer()
