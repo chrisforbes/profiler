@@ -1,7 +1,53 @@
 #pragma once
 
+#include <process.h>
+
 // 2MB buffer!
 #define BUFFER_SIZE		2048 * 1024
+
+#define IOCK_IO		0
+#define IOCK_TERM	1
+
+struct io_params
+{
+	HANDLE iocp;
+	HANDLE f;
+};
+
+struct io_packet
+{
+	int action;
+	unsigned char * buffer;
+	int length;
+};
+
+void DoIo( void * p )
+{
+	io_params * params = (io_params *) p;
+	DWORD bytes;
+	io_packet * packet;
+	OVERLAPPED * overlapped;
+	while( ::GetQueuedCompletionStatus( params->iocp, &bytes, (PULONG_PTR) &packet, &overlapped, INFINITE ) )
+	{
+		if (packet->action == IOCK_TERM)
+		{
+			::CloseHandle( params->iocp );
+			::CloseHandle( params->f );
+			delete packet;
+			delete params;
+			return;
+		}
+
+		if (packet->action == IOCK_IO)
+		{
+			::WriteFile( params->f, packet->buffer, packet->length, &bytes, 0 );
+			delete [] packet->buffer;
+			delete packet;
+		}
+
+		// shouldnt get here!
+	}
+}
 
 #define op_thread_transition	1
 #define op_enter_func			2
@@ -12,8 +58,8 @@
 
 class ProfileWriter
 {
-	HANDLE fh;
-	unsigned char buffer[ BUFFER_SIZE ];
+	HANDLE iocp;
+	unsigned char * buffer;
 	unsigned char * cur;
 	CRITICAL_SECTION cs;
 
@@ -21,16 +67,13 @@ public:
 	ProfileWriter( std::string const & filename )
 		: lastThreadId(0)
 	{
-		fh = CreateFileA( filename.c_str(), GENERIC_WRITE, 0, NULL, CREATE_ALWAYS, 0, 0 );
-		cur = buffer;
+		cur = buffer = new unsigned char[ BUFFER_SIZE ];
 		InitializeCriticalSection( &cs );
-	}
 
-	~ProfileWriter()
-	{
-		Flush();
-		CloseHandle( fh );
-		DeleteCriticalSection( &cs );
+		io_params * params = new io_params;
+		params->f = ::CreateFileA( filename.c_str(), GENERIC_WRITE, 0, NULL, CREATE_ALWAYS, 0, 0 );
+		params->iocp = iocp = ::CreateIoCompletionPort( INVALID_HANDLE_VALUE, 0, 0, 2 );
+		_beginthread( DoIo, 0, (void *)params );
 	}
 
 #pragma pack(push,1)
@@ -123,15 +166,22 @@ private:
 
 	void WriteData( unsigned char * data, unsigned int length )
 	{
-		DWORD b;
 		if (cur + length >= buffer + BUFFER_SIZE)
-		{
-			WriteFile( fh, buffer, (DWORD)(cur - buffer), &b, NULL );
-			cur = buffer;
-		}
+			__WriteData();
 
 		memcpy( cur, data, length );
 		cur += length;
+	}
+
+	void __WriteData()
+	{
+		io_packet * packet = new io_packet;
+		packet->action = IOCK_IO;
+		packet->buffer = buffer;
+		packet->length = cur - buffer;
+		::PostQueuedCompletionStatus( iocp, 1 /* dummy */, (ULONG_PTR) packet, 0 );
+		buffer = new unsigned char[ BUFFER_SIZE ];
+		cur = buffer;
 	}
 
 public:
@@ -140,13 +190,15 @@ public:
 		EnterCriticalSection( &cs );
 
 		if (cur != buffer)
-		{
-			DWORD b;
-			WriteFile( fh, buffer, (DWORD)(cur - buffer), &b, NULL );
-			cur = buffer;
-		}
+			__WriteData();
+
+		io_packet * packet = new io_packet;
+		packet->action = IOCK_TERM;
+		::PostQueuedCompletionStatus( iocp, 1 /* dummy */, (ULONG_PTR) packet, 0 );
 
 		LeaveCriticalSection( &cs );
+
+		DeleteCriticalSection( &cs );
 	}
 };
 
