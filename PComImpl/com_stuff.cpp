@@ -28,7 +28,7 @@ class Profiler * __inst;
 void __funcEnter( UINT functionId, UINT_PTR, COR_PRF_FRAME_INFO, COR_PRF_FUNCTION_ARGUMENT_INFO* );
 void __funcLeave( UINT functionId, UINT_PTR, COR_PRF_FRAME_INFO, COR_PRF_FUNCTION_ARGUMENT_RANGE* );
 void __funcTail( UINT functionId, UINT_PTR, COR_PRF_FRAME_INFO );
-UINT_PTR __stdcall __shouldHookFunction( UINT functionId, BOOL * shouldHook );
+UINT_PTR __stdcall __shouldHookFunction( FunctionID functionId, BOOL * shouldHook );
 
 char const * txtProfileEnv = "ijwprof_txt";
 char const * binProfileEnv = "ijwprof_bin";
@@ -72,7 +72,7 @@ namespace
 class Profiler : public ProfilerBase
 {
 	ProfileWriter writer;
-	//std::map< UINT, bool > interesting;
+	std::map< UINT, bool > hooked;
 	FunctionStack fns;
 	ThreadPtr< UINT > unwindFunc;
 
@@ -120,7 +120,8 @@ public:
 			return S_OK;	//pretend it works, dont break the CLR :)
 		}
 
-		OnFunctionLeave( functionId );
+		if( hooked.find( functionId ) != hooked.end() )
+			OnFunctionLeave( functionId );
 		unwindFunc.set(0);
 		return S_OK;
 	}
@@ -132,10 +133,10 @@ public:
 		return result;
 	}
 
-	void OnFunctionEnter( UINT functionId, UINT interesting )
+	void OnFunctionEnter( UINT functionId, UINT_PTR interesting )
 	{
 		bool parentInteresting = fns.EmptyOrPeek();// fns.Empty() || fns.Peek();
-		bool functionInteresting = interesting == 1; //interesting[ functionId ];
+		bool functionInteresting = interesting == functionId; //interesting[ functionId ];
 
 		fns.Push(functionInteresting);
 
@@ -215,7 +216,36 @@ public:
 		return class_buf_string + L"::" + std::wstring( buf );
 	}
 
-	UINT_PTR ShouldHookFunction( UINT functionId, BOOL * shouldHook )
+	bool FunctionIsTrivial( UINT functionId )
+	{
+		ClassID c;
+		mdToken md;
+		ModuleID module;
+		if( !SUCCEEDED( profiler->GetFunctionInfo( functionId, &c, &module, &md ) ) )
+			return false;
+		BYTE const* ilPtr;
+		ULONG ilSize;
+		if( !SUCCEEDED( profiler->GetILFunctionBody( module, md, &ilPtr, &ilSize ) ) )
+			return false;
+
+		ULONG bodySize = 0;
+		BYTE const* body = ilPtr + 1;
+		if( ( ilPtr[0] & 2 ) == 2 )
+			bodySize = ilPtr[0] >> 2;
+		else
+		{
+			bodySize = *(ULONG*)(ilPtr + 4);
+			body = ilPtr + 12;
+		}
+
+		// is ldarg.0; ldfld [token]; ret ?
+		if( bodySize >= 7 && body[0] == 0x2 && body[1] == 0x7b && body[6] == 0x2a )
+			return true;
+
+		return false;
+	}
+
+	UINT_PTR ShouldHookFunction( FunctionID functionId, BOOL * shouldHook )
 	{
 		bool isPrivate = false;
 		char sz[1024];
@@ -228,20 +258,20 @@ public:
 		//return true;
 		bool isInteresting = !StringStartsWithAny( ws, str, str + 3 );
 
-		if( isInteresting || !isPrivate )
+		if( !FunctionIsTrivial( functionId ) && ( isInteresting || !isPrivate ) )
 		{
 			*shouldHook = true;
-			return isInteresting ? (UINT_PTR)1 : (UINT_PTR)2;
+			hooked[functionId] = true;
+			return isInteresting ? functionId : functionId + 1;
 		}
-		return NULL;
+		*shouldHook = false;
+		return functionId;
 	}
 };
 
-UINT_PTR __stdcall __shouldHookFunction( UINT functionId, BOOL * shouldHook )
+UINT_PTR __stdcall __shouldHookFunction( FunctionID functionId, BOOL * shouldHook )
 {
-	*shouldHook = true;
 	return __inst->ShouldHookFunction( functionId, shouldHook );
-	//return functionId;
 }
 
 void __declspec(naked) __funcEnter ( UINT functionId, UINT_PTR, COR_PRF_FRAME_INFO, COR_PRF_FUNCTION_ARGUMENT_INFO* )
