@@ -72,7 +72,6 @@ namespace
 class Profiler : public ProfilerBase
 {
 	ProfileWriter writer;
-	//std::map< UINT, bool > interesting;
 	FunctionStack fns;
 	ThreadPtr< UINT > unwindFunc;
 
@@ -134,8 +133,8 @@ public:
 
 	void OnFunctionEnter( UINT functionId, UINT interesting )
 	{
-		bool parentInteresting = fns.EmptyOrPeek();// fns.Empty() || fns.Peek();
-		bool functionInteresting = interesting == 1; //interesting[ functionId ];
+		bool parentInteresting = fns.EmptyOrPeek();
+		bool functionInteresting = interesting == 1;
 
 		fns.Push(functionInteresting);
 
@@ -145,20 +144,12 @@ public:
 
 	void OnFunctionLeave( UINT functionId )
 	{
-		//bool functionInteresting = fns.Pop();
-		//bool parentInteresting = fns.EmptyOrPeek();// fns.Empty() || fns.Peek();
-
-		//if (parentInteresting || functionInteresting)
 		if( fns.PopOrEmptyOrPeek() )
 			writer.WriteLeaveFunction( functionId, GetCurrentThreadID() );
 	}
 
 	void OnFunctionTail( UINT functionId )
 	{
-		//bool functionInteresting = fns.Pop();
-		//bool parentInteresting = fns.EmptyOrPeek();// fns.Empty() || fns.Peek();
-
-		//if (parentInteresting || functionInteresting)
 		if( fns.PopOrEmptyOrPeek() )
 			writer.WriteTailFunction( functionId, GetCurrentThreadID() );
 	}
