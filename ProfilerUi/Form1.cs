@@ -127,10 +127,11 @@ namespace Ijw.Profiler.UI
 		void LoadTraceData(Run run, IAgent agent)
 		{
 			FunctionNameProvider names = new FunctionNameProvider(run.txtFile, agent.NameFactory);
+            FileInfo fi = new FileInfo(run.binFile); long megabytes = ( fi.Length + (1 << 20) - 1 ) >> 20;
 
 			string baseText = Text;
 			Action<float> progressCallback =
-				delegate(float frac) { Text = baseText + " - Slurping " + frac.ToString("P0"); Application.DoEvents(); };
+				delegate(float frac) { Text = baseText + " - Slurping " + frac.ToString("P0") + " of " + megabytes.ToString() + "MB"; Application.DoEvents(); };
 
 			CallTree tree = new CallTree(run.binFile, names.GetName, progressCallback);
 			TreeControl view = CreateNewView(run.name, tree, callTreeColumns);
