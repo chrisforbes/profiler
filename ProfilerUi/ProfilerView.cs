@@ -43,5 +43,10 @@ namespace Ijw.Profiler.UI
 		}
 
 		public override string ToString() { return view.ToString(); }
+
+		protected override void Focus()
+		{
+			view.Focus();
+		}
 	}
 }
