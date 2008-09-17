@@ -60,6 +60,12 @@ namespace Ijw.Profiler.UI
 				Columns.BindSubtype<IProfilerElement>(cc.RenderTotalTimeColumn));
 			callTreeColumns.CreateFixedWidth("Own Time", 70, 
 				Columns.BindSubtype<IProfilerElement>(cc.RenderOwnTimeColumn));
+			callTreeColumns.CreateFixedWidth("Min Time", 70,
+				Columns.BindSubtype<IProfilerElement>(cc.RenderMinTimeColumn));
+			callTreeColumns.CreateFixedWidth("Max Time", 70,
+				Columns.BindSubtype<IProfilerElement>(cc.RenderMaxTimeColumn));
+			callTreeColumns.CreateFixedWidth("Avg Time", 70,
+				Columns.BindSubtype<IProfilerElement>(cc.RenderAvgTimeColumn));
 			callTreeColumns.CreateFixedWidth("", 16, delegate { });
 
 			callerColumns.CreateAutoWidth("Function", 
@@ -70,6 +76,12 @@ namespace Ijw.Profiler.UI
 				Columns.BindSubtype<CallerFunction>(cc.RenderCallerOwnTimeColumn));
 			callerColumns.CreateFixedWidth("Total Time", 70, 
 				Columns.BindSubtype<CallerFunction>(cc.RenderCallerTotalTimeColumn));
+			callerColumns.CreateFixedWidth("Min Time", 70,
+				Columns.BindSubtype<IProfilerElement>(cc.RenderMinTimeColumn));
+			callerColumns.CreateFixedWidth("Max Time", 70,
+				Columns.BindSubtype<IProfilerElement>(cc.RenderMaxTimeColumn));
+			callerColumns.CreateFixedWidth("Avg Time", 70,
+				Columns.BindSubtype<IProfilerElement>(cc.RenderAvgTimeColumn));
 			callerColumns.CreateFixedWidth("", 16, delegate { });
 			
 			InitializeComponent();

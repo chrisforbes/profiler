@@ -51,7 +51,7 @@ namespace Ijw.Profiler.UI
 
 		public static Action<IColumn, Painter, Node> BindSubtype<T>(Action<IColumn, Painter, Node<T>> f)
 		{
-			return delegate(IColumn c, Painter p, Node n) { f(c, p, (Node<T>)n); };
+			return (c, p, n) => f(c, p, (Node<T>)n);
 		}
 
 		public void RenderCallerColumn(IColumn c, Painter p, Node<CallerFunction> n)
@@ -130,6 +130,27 @@ namespace Ijw.Profiler.UI
 			Function e = nn.Value as Function;
 			if (e != null)
 				RenderRightAligned(c, p, e.OwnTime.ToString("F1") + " ms", GetBrush(e));
+		}
+
+		public void RenderMinTimeColumn(IColumn c, Painter p, Node<IProfilerElement> nn)
+		{
+			Function e = nn.Value as Function;
+			if (e != null)
+				RenderRightAligned(c, p, e.MinTime.ToString("F1") + " ms", GetBrush(e));
+		}
+
+		public void RenderMaxTimeColumn(IColumn c, Painter p, Node<IProfilerElement> nn)
+		{
+			Function e = nn.Value as Function;
+			if (e != null)
+				RenderRightAligned(c, p, e.MaxTime.ToString("F1") + " ms", GetBrush(e));
+		}
+
+		public void RenderAvgTimeColumn(IColumn c, Painter p, Node<IProfilerElement> nn)
+		{
+			Function e = nn.Value as Function;
+			if (e != null)
+				RenderRightAligned(c, p, e.Average.ToString("F1") + " ms", GetBrush(e));
 		}
 
 		public void RenderCallsColumn(IColumn c, Painter p, Node<IProfilerElement> nn)

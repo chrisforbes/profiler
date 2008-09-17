@@ -34,6 +34,19 @@ namespace Ijw.Profiler.Model
 		public Dictionary<uint, Function> children = new Dictionary<uint, Function>();
 		public Name name;
 
+		double minTime = double.MaxValue, maxTime = double.MinValue;
+		public double MinTime { get { return minTime; } }
+		public double MaxTime { get { return maxTime; } }
+		public double Average
+		{
+			get
+			{
+				if (calls > 0)
+					return time / (double)calls;
+				return 0d;
+			}
+		}
+
 		public double TimeInChildren
 		{
 			get
@@ -70,6 +83,10 @@ namespace Ijw.Profiler.Model
 		{
 			time += milliseconds;
 			calls++;
+			if (milliseconds > maxTime)
+				maxTime = milliseconds;
+			if (milliseconds < minTime)
+				minTime = milliseconds;
 		}
 
 		public static Comparison<Function> ByTimeDecreasing =
