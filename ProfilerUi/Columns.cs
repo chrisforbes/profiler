@@ -77,6 +77,22 @@ namespace Ijw.Profiler.UI
 			RenderRightAligned(c, p, n.Value.OwnTime.ToString("F1") + " ms", GetBrush(n.Value));
 		}
 
+		public void RenderCallerMinTimeColumn(IColumn c, Painter p, Node<CallerFunction> n)
+		{
+			RenderRightAligned(c, p, n.Value.MinTime.ToString("F1") + " ms", GetBrush(n.Value));
+		}
+
+		public void RenderCallerMaxTimeColumn(IColumn c, Painter p, Node<CallerFunction> n)
+		{
+			RenderRightAligned(c, p, n.Value.MaxTime.ToString("F1") + " ms", GetBrush(n.Value));
+		}
+
+		public void RenderCallerAvgTimeColumn(IColumn c, Painter p, Node<CallerFunction> n)
+		{
+			RenderRightAligned(c, p, n.Value.Average.ToString("F1") + " ms", GetBrush(n.Value));
+		}
+
+
 		void RenderName(IColumn c, Name name, Painter p)
 		{
 			Brush brush = GetBrush(name.Interesting);

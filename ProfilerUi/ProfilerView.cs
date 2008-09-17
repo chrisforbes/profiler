@@ -12,13 +12,13 @@ namespace Ijw.Profiler.UI
 		public readonly CallTreeView view;
 		public readonly Panel cc;
 
-		public static ProfilerView Create(MultipleViewManager host, CallTreeView c, TreeColumnHeader h, LegendBar b)
+		public static ProfilerView Create(MultipleViewManager host, CallTreeView c, TreeColumnHeader h, LegendBar b, ContextMenuStrip cms)
 		{
 			Panel p = new Panel();
-			return new ProfilerView(host, c, h, p, b);
+			return new ProfilerView(host, c, h, p, b, cms);
 		}
 
-		ProfilerView(MultipleViewManager host, CallTreeView v, TreeColumnHeader h, Panel p, LegendBar b)
+		ProfilerView(MultipleViewManager host, CallTreeView v, TreeColumnHeader h, Panel p, LegendBar b, ContextMenuStrip cms)
 			: base( host, p )
 		{
 			cc = p;
@@ -40,6 +40,7 @@ namespace Ijw.Profiler.UI
 			b.Size = new Size(cc.ClientSize.Width, 20);
 
 			this.view = v;
+			view.HaxContextMenu = cms;
 		}
 
 		public override string ToString() { return view.ToString(); }

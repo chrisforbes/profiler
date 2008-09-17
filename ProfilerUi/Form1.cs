@@ -77,11 +77,11 @@ namespace Ijw.Profiler.UI
 			callerColumns.CreateFixedWidth("Total Time", 70, 
 				Columns.BindSubtype<CallerFunction>(cc.RenderCallerTotalTimeColumn));
 			callerColumns.CreateFixedWidth("Min Time", 70,
-				Columns.BindSubtype<IProfilerElement>(cc.RenderMinTimeColumn));
+				Columns.BindSubtype<CallerFunction>(cc.RenderCallerMinTimeColumn));
 			callerColumns.CreateFixedWidth("Max Time", 70,
-				Columns.BindSubtype<IProfilerElement>(cc.RenderMaxTimeColumn));
+				Columns.BindSubtype<CallerFunction>(cc.RenderCallerMaxTimeColumn));
 			callerColumns.CreateFixedWidth("Avg Time", 70,
-				Columns.BindSubtype<IProfilerElement>(cc.RenderAvgTimeColumn));
+				Columns.BindSubtype<CallerFunction>(cc.RenderCallerAvgTimeColumn));
 			callerColumns.CreateFixedWidth("", 16, delegate { });
 			
 			InitializeComponent();
@@ -118,7 +118,7 @@ namespace Ijw.Profiler.UI
 		TreeControl CreateNewView(string name, CallTree src, ColumnCollection cc)
 		{
 			CallTreeView view = new CallTreeView( imageProvider, cc, src, name );
-			ProfilerView viewWrapper = ProfilerView.Create(viewManager, view, new TreeColumnHeader(cc), MakeLegendBar());
+			ProfilerView viewWrapper = ProfilerView.Create(viewManager, view, new TreeColumnHeader(cc), MakeLegendBar(), contextMenuStrip1);
 			viewManager.Add(viewWrapper);
 			viewManager.Select(viewWrapper);
 
@@ -320,6 +320,24 @@ namespace Ijw.Profiler.UI
 			bar.Add(pageTwo);
 
 			return bar;
+		}
+
+		private void contextMenuStrip1_Opening(object sender, CancelEventArgs e)
+		{
+			if (viewManager.Current is ProfilerView)
+			{
+				contextMenuStrip1.Items.Clear();
+				var openNewTabItem = new ToolStripMenuItem();
+				openNewTabItem.Text = "Open in new tab";
+				openNewTabItem.Click += OnOpenInNewTab;
+				var showCallersItem = new ToolStripMenuItem();
+				showCallersItem.Text = "Show callers";
+				showCallersItem.Click += ShowBacktraces;
+				contextMenuStrip1.Items.Add(openNewTabItem);
+				contextMenuStrip1.Items.Add(showCallersItem);
+			}
+			else
+				e.Cancel = true;
 		}
 	}
 }

@@ -12,13 +12,16 @@ namespace Ijw.Profiler.Model
 		readonly uint id;
 
 		int calls;
-		double ownTime, totalTime;
+		double ownTime, totalTime, minTime = double.MaxValue, maxTime = double.MinValue;
 
 		public Name Name { get { return name; } }
 		public int Calls { get { return calls; } }
 		public double OwnTime { get { return ownTime; } }
 		public double TotalTime { get { return totalTime; } }
 		public bool Interesting { get { return name.Interesting; } }
+		public double Average { get { if (calls > 0) return totalTime / (double)calls; else return 0.0; } }
+		public double MinTime { get { return minTime; } }
+		public double MaxTime { get { return maxTime; } }
 
 		readonly Dictionary<uint, CallerFunction> callers = new Dictionary<uint, CallerFunction>();
 
@@ -38,6 +41,10 @@ namespace Ijw.Profiler.Model
 			calls += f.Calls;
 			totalTime += f.TotalTime;
 			ownTime += f.OwnTime;
+			if (f.MinTime < minTime)
+				minTime = f.MinTime;
+			if (f.MaxTime > maxTime)
+				maxTime = f.MaxTime;
 
 			AddCaller(f.Parent);
 		}
@@ -50,6 +57,8 @@ namespace Ijw.Profiler.Model
 			this.calls = f.Calls;
 			this.ownTime = f.OwnTime;
 			this.totalTime = f.TotalTime;
+			this.minTime = f.MinTime;
+			this.maxTime = f.MaxTime;
 
 			AddCaller(f.Parent);
 		}

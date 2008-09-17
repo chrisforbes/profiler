@@ -28,6 +28,7 @@ namespace Ijw.Profiler.UI
 		/// </summary>
 		private void InitializeComponent()
 		{
+			this.components = new System.ComponentModel.Container();
 			System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(Form1));
 			this.workspace = new System.Windows.Forms.ToolStripContainer();
 			this.menuStrip1 = new System.Windows.Forms.MenuStrip();
@@ -40,13 +41,14 @@ namespace Ijw.Profiler.UI
 			this.viewToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
 			this.openInNewTabToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
 			this.showBacktraces = new System.Windows.Forms.ToolStripMenuItem();
+			this.showHotToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
 			this.toolStripSeparator1 = new System.Windows.Forms.ToolStripSeparator();
 			this.nextTabToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
 			this.previousTabToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
 			this.helpToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
 			this.aboutToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
 			this.checkForUpdatesToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-			this.showHotToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+			this.contextMenuStrip1 = new System.Windows.Forms.ContextMenuStrip(this.components);
 			this.workspace.TopToolStripPanel.SuspendLayout();
 			this.workspace.SuspendLayout();
 			this.menuStrip1.SuspendLayout();
@@ -158,6 +160,14 @@ namespace Ijw.Profiler.UI
 			this.showBacktraces.Text = "&Show Callers";
 			this.showBacktraces.Click += new System.EventHandler(this.ShowBacktraces);
 			// 
+			// showHotToolStripMenuItem
+			// 
+			this.showHotToolStripMenuItem.Name = "showHotToolStripMenuItem";
+			this.showHotToolStripMenuItem.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.H)));
+			this.showHotToolStripMenuItem.Size = new System.Drawing.Size(228, 22);
+			this.showHotToolStripMenuItem.Text = "Show &Hotspots";
+			this.showHotToolStripMenuItem.Click += new System.EventHandler(this.ShowHotspots);
+			// 
 			// toolStripSeparator1
 			// 
 			this.toolStripSeparator1.Name = "toolStripSeparator1";
@@ -203,13 +213,11 @@ namespace Ijw.Profiler.UI
 			this.checkForUpdatesToolStripMenuItem.Text = "&Check for Updates...";
 			this.checkForUpdatesToolStripMenuItem.Click += new System.EventHandler(this.CheckForUpdates);
 			// 
-			// showHotToolStripMenuItem
+			// contextMenuStrip1
 			// 
-			this.showHotToolStripMenuItem.Name = "showHotToolStripMenuItem";
-			this.showHotToolStripMenuItem.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.H)));
-			this.showHotToolStripMenuItem.Size = new System.Drawing.Size(228, 22);
-			this.showHotToolStripMenuItem.Text = "Show &Hotspots";
-			this.showHotToolStripMenuItem.Click += new System.EventHandler(this.ShowHotspots);
+			this.contextMenuStrip1.Name = "contextMenuStrip1";
+			this.contextMenuStrip1.Size = new System.Drawing.Size(153, 26);
+			this.contextMenuStrip1.Opening += new System.ComponentModel.CancelEventHandler(this.contextMenuStrip1_Opening);
 			// 
 			// Form1
 			// 
@@ -251,6 +259,7 @@ namespace Ijw.Profiler.UI
 		private System.Windows.Forms.ToolStripMenuItem toolStripMenuItem3;
 		private System.Windows.Forms.ToolStripSeparator toolStripSeparator1;
 		private System.Windows.Forms.ToolStripMenuItem showHotToolStripMenuItem;
+		private System.Windows.Forms.ContextMenuStrip contextMenuStrip1;
 		
 
 	}

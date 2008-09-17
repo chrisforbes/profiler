@@ -126,6 +126,10 @@ namespace Ijw.Profiler.Model
 
 				f.calls += i.calls;
 				f.time += i.time;
+				if (f.minTime > i.minTime)
+					f.minTime = i.minTime;
+				if (f.maxTime < i.maxTime)
+					f.maxTime = i.maxTime;
 
 				foreach (Function c in i.children.Values)
 					MergeInto(f.children, c);
