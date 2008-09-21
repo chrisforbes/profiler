@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.Text;
 using System.Runtime.InteropServices;
 using System.Windows.Forms;
-using IjwFramework.Delegates;
 using System.Diagnostics;
 using Ijw.Profiler.Core;
 using IjwFramework;

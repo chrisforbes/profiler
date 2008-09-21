@@ -5,19 +5,18 @@ using System.Drawing;
 using IjwFramework.Ui;
 using Ijw.Profiler.Core;
 using Ijw.Profiler.Model;
-using IjwFramework.Delegates;
 
 namespace Ijw.Profiler.UI
 {
 	class Columns
 	{
-		readonly Font font, boldFont;
+		static Font font, boldFont;
 		readonly ImageProvider imageProvider;
 
 		public Columns(Font font, Font boldFont, ImageProvider provider)
 		{
-			this.font = font;
-			this.boldFont = boldFont;
+			Columns.font = font;
+			Columns.boldFont = boldFont;
 			this.imageProvider = provider;
 		}
 
@@ -62,36 +61,42 @@ namespace Ijw.Profiler.UI
 			RenderName(c, n.Value.Name, p);
 		}
 
+		static Brush GetBrush<T>(T value)
+		{
+			if (value is IProfilerElement)
+				return GetBrush((IProfilerElement)value);
+			if (value is CallerFunction)
+				return GetBrush((CallerFunction)(object)value);
+
+			throw new NotImplementedException("wtf??");
+		}
+
+		public static Action<IColumn, Painter, Node> MakeRightAlignedColumn<T>(Func<T, object> extractValueFunc)
+			where T : class
+		{
+			return MakeRightAlignedColumn<T, T>(extractValueFunc);
+		}
+
+		public static Action<IColumn, Painter, Node> MakeRightAlignedColumn<T,U>(Func<T, object> extractValueFunc)
+			where T : class
+		{
+			return (c, p, n) =>
+				{
+					var nn = (Node<U>)n;
+
+					var v = nn.Value as T;
+					if (v == null)
+						return;		// wrong type
+
+					var value = extractValueFunc(v);
+					RenderRightAligned(c, p, value.ToString(), GetBrush(v));
+				};
+		}
+
 		public void RenderCallerCallsColumn(IColumn c, Painter p, Node<CallerFunction> n)
 		{
 			RenderRightAligned(c, p, n.Value.Calls.ToString(), GetBrush(n.Value));
 		}
-
-		public void RenderCallerTotalTimeColumn(IColumn c, Painter p, Node<CallerFunction> n)
-		{
-			RenderRightAligned(c, p, n.Value.TotalTime.ToString("F1") + " ms", GetBrush(n.Value));
-		}
-
-		public void RenderCallerOwnTimeColumn(IColumn c, Painter p, Node<CallerFunction> n)
-		{
-			RenderRightAligned(c, p, n.Value.OwnTime.ToString("F1") + " ms", GetBrush(n.Value));
-		}
-
-		public void RenderCallerMinTimeColumn(IColumn c, Painter p, Node<CallerFunction> n)
-		{
-			RenderRightAligned(c, p, n.Value.MinTime.ToString("F1") + " ms", GetBrush(n.Value));
-		}
-
-		public void RenderCallerMaxTimeColumn(IColumn c, Painter p, Node<CallerFunction> n)
-		{
-			RenderRightAligned(c, p, n.Value.MaxTime.ToString("F1") + " ms", GetBrush(n.Value));
-		}
-
-		public void RenderCallerAvgTimeColumn(IColumn c, Painter p, Node<CallerFunction> n)
-		{
-			RenderRightAligned(c, p, n.Value.Average.ToString("F1") + " ms", GetBrush(n.Value));
-		}
-
 
 		void RenderName(IColumn c, Name name, Painter p)
 		{
@@ -135,40 +140,6 @@ namespace Ijw.Profiler.UI
 				RenderRightAligned(c, p, (e.TotalTime / nn.rootTime).ToString("P1"), GetBrush(e));
 		}
 
-		public void RenderTotalTimeColumn(IColumn c, Painter p, Node<IProfilerElement> nn)
-		{
-			IProfilerElement e = nn.Value;
-			RenderRightAligned(c, p, e.TotalTime.ToString("F1") + " ms", GetBrush(e));
-		}
-
-		public void RenderOwnTimeColumn(IColumn c, Painter p, Node<IProfilerElement> nn)
-		{
-			Function e = nn.Value as Function;
-			if (e != null)
-				RenderRightAligned(c, p, e.OwnTime.ToString("F1") + " ms", GetBrush(e));
-		}
-
-		public void RenderMinTimeColumn(IColumn c, Painter p, Node<IProfilerElement> nn)
-		{
-			Function e = nn.Value as Function;
-			if (e != null)
-				RenderRightAligned(c, p, e.MinTime.ToString("F1") + " ms", GetBrush(e));
-		}
-
-		public void RenderMaxTimeColumn(IColumn c, Painter p, Node<IProfilerElement> nn)
-		{
-			Function e = nn.Value as Function;
-			if (e != null)
-				RenderRightAligned(c, p, e.MaxTime.ToString("F1") + " ms", GetBrush(e));
-		}
-
-		public void RenderAvgTimeColumn(IColumn c, Painter p, Node<IProfilerElement> nn)
-		{
-			Function e = nn.Value as Function;
-			if (e != null)
-				RenderRightAligned(c, p, e.Average.ToString("F1") + " ms", GetBrush(e));
-		}
-
 		public void RenderCallsColumn(IColumn c, Painter p, Node<IProfilerElement> nn)
 		{
 			IProfilerElement e = nn.Value;
@@ -178,7 +149,7 @@ namespace Ijw.Profiler.UI
 				RenderRightAligned(c, p, f.Calls.ToString(), GetBrush(e));
 		}
 
-		void RenderRightAligned(IColumn c, Painter p, string s, Brush b)
+		static void RenderRightAligned(IColumn c, Painter p, string s, Brush b)
 		{
 			p.SetPosition(c.Left + c.Width - 4);
 			p.Alignment = StringAlignment.Far;

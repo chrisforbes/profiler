@@ -9,7 +9,6 @@ using System.Diagnostics;
 using System.IO;
 
 using IjwFramework.Ui;
-using IjwFramework.Delegates;
 using IjwFramework.Types;
 using Ijw.Profiler.Core;
 using Ijw.Profiler.Model;
@@ -52,37 +51,29 @@ namespace Ijw.Profiler.UI
 
 			callTreeColumns.CreateAutoWidth("Function", 
 				Columns.BindSubtype<IProfilerElement>(cc.RenderFunctionColumn));
-			callTreeColumns.CreateFixedWidth("Calls", 50, 
-				Columns.BindSubtype<IProfilerElement>(cc.RenderCallsColumn));
+
+			callTreeColumns.CreateColumn<IProfilerElement, Function>("Calls", 50, x => x.Calls);
+
 			callTreeColumns.CreateFixedWidth("Time %", 50, 
 				Columns.BindSubtype<IProfilerElement>(cc.RenderPercentColumn));
-			callTreeColumns.CreateFixedWidth("Total Time", 70, 
-				Columns.BindSubtype<IProfilerElement>(cc.RenderTotalTimeColumn));
-			callTreeColumns.CreateFixedWidth("Own Time", 70, 
-				Columns.BindSubtype<IProfilerElement>(cc.RenderOwnTimeColumn));
-			callTreeColumns.CreateFixedWidth("Min Time", 70,
-				Columns.BindSubtype<IProfilerElement>(cc.RenderMinTimeColumn));
-			callTreeColumns.CreateFixedWidth("Max Time", 70,
-				Columns.BindSubtype<IProfilerElement>(cc.RenderMaxTimeColumn));
-			callTreeColumns.CreateFixedWidth("Avg Time", 70,
-				Columns.BindSubtype<IProfilerElement>(cc.RenderAvgTimeColumn));
-			callTreeColumns.CreateFixedWidth("", 16, delegate { });
+
+			callTreeColumns.CreateColumn<IProfilerElement>("Total Time", 70, x => x.TotalTime.ToStringMs());
+			callTreeColumns.CreateColumn<IProfilerElement,Function>("Own Time", 70, x => x.OwnTime.ToStringMs());
+			callTreeColumns.CreateColumn<IProfilerElement,Function>("Min Time", 70, x => x.MinTime.ToStringMs() );
+			callTreeColumns.CreateColumn<IProfilerElement, Function>("Max Time", 70, x => x.MaxTime.ToStringMs());
+			callTreeColumns.CreateColumn<IProfilerElement, Function>("Avg Time", 70, x => x.Average.ToStringMs());
+			callTreeColumns.CreateFillerColumn();
 
 			callerColumns.CreateAutoWidth("Function", 
 				Columns.BindSubtype<CallerFunction>(cc.RenderCallerColumn));
-			callerColumns.CreateFixedWidth("Calls", 50, 
-				Columns.BindSubtype<CallerFunction>(cc.RenderCallerCallsColumn));
-			callerColumns.CreateFixedWidth("Own Time", 70, 
-				Columns.BindSubtype<CallerFunction>(cc.RenderCallerOwnTimeColumn));
-			callerColumns.CreateFixedWidth("Total Time", 70, 
-				Columns.BindSubtype<CallerFunction>(cc.RenderCallerTotalTimeColumn));
-			callerColumns.CreateFixedWidth("Min Time", 70,
-				Columns.BindSubtype<CallerFunction>(cc.RenderCallerMinTimeColumn));
-			callerColumns.CreateFixedWidth("Max Time", 70,
-				Columns.BindSubtype<CallerFunction>(cc.RenderCallerMaxTimeColumn));
-			callerColumns.CreateFixedWidth("Avg Time", 70,
-				Columns.BindSubtype<CallerFunction>(cc.RenderCallerAvgTimeColumn));
-			callerColumns.CreateFixedWidth("", 16, delegate { });
+
+			callerColumns.CreateColumn<CallerFunction>("Calls", 50, x => x.Calls);
+			callerColumns.CreateColumn<CallerFunction>("Own Time", 70, x => x.OwnTime.ToStringMs());
+			callerColumns.CreateColumn<CallerFunction>("Total Time", 70, x => x.TotalTime.ToStringMs());
+			callerColumns.CreateColumn<CallerFunction>("Min Time", 70, x => x.MinTime.ToStringMs());
+			callerColumns.CreateColumn<CallerFunction>("Max Time", 70, x => x.MaxTime.ToStringMs());
+			callerColumns.CreateColumn<CallerFunction>("Avg Time", 70, x => x.Average.ToStringMs());
+			callerColumns.CreateFillerColumn();
 			
 			InitializeComponent();
 
@@ -338,6 +329,32 @@ namespace Ijw.Profiler.UI
 			}
 			else
 				e.Cancel = true;
+		}
+	}
+
+	static class Extensions
+	{
+		public static string ToStringMs(this double t)
+		{
+			return t.ToString("F1") + " ms";
+		}
+
+		public static IColumn CreateColumn<T>( this ColumnCollection cc, string name, int width, Func<T, object> extractValueFunc)
+			where T : class
+		{
+			return cc.CreateFixedWidth(name, width, Columns.MakeRightAlignedColumn(extractValueFunc));
+		}
+
+		public static IColumn CreateColumn<U,T>(this ColumnCollection cc, string name, int width, Func<T, object> extractValueFunc)
+			where T : class
+			where U : class
+		{
+			return cc.CreateFixedWidth(name, width, Columns.MakeRightAlignedColumn<T,U>(extractValueFunc));
+		}
+
+		public static IColumn CreateFillerColumn(this ColumnCollection cc)
+		{
+			return cc.CreateFixedWidth("", 16, delegate { });
 		}
 	}
 }
