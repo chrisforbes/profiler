@@ -231,7 +231,7 @@ public:
 
 UINT_PTR __stdcall __shouldHookFunction( UINT functionId, BOOL * shouldHook )
 {
-	*shouldHook = false;
+	*shouldHook = true;
 	return __inst->ShouldHookFunction( functionId, shouldHook );
 }
 
