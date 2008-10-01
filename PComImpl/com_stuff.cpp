@@ -41,32 +41,6 @@ namespace
 		GetEnvironmentVariableA( name.c_str(), buf, MAX_PATH );
 		return buf;
 	}
-
-	template< typename T >
-	bool StringStartsWith( std::basic_string< T > const& s, std::basic_string< T > const& prefix )
-	{
-		std::basic_string<T>::const_iterator a = s.begin();
-		std::basic_string<T>::const_iterator b = prefix.begin();
-
-		while( b != prefix.end() )
-			if (*a++ != *b++)
-				return false;
-
-		return true;
-	}
-
-	template< typename T >
-	bool StringStartsWithAny( std::basic_string< T > const& s, 
-		std::basic_string< T > const * begin, 
-		std::basic_string< T > const * end )
-	{
-		std::basic_string< T > const * p = begin;
-		while( p != end )
-			if (StringStartsWith( s, *p++ ))
-				return true;
-
-		return false;
-	}
 }
 
 class Profiler : public ProfilerBase
@@ -133,10 +107,8 @@ public:
 
 	void OnFunctionEnter( UINT functionId, UINT interesting )
 	{
-		bool parentInteresting = fns.EmptyOrPeek();
 		bool functionInteresting = interesting == 1;
-
-		fns.Push(functionInteresting);
+		bool parentInteresting = fns.EmptyOrPeekThenPush(functionInteresting);
 
 		if (parentInteresting || functionInteresting)
 			writer.WriteEnterFunction( functionId, GetCurrentThreadID() );
@@ -160,64 +132,93 @@ public:
 		return (flags == mdPrivateScope || flags == mdPrivate || flags == mdFamANDAssem || flags == mdAssem);
 	}
 
-	std::wstring GetFunctionName(UINT functionId, bool& isPrivate )
+	// does simplistic ucs-2 -> 8859-1 conversion while copying.
+	static __forceinline char * append( char * dest, wchar_t const * src, size_t n )
 	{
-		mdToken methodToken, classToken, newClassToken;
+		while(n--)
+			*dest++ = (char)(unsigned char)*src++;
+
+		return dest;
+	}
+
+	// returns ptr to start of toplevel ns
+	char * GetFunctionName(UINT functionId, bool& isPrivate, char * dest )
+	{
+		mdToken methodToken, classToken;
 		IMetaDataImport * pm = NULL;
+		wchar_t temp[512];
+		DWORD size = 512;
 
 		if (FAILED(profiler->GetTokenAndMetaDataFromFunction( functionId, IID_IMetaDataImport, (IUnknown **) &pm, &methodToken )))
-			return L"<no metadata>";
+		{
+			*dest = 0;
+			return 0;
+		}
 
-		wchar_t buf[512];
-		DWORD size = 512;
 		DWORD flags = 0;
-		if (FAILED(pm->GetMethodProps( methodToken, &classToken, buf, size, &size, &flags, NULL, NULL, NULL, NULL )))
+		if (FAILED(pm->GetMethodProps( methodToken, &classToken, temp, size, &size, &flags, NULL, NULL, NULL, NULL )))
 		{
 			pm->Release();
-			return L"<no metadata>";
+			*dest = 0;
+			return 0;
 		}
+
+		dest = append( dest, temp, wcslen(temp) );
+		*dest++ = '@';
 
 		isPrivate = IsPrivate( flags );
 
-		std::wstring class_buf_string;
+		char * result = dest;
+
 		while( true )
 		{
-			wchar_t class_buf[512];
 			size = 512;
-			if (FAILED(pm->GetTypeDefProps( classToken, class_buf, size, &size, NULL, NULL )))
+			if (FAILED(pm->GetTypeDefProps( classToken, temp, size, &size, NULL, NULL )))
 			{
 				pm->Release();
-				return L"<no metadata>";
+				*dest = 0;
+				return 0;
 			}
-			class_buf_string = std::wstring( class_buf ) + class_buf_string;
 
+			dest = append( dest, temp, wcslen(temp) );
+
+			mdToken newClassToken;
 			if( FAILED( pm->GetNestedClassProps( classToken, &newClassToken ) ) )
 				break;
 			if( !newClassToken || newClassToken == classToken )
 				break;
 
-			class_buf_string = L"$" + class_buf_string;
+			*dest++ = '@';
+			result = dest;
 
 			classToken = newClassToken;
 		}
 
 		pm->Release();
 
-		return class_buf_string + L"::" + std::wstring( buf );
+		*dest = 0;
+		return result;
 	}
+
+#define match( x, y )\
+	(0 == memcmp( x, y, sizeof(y) - 1 ))
 
 	UINT_PTR ShouldHookFunction( UINT functionId, BOOL * shouldHook )
 	{
 		bool isPrivate = false;
-		char sz[1024];
-		std::wstring ws = GetFunctionName( functionId, isPrivate );
-		sprintf(sz, "0x%08x=%ws", functionId, ws.c_str());
+		char sz[4096];
+		char * psz = sz + sprintf( sz, "0x%08x=", functionId );
+		psz = GetFunctionName( functionId, isPrivate, psz );
 		Log(sz);
 
-		static std::wstring str[] = { L"System.", L"Microsoft.", L"MS." };
-		//interesting[ functionId ] = !StringStartsWithAny( ws, str, str + 3 );
-		//return true;
-		bool isInteresting = !StringStartsWithAny( ws, str, str + 3 );
+		bool isInteresting = true;
+		
+		if (psz)
+		{
+			if (match( psz, "System." )) isInteresting = false;
+			if (match( psz, "Microsoft." )) isInteresting = false;
+			if (match( psz, "MS." )) isInteresting = false;
+		}
 
 		if( isInteresting || !isPrivate )
 		{
@@ -230,9 +231,8 @@ public:
 
 UINT_PTR __stdcall __shouldHookFunction( UINT functionId, BOOL * shouldHook )
 {
-	*shouldHook = true;
+	*shouldHook = false;
 	return __inst->ShouldHookFunction( functionId, shouldHook );
-	//return functionId;
 }
 
 void __declspec(naked) __funcEnter ( UINT functionId, UINT_PTR, COR_PRF_FRAME_INFO, COR_PRF_FUNCTION_ARGUMENT_INFO* )

@@ -53,5 +53,13 @@ public:
 		t->pop();
 		return a || t->empty() || t->top();
 	}
+
+	bool EmptyOrPeekThenPush( bool f )
+	{
+		std::stack< bool >* t = Stack();
+		bool result = t->empty() || t->top();
+		t->push( f );
+		return result;
+	}
 };
 

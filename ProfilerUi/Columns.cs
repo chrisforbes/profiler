@@ -104,8 +104,9 @@ namespace Ijw.Profiler.UI
 			p.DrawImage(imageProvider.GetImage(GetImage(name)));
 			p.Pad(2);
 			p.DrawString(name.ClassName, font, brush, 1, c.Left + c.Width);
-			p.DrawString((name.Type == MethodType.Constructor ? "  " : " .") + name.MethodName, 
-				boldFont, brush, 1, c.Left + c.Width);
+			if (!string.IsNullOrEmpty(name.MethodName))
+				p.DrawString((name.Type == MethodType.Constructor ? "  " : " .") + name.MethodName,
+					boldFont, brush, 1, c.Left + c.Width);
 		}
 
 		public void RenderFunctionColumn(IColumn c, Painter p, Node<IProfilerElement> n)

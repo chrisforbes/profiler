@@ -4,6 +4,7 @@ using System.Text;
 using System.Text.RegularExpressions;
 using IjwFramework.Types;
 using Ijw.Profiler.Core;
+using System.Linq;
 
 namespace Ijw.Profiler.Agents.CLR
 {
@@ -38,11 +39,11 @@ namespace Ijw.Profiler.Agents.CLR
 			{
 				rawName = genericReplacer.Replace(rawName, "<>");
 
-				string[] parts = rawName.Split(new char[] { ':' },
+				string[] parts = rawName.Split(new char[] { '@' },
 					StringSplitOptions.RemoveEmptyEntries);
 
-				string ClassName = parts[0].Replace('$', '.');
-				string MethodName = parts[1];
+				string MethodName = parts[0];
+				string ClassName = string.Join(".", parts.Skip(1).Reverse().ToArray());
 
 				bool interesting = isFunctionInteresting( ClassName );
 
@@ -57,7 +58,7 @@ namespace Ijw.Profiler.Agents.CLR
 			}
 			catch (Exception)
 			{
-				return new Name("(error)", "(error)", MethodType.Method, false);
+				return new Name("", "Name not available", MethodType.Method, false);
 			}
 		}
 	}
