@@ -1,0 +1,9 @@
+*.ncb
+*.suo
+debug
+release
+*/obj
+*/bin
+*/*.user
+*/debug
+*/release
